@@ -3,15 +3,16 @@ import { useMutation } from '@tanstack/react-query';
 import { Resource } from '../../../types/resource';
 import useAccessToken from '../../auth/useAccessToken';
 
-interface CreateResourceParams {
+export interface CreateResourceParams {
   package_id: string;
   name: string;
-  url: string;
+  url?: string;
   description?: string;
   format?: string;
   hash?: string;
   size?: number;
-  [key: string]: string | number | undefined;
+  files?: FileList;
+  [key: string]: string | number | FileList | undefined;
 }
 
 export const useCreateResource = () => {

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useCreateResource } from '../hooks/ckan/resources/useCreateResource';
 import type { Resource } from '../types/resource';
 import { useAuth } from '../contexts/AuthContext';
+import { FiUpload } from 'react-icons/fi';
+import type { CreateResourceParams } from '../hooks/ckan/resources/useCreateResource';
 
 interface CreateResourceFormProps {
   packageId: string;
@@ -9,17 +11,14 @@ interface CreateResourceFormProps {
   onError?: (error: Error) => void;
 }
 
-const COMMON_FORMATS = ['CSV', 'JSON', 'XML', 'PDF', 'XLSX', 'ZIP'];
-
 export const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
   packageId,
   onSuccess,
   onError,
 }) => {
   const [name, setName] = useState('');
-  const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
-  const [format, setFormat] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { isAuthenticated } = useAuth();
 
@@ -33,31 +32,16 @@ export const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
       newErrors.name = 'Name is required';
     }
 
-    if (!url.trim()) {
-      newErrors.url = 'URL is required';
-    } else if (!isValidUrl(url)) {
-      newErrors.url = 'Please enter a valid URL';
+    if (files.length === 0) {
+      newErrors.files = 'At least one file is required';
     }
 
     if (description.length > 1000) {
       newErrors.description = 'Description must be less than 1000 characters';
     }
 
-    if (format && !COMMON_FORMATS.includes(format.toUpperCase())) {
-      newErrors.format = 'Please select a valid format';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const isValidUrl = (urlString: string) => {
-    try {
-      new URL(urlString);
-      return true;
-    } catch {
-      return false;
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,13 +57,17 @@ export const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
     }
 
     try {
-      const result = await createResourceAsync({
+      const params: CreateResourceParams = {
         package_id: packageId,
         name,
-        url,
         description,
-        format,
-      });
+      };
+
+      if (files.length > 0) {
+        params.files = files;
+      }
+
+      const result = await createResourceAsync(params);
 
       if (onSuccess) {
         onSuccess(result);
@@ -87,9 +75,8 @@ export const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
 
       // Clear form after successful submission
       setName('');
-      setUrl('');
       setDescription('');
-      setFormat('');
+      setFiles([]);
       setErrors({});
     } catch (error) {
       if (onError && error instanceof Error) {
@@ -107,6 +94,17 @@ export const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
       return () => clearTimeout(timer);
     }
   }, [isSuccess]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = e.target.files;
+    if (newFiles) {
+      setFiles((prevFiles) => [...prevFiles, ...Array.from(newFiles)]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -137,26 +135,6 @@ export const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="url" className="text-sm font-medium">
-          URL
-        </label>
-        <input
-          type="url"
-          id="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          className={`border rounded-lg p-2 ${
-            errors.url ? 'border-red-500' : 'border-gray-300'
-          }`}
-          placeholder="Enter resource URL"
-          required
-        />
-        {errors.url && (
-          <span className="text-red-500 text-sm">{errors.url}</span>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-2">
         <label htmlFor="description" className="text-sm font-medium">
           Description
         </label>
@@ -176,26 +154,51 @@ export const CreateResourceForm: React.FC<CreateResourceFormProps> = ({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="format" className="text-sm font-medium">
-          Format
-        </label>
-        <select
-          id="format"
-          value={format}
-          onChange={(e) => setFormat(e.target.value)}
-          className={`border rounded-lg p-2 ${
-            errors.format ? 'border-red-500' : 'border-gray-300'
-          }`}
+        <label
+          htmlFor="files"
+          className="flex flex-col items-center rounded border border-gray-300 p-4 text-gray-900 shadow-sm sm:p-6"
         >
-          <option value="">Select a format</option>
-          {COMMON_FORMATS.map((fmt) => (
-            <option key={fmt} value={fmt}>
-              {fmt}
-            </option>
-          ))}
-        </select>
-        {errors.format && (
-          <span className="text-red-500 text-sm">{errors.format}</span>
+          <FiUpload className="size-6" />
+          <span className="mt-4 font-medium">Upload your file(s)</span>
+          <span className="mt-2 inline-block rounded border border-gray-200 bg-gray-50 px-3 py-1.5 text-center text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-100">
+            Browse files
+          </span>
+          <input
+            multiple
+            type="file"
+            id="files"
+            className="sr-only"
+            onChange={handleFileChange}
+          />
+        </label>
+        {errors.files && (
+          <span className="text-red-500 text-sm">{errors.files}</span>
+        )}
+        {files.length > 0 && (
+          <div className="mt-2 space-y-2">
+            <div className="text-sm text-gray-600">
+              {files.length} file(s) selected
+            </div>
+            <ul className="space-y-2">
+              {files.map((file, index) => (
+                <li
+                  key={`${file.name}-${index}`}
+                  className="flex items-center justify-between bg-gray-50 p-2 rounded"
+                >
+                  <span className="text-sm text-gray-700 truncate">
+                    {file.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
 
