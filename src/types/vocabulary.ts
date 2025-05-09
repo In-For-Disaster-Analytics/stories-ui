@@ -1,0 +1,28 @@
+import parseTag, { Tag, RawTag } from './tag';
+import type { StringIndexedObject } from './types';
+
+/** Vocabulary type */
+export interface Vocabulary {
+  /** The vocabulary's id */
+  id: string;
+  /** The vocabulary's name */
+  name: string;
+  /** The tags associated with the vocabulary */
+  tags: Tag[];
+  /** Non-standard additional data provided by the API. */
+  additionalData: StringIndexedObject;
+}
+
+/** Raw vocabulary type */
+export interface RawVocabulary {
+  id: string;
+  name: string;
+  tags: RawTag[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
+export default function parseVocabulary(vocabulary: RawVocabulary): Vocabulary {
+  const { id, name, tags, ...rest } = vocabulary;
+  return { id, name, tags: tags.map((x) => parseTag(x)), additionalData: rest };
+}
