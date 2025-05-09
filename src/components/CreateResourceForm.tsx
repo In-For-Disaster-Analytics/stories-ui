@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCreateResource } from '../hooks/ckan/resources/useCreateResource';
-import type { Resource } from 'ckan-ts';
+import type { Resource } from '../types/resource';
 
 interface CreateResourceFormProps {
   packageId: string;
