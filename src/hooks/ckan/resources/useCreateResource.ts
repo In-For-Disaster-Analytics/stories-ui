@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Resource } from '../../../types/resource';
+import useAccessToken from '../../auth/useAccessToken';
 
 interface CreateResourceParams {
   package_id: string;
@@ -14,6 +15,8 @@ interface CreateResourceParams {
 }
 
 export const useCreateResource = () => {
+  const { accessToken } = useAccessToken();
+
   const {
     mutate,
     mutateAsync,
@@ -26,13 +29,30 @@ export const useCreateResource = () => {
   } = useMutation({
     mutationFn: async (params: CreateResourceParams): Promise<Resource> => {
       try {
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json',
+        };
+
+        if (accessToken) {
+          headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
         const result = await fetch(
-          `${import.meta.env.VITE_CKAN_URL}/api/3/action/resource_create`,
+          `${import.meta.env.VITE_CKAN_BASE_URL}/api/3/action/resource_create`,
           {
             method: 'POST',
+            headers,
             body: JSON.stringify(params),
           },
         );
+
+        if (!result.ok) {
+          const errorData = await result.json();
+          throw new Error(
+            errorData.error?.message || 'Failed to create resource',
+          );
+        }
+
         return (await result.json()) as Resource;
       } catch (error: unknown) {
         const errorMessage =

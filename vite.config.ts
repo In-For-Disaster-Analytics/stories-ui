@@ -12,6 +12,9 @@ export default defineConfig(({ mode }) => {
       'VITE_TAPIS_API_BASE_URL is required in environment variables',
     );
   }
+  if (!env.VITE_CKAN_BASE_URL) {
+    throw new Error('VITE_CKAN_BASE_URL is required in environment variables');
+  }
 
   return {
     resolve: {
