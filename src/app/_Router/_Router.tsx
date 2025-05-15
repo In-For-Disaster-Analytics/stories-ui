@@ -3,10 +3,10 @@ import { Route, Switch } from 'react-router-dom';
 import Home from '../Home';
 import ProtectedRoute from '../common/ProtectedRoute';
 import Login from '../Login/Login';
-import Stories from '../Stories/Stories';
 import NewStory from '../Stories/NewStory';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loading } from '../common/Loading';
+import Story from '../Stories/Story';
 
 const Router: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -22,8 +22,8 @@ const Router: React.FC = () => {
       <ProtectedRoute isAuthenticated={isAuthenticated} exact path="/">
         <Home />
       </ProtectedRoute>
-      <ProtectedRoute isAuthenticated={isAuthenticated} exact path="/stories">
-        <Stories />
+      <ProtectedRoute isAuthenticated={isAuthenticated} path="/stories/:id">
+        <Story />
       </ProtectedRoute>
       <ProtectedRoute
         isAuthenticated={isAuthenticated}
