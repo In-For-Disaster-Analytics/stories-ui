@@ -11,8 +11,8 @@ export interface CreateResourceParams {
   format?: string;
   hash?: string;
   size?: number;
-  files?: FileList;
-  [key: string]: string | number | FileList | undefined;
+  files?: File[];
+  [key: string]: string | number | File[] | undefined;
 }
 
 export const useCreateResource = () => {
@@ -30,10 +30,30 @@ export const useCreateResource = () => {
   } = useMutation({
     mutationFn: async (params: CreateResourceParams): Promise<Resource> => {
       try {
-        const headers: HeadersInit = {
-          'Content-Type': 'application/json',
-        };
+        const formData = new FormData();
 
+        // Add basic resource metadata
+        formData.append('package_id', params.package_id);
+        formData.append('name', params.name);
+
+        if (params.description) {
+          formData.append('description', params.description);
+        }
+        if (params.format) {
+          formData.append('format', params.format);
+        }
+        if (params.url) {
+          formData.append('url', params.url);
+        }
+
+        // Handle file uploads
+        if (params.files && params.files.length > 0) {
+          params.files.forEach((file) => {
+            formData.append('upload', file);
+          });
+        }
+
+        const headers: HeadersInit = {};
         if (accessToken) {
           headers['Authorization'] = `Bearer ${accessToken}`;
         }
@@ -43,7 +63,7 @@ export const useCreateResource = () => {
           {
             method: 'POST',
             headers,
-            body: JSON.stringify(params),
+            body: formData,
           },
         );
 
