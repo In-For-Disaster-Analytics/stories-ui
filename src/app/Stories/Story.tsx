@@ -54,7 +54,7 @@ const Story: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex gap-8">
           {/* Sidebar */}
           <aside className="w-72 flex-shrink-0">
