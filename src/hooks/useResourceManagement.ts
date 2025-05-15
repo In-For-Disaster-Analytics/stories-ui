@@ -1,29 +1,36 @@
 import { useState } from 'react';
-import { useCreateResource } from './ckan/resources/useCreateResource';
+import { useCreateMultipleResources } from './ckan/resources/useCreateMultipleResources';
 
 export interface ResourceData {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   files: File[];
 }
 
 export const useResourceManagement = (packageId: string) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { createResourceAsync, isPending, isError, error } =
-    useCreateResource();
+  const {
+    createMultipleResourcesAsync,
+    isPending,
+    isError,
+    error,
+    getFileStatus,
+  } = useCreateMultipleResources();
 
   const handleAddResource = async (data: ResourceData) => {
     try {
-      const result = await createResourceAsync({
+      const results = await createMultipleResourcesAsync({
         package_id: packageId,
-        name: data.name,
-        description: data.description,
-        files: data.files,
+        resources: data.files.map((file) => ({
+          name: data.name || file.name || 'Untitled Resource',
+          description: data.description,
+          file: file,
+        })),
       });
 
-      return result;
+      return results;
     } catch (error) {
-      console.error('Failed to create resource:', error);
+      console.error('Failed to create resources:', error);
       throw error;
     }
   };
@@ -35,5 +42,6 @@ export const useResourceManagement = (packageId: string) => {
     isPending,
     isError,
     error,
+    getFileStatus,
   };
 };

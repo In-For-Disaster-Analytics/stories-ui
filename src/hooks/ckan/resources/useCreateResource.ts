@@ -11,7 +11,7 @@ export interface CreateResourceParams {
   format?: string;
   hash?: string;
   size?: number;
-  files?: File[];
+  file?: File;
   [key: string]: string | number | File[] | undefined;
 }
 
@@ -47,10 +47,8 @@ export const useCreateResource = () => {
         }
 
         // Handle file uploads
-        if (params.files && params.files.length > 0) {
-          params.files.forEach((file) => {
-            formData.append('upload', file);
-          });
+        if (params.file) {
+          formData.append('upload', params.file);
         }
 
         const headers: HeadersInit = {};
