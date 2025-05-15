@@ -11,12 +11,49 @@ import {
 import { BsCheckCircle } from 'react-icons/bs';
 import AddResourceModal from '../../components/AddResourceModal/AddResourceModal';
 import { useResourceManagement } from '../../hooks/useResourceManagement';
+import ResourcesPanel from '../../components/ResourcesPanel/ResourcesPanel';
+
+// Mock data for resources
+const mockResources = [
+  {
+    id: '1',
+    name: 'Water Quality Dataset 2023',
+    type: 'CSV',
+    size: '2.4 MB',
+  },
+  {
+    id: '2',
+    name: 'Interview Recording',
+    type: 'MP3',
+    size: '15.8 MB',
+  },
+  {
+    id: '3',
+    name: 'Interview with Sean Turner - Water Resources Modeler',
+    type: 'MP4',
+    size: '45.2 MB',
+  },
+];
 
 const Story: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { dataset } = useDetailDataset(id);
   const { isModalOpen, setIsModalOpen, isPending, error } =
     useResourceManagement(id);
+
+  const handleAddResource = () => {
+    setIsModalOpen(true);
+  };
+
+  const handlePreviewResource = (resourceId: string) => {
+    console.log('Preview resource:', resourceId);
+    // Implement preview functionality
+  };
+
+  const handleEmbedResource = (resourceId: string) => {
+    console.log('Embed resource:', resourceId);
+    // Implement embed functionality
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -137,7 +174,7 @@ const Story: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-100 py-5 mt-10 sticky bottom-0 z-50">
+      <footer className="bg-white border-t border-gray-100 py-5 mt-10 fixed bottom-0 left-0 right-0 z-[1002]">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-1.5 text-sm text-gray-600">
@@ -163,6 +200,14 @@ const Story: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         isSubmitting={isPending}
         error={error}
+      />
+
+      {/* Resources Panel */}
+      <ResourcesPanel
+        resources={mockResources}
+        onAddResource={handleAddResource}
+        onPreviewResource={handlePreviewResource}
+        onEmbedResource={handleEmbedResource}
       />
     </div>
   );

@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story Editor Dashboard | Stories Explorer</title>
+    <link rel="stylesheet" href="1.css" />
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <div class="container">
+        <div class="top-bar-content">
+          <div class="logo">Stories<span>Explorer</span></div>
+          <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Collections</a></li>
+            <li><a href="#">Data Catalog</a></li>
+            <li><a href="#">About</a></li>
+          </ul>
+          <div class="user-menu">
+            <a href="#">Emma Wilson</a>
+            <div class="avatar">EW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+      <div class="container">
+        <h1 class="dashboard-title">Story Editor</h1>
+        <p class="dashboard-subtitle">
+          Water Quality Assessment: Colorado River Basin
+        </p>
+
+        <div class="header-actions">
+          <div class="view-switch">
+            <div class="view-option active">Edit</div>
+            <div class="view-option">Preview</div>
+          </div>
+
+          <button class="action-button">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              ></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              ></path>
+            </svg>
+            View Published Story
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-layout">
+      <div class="container">
+        <div class="dashboard-layout">
+          <!-- Sidebar -->
+          <aside class="sidebar">
+            <!-- Status Section -->
+            <div class="status-section">
+              <div class="status-header">
+                <div class="status-indicator status-published">
+                  <div class="status-dot"></div>
+                  <div class="status-text">Published</div>
+                </div>
+                <button class="unpublish-button">Unpublish</button>
+              </div>
+              <div class="status-meta">
+                <div>Published: May 10, 2025</div>
+                <div>Last updated: 2 days ago</div>
+              </div>
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-value">1,245</div>
+                  <div class="stat-label">Views</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">87</div>
+                  <div class="stat-label">Downloads</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">32</div>
+                  <div class="stat-label">Shares</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">18</div>
+                  <div class="stat-label">Citations</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metadata Section -->
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Story Details</h3>
+
+              <div class="metadata-item">
+                <div class="metadata-label">Collection</div>
+                <a href="#" class="collection-badge">Colorado River Research</a>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-label">Visibility</div>
+                <div class="visibility-selector">
+                  <div class="visibility-option active">Public</div>
+                  <div class="visibility-option">Private</div>
+                </div>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-label">Author</div>
+                <div class="metadata-value">Emma Wilson</div>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-label">Co-authors</div>
+                <div class="metadata-value">None</div>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-label">Tags</div>
+                <div class="tags-list">
+                  <div class="tag">
+                    Water Quality
+                    <svg
+                      width="12"
+                      height="12"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="tag">
+                    Colorado River
+                    <svg
+                      width="12"
+                      height="12"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="tag">
+                    Environmental
+                    <svg
+                      width="12"
+                      height="12"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="tag add-tag">
+                    <svg
+                      width="12"
+                      height="12"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                      />
+                    </svg>
+                    Add tag
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Editor Area -->
+          <div class="main-content">
+            <!-- Editor Toolbar -->
+            <div class="editor-toolbar">
+              <div class="toolbar-group">
+                <button class="toolbar-button" title="Bold">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"
+                    ></path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Italic">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 4h4M12 4v16M10 20h4"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Underline">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 8h10M7 12h10M7 16h10"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="toolbar-group">
+                <button class="toolbar-button" title="Heading 1">H1</button>
+                <button class="toolbar-button" title="Heading 2">H2</button>
+                <button class="toolbar-button" title="Heading 3">H3</button>
+              </div>
+              <div class="toolbar-group">
+                <button class="toolbar-button" title="Bullet List">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Numbered List">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 6h13M7 12h13M7 18h13"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Quote">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 10h8M8 14h8M8 18h8"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="toolbar-group">
+                <button class="toolbar-button" title="Align Left">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h10M4 18h12"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Align Center">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M6 12h12M8 18h8"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Align Right">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M10 12h10M12 18h8"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="toolbar-group">
+                <button class="toolbar-button" title="Insert Link">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Insert Image">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="toolbar-button" title="Insert Map">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Editor Content -->
+            <div class="editor-content">
+              <input
+                type="text"
+                class="title-input"
+                placeholder="Enter story title..."
+                value="Water Quality Assessment: Colorado River Basin"
+              />
+              <input
+                type="text"
+                class="subtitle-input"
+                placeholder="Enter subtitle..."
+                value="A comprehensive analysis of water quality trends and environmental impacts"
+              />
+
+              <div class="content-blocks">
+                <!-- Text Block -->
+                <div class="block text-block">
+                  <div class="block-hover-controls">
+                    <button class="block-control" title="Move Up">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 4l-6 6h12L8 4z" />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Move Down">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 12l6-6H2l6 6z" />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Delete">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                        />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Duplicate">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M4 1.5H3a2 2 0 00-2 2V14a2 2 0 002 2h10a2 2 0 002-2V3.5a2 2 0 00-2-2h-1v1h1a1 1 0 011 1V14a1 1 0 01-1 1H3a1 1 0 01-1-1V3.5a1 1 0 011-1h1v-1z"
+                        />
+                        <path
+                          d="M9.5 1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-3a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5h3zm-3-1A1.5 1.5 0 005 1.5v1A1.5 1.5 0 006.5 4h3A1.5 1.5 0 0011 2.5v-1A1.5 1.5 0 009.5 0h-3z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <textarea
+                    class="text-area"
+                    placeholder="Start writing your story..."
+                  >
+The Colorado River Basin is one of the most important water resources in the western United States, providing water for over 40 million people and supporting a diverse ecosystem. This assessment examines water quality trends over the past decade, focusing on key indicators such as temperature, pH levels, and contaminant concentrations.</textarea
+                  >
+                  <div class="add-cell-btn" title="Add new cell">
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" stroke-width="2" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v8M8 12h8"
+                      />
+                    </svg>
+                    Add Cell
+                  </div>
+                </div>
+
+                <!-- Quote Block: Sean Turner -->
+                <div class="block text-block">
+                  <div class="block-hover-controls">
+                    <button class="block-control" title="Move Up">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 4l-6 6h12L8 4z" />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Move Down">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 12l6-6H2l6 6z" />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Delete">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                        />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Duplicate">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M4 1.5H3a2 2 0 00-2 2V14a2 2 0 002 2h10a2 2 0 002-2V3.5a2 2 0 00-2-2h-1v1h1a1 1 0 011 1V14a1 1 0 01-1 1H3a1 1 0 01-1-1V3.5a1 1 0 011-1h1v-1z"
+                        />
+                        <path
+                          d="M9.5 1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-3a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5h3zm-3-1A1.5 1.5 0 005 1.5v1A1.5 1.5 0 006.5 4h3A1.5 1.5 0 0011 2.5v-1A1.5 1.5 0 009.5 0h-3z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="quote-source">
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L5.146 2.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 7.5H4.5z"
+                      />
+                    </svg>
+                    From: Interview with Sean Turner
+                  </div>
+                  <textarea
+                    class="text-area"
+                    style="
+                      font-style: italic;
+                      border-left: 4px solid #2a64c7;
+                      padding-left: 15px;
+                    "
+                  >
+"There's a drought within a drought," said Sean Turner, a water resources modeler at the Pacific Northwest National Laboratory. "Those dams [on the Colorado River] are suffering not necessarily because of the 2020-2022 drought that's occurring right now, but more because of the dry conditions over 20 years."
+                  </textarea>
+                  <div class="quote-actions">
+                    <button class="quote-action">
+                      <svg
+                        width="14"
+                        height="14"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L5.146 2.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 7.5H4.5z"
+                        />
+                      </svg>
+                      Watch Full Interview
+                    </button>
+                  </div>
+                  <div class="add-cell-btn" title="Add new cell">
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" stroke-width="2" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v8M8 12h8"
+                      />
+                    </svg>
+                    Add Cell
+                  </div>
+                </div>
+
+                <!-- Expert Note Block -->
+                <div class="block text-block">
+                  <div class="block-hover-controls">
+                    <button class="block-control" title="Move Up">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 4l-6 6h12L8 4z" />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Move Down">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 12l6-6H2l6 6z" />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Delete">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                        />
+                      </svg>
+                    </button>
+                    <button class="block-control" title="Duplicate">
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M4 1.5H3a2 2 0 00-2 2V14a2 2 0 002 2h10a2 2 0 002-2V3.5a2 2 0 00-2-2h-1v1h1a1 1 0 011 1V14a1 1 0 01-1 1H3a1 1 0 01-1-1V3.5a1 1 0 011-1h1v-1z"
+                        />
+                        <path
+                          d="M9.5 1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-3a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5h3zm-3-1A1.5 1.5 0 005 1.5v1A1.5 1.5 0 006.5 4h3A1.5 1.5 0 0011 2.5v-1A1.5 1.5 0 009.5 0h-3z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <textarea
+                    class="text-area"
+                    style="
+                      background-color: #f8f9fa;
+                      border-left: 4px solid #33a852;
+                      padding-left: 15px;
+                    "
+                  >
+Expert Note:
+The data presented in this assessment represents a comprehensive analysis of water quality parameters across the Colorado River Basin. Key findings indicate a 15% increase in average water temperatures over the past decade, while pH levels have remained relatively stable. The implementation of new monitoring technologies has improved our ability to detect and track contaminants, leading to more accurate assessments of water quality trends.
+
+— Environmental Science Team, Colorado Water Research Institute
+                  </textarea>
+                  <div class="add-cell-btn" title="Add new cell">
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" stroke-width="2" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v8M8 12h8"
+                      />
+                    </svg>
+                    Add Cell
+                  </div>
+                </div>
+
+                <!-- Lake Powell Image Block -->
+                <div class="block media-block">
+                  <div class="media-header">
+                    <div class="media-title">Lake Powell Satellite View</div>
+                    <div class="media-actions">
+                      <button class="media-action" title="Edit">
+                        <svg
+                          width="14"
+                          height="14"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
+                          />
+                        </svg>
+                      </button>
+                      <button class="media-action" title="Delete">
+                        <svg
+                          width="14"
+                          height="14"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+                          />
+                          <path
+                            fill-rule="evenodd"
+                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="media-content">
+                    <img
+                      src="https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/23949541/LakePowell.gif?quality=90&strip=all&crop=0%2C0%2C100%2C100&w=750"
+                      alt="Lake Powell Satellite View"
+                      style="
+                        width: 100%;
+                        height: auto;
+                        border-radius: 6px;
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+                      "
+                    />
+                  </div>
+                  <div class="add-cell-btn" title="Add new cell">
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" stroke-width="2" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v8M8 12h8"
+                      />
+                    </svg>
+                    Add Cell
+                  </div>
+                </div>
+
+                <!-- Media Block Example -->
+                <div class="block media-block">
+                  <div class="media-header">
+                    <div class="media-title">Water Quality Data Map</div>
+                    <div class="media-actions">
+                      <button class="media-action" title="Edit">
+                        <svg
+                          width="14"
+                          height="14"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
+                          />
+                        </svg>
+                      </button>
+                      <button class="media-action" title="Delete">
+                        <svg
+                          width="14"
+                          height="14"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+                          />
+                          <path
+                            fill-rule="evenodd"
+                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="media-content">
+                    <div class="map-block">
+                      <div class="map-placeholder"></div>
+                    </div>
+                  </div>
+                  <div class="add-cell-btn" title="Add new cell">
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" stroke-width="2" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v8M8 12h8"
+                      />
+                    </svg>
+                    Add Cell
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="save-indicator">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+              />
+              <path
+                d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"
+              />
+            </svg>
+            All changes saved
+          </div>
+          <div class="action-buttons">
+            <button class="secondary-button">Preview</button>
+            <button class="primary-button">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Resources Panel -->
+    <div class="resources-panel">
+      <div class="resources-panel-header">
+        <div class="resources-panel-title">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path
+              d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L5.146 2.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 7.5H4.5z"
+            />
+          </svg>
+          Resources
+          <span class="resources-count">3</span>
+        </div>
+        <div class="resources-panel-actions">
+          <button class="add-resource-floating-button" title="Add Resource">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+              />
+            </svg>
+          </button>
+          <button
+            class="resources-panel-toggle"
+            aria-label="Toggle resources panel"
+          >
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="resources-panel-content">
+        <div class="resources-list">
+          <!-- Water Quality Dataset -->
+          <div class="resource-card">
+            <div class="resource-icon">
+              <svg
+                width="32"
+                height="32"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L5.146 2.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 7.5H4.5z"
+                />
+              </svg>
+            </div>
+            <div class="resource-details">
+              <div class="resource-name">Water Quality Dataset 2023</div>
+              <div class="resource-meta">
+                <span>CSV</span>
+                <span>2.4 MB</span>
+              </div>
+              <div class="resource-actions">
+                <button class="resource-action">Preview</button>
+                <button class="resource-action">Embed</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interview Recording -->
+          <div class="resource-card">
+            <div class="resource-icon">
+              <svg
+                width="32"
+                height="32"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L5.146 2.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 7.5H4.5z"
+                />
+              </svg>
+            </div>
+            <div class="resource-details">
+              <div class="resource-name">Interview Recording</div>
+              <div class="resource-meta">
+                <span>MP3</span>
+                <span>15.8 MB</span>
+              </div>
+              <div class="resource-actions">
+                <button class="resource-action">Preview</button>
+                <button class="resource-action">Embed</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sean Turner Interview -->
+          <div class="resource-card">
+            <div class="resource-icon">
+              <svg
+                width="32"
+                height="32"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L5.146 2.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 7.5H4.5z"
+                />
+              </svg>
+            </div>
+            <div class="resource-details">
+              <div class="resource-name">
+                Interview with Sean Turner - Water Resources Modeler
+              </div>
+              <div class="resource-meta">
+                <span>MP4</span>
+                <span>45.2 MB</span>
+              </div>
+              <div class="resource-actions">
+                <button class="resource-action">Preview</button>
+                <button class="resource-action">Embed</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="add-resource-button">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+            <path
+              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+            />
+          </svg>
+          Add Resource
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
+
+      // Initialize all textareas
+      document.addEventListener('DOMContentLoaded', function () {
+        const textareas = document.querySelectorAll('.text-area');
+        textareas.forEach((textarea) => {
+          autoResizeTextarea(textarea);
+          textarea.addEventListener('input', function () {
+            autoResizeTextarea(this);
+          });
+        });
+
+        // Resources panel toggle
+        const resourcesPanel = document.querySelector('.resources-panel');
+        const toggleButton = document.querySelector('.resources-panel-toggle');
+
+        toggleButton.addEventListener('click', () => {
+          resourcesPanel.classList.toggle('expanded');
+          const isExpanded = resourcesPanel.classList.contains('expanded');
+          toggleButton.querySelector('svg').style.transform = isExpanded
+            ? 'rotate(180deg)'
+            : '';
+        });
+
+        // Add drag handle functionality
+        const panelHeader = document.querySelector('.resources-panel-header');
+        let isDragging = false;
+        let startY;
+        let startHeight;
+
+        panelHeader.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          startY = e.clientY;
+          startHeight = resourcesPanel.offsetHeight;
+          document.body.style.cursor = 'ns-resize';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+
+          const deltaY = startY - e.clientY;
+          const newHeight = Math.min(
+            Math.max(startHeight + deltaY, 50),
+            window.innerHeight * 0.8,
+          );
+          resourcesPanel.style.height = `${newHeight}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+          isDragging = false;
+          document.body.style.cursor = '';
+        });
+      });
+    </script>
+  </body>
+</html>
