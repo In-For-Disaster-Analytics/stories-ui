@@ -9,10 +9,14 @@ import {
   FiAlignCenter,
 } from 'react-icons/fi';
 import { BsCheckCircle } from 'react-icons/bs';
+import AddResourceModal from '../../components/AddResourceModal/AddResourceModal';
+import { useResourceManagement } from '../../hooks/useResourceManagement';
 
 const Story: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { dataset, isLoading, isError, error } = useDetailDataset(id);
+  const { dataset } = useDetailDataset(id);
+  const { isModalOpen, setIsModalOpen, isPending, error } =
+    useResourceManagement(id);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -37,7 +41,10 @@ const Story: React.FC = () => {
                 <FiEye className="w-4 h-4" />
                 View Published Story
               </button>
-              <button className="flex items-center gap-2 bg-white text-blue-600 border border-blue-600 px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-50">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 bg-white text-blue-600 border border-blue-600 px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-50"
+              >
                 <FiPlus className="w-4 h-4" />
                 Add Resource
               </button>
@@ -107,7 +114,6 @@ const Story: React.FC = () => {
                     <FiAlignCenter className="w-4 h-4" />
                   </button>
                 </div>
-                {/* Add more toolbar groups as needed */}
               </div>
             </div>
 
@@ -125,7 +131,6 @@ const Story: React.FC = () => {
                 placeholder="Enter subtitle..."
                 defaultValue="A comprehensive analysis of water quality trends and environmental impacts"
               />
-              {/* Add content blocks here */}
             </div>
           </div>
         </div>
@@ -150,6 +155,15 @@ const Story: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Add Resource Modal */}
+      <AddResourceModal
+        id={id}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        isSubmitting={isPending}
+        error={error}
+      />
     </div>
   );
 };
