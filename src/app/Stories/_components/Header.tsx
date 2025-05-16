@@ -1,17 +1,10 @@
 import React from 'react';
 import { FiEye, FiPlus } from 'react-icons/fi';
+import { useStory } from '../StoryContext';
 
-interface HeaderProps {
-  title: string;
-  onAddResource: () => void;
-  onViewPublished: () => void;
-}
+const Header: React.FC = () => {
+  const { title, handleAddResource, handleViewPublished } = useStory();
 
-const Header: React.FC<HeaderProps> = ({
-  title,
-  onAddResource,
-  onViewPublished,
-}) => {
   return (
     <header className="bg-white border-b border-gray-100">
       <div className="container mx-auto px-4 py-4">
@@ -29,13 +22,13 @@ const Header: React.FC<HeaderProps> = ({
           <div className="flex gap-3">
             <button
               className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-700"
-              onClick={onViewPublished}
+              onClick={handleViewPublished}
             >
               <FiEye className="w-4 h-4" />
               View Published Story
             </button>
             <button
-              onClick={onAddResource}
+              onClick={handleAddResource}
               className="flex items-center gap-2 bg-white text-blue-600 border border-blue-600 px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-50"
             >
               <FiPlus className="w-4 h-4" />

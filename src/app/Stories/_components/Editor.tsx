@@ -1,19 +1,10 @@
 import React from 'react';
 import { FiType, FiAlignLeft, FiAlignCenter } from 'react-icons/fi';
+import { useStory } from '../StoryContext';
 
-interface EditorProps {
-  title: string;
-  subtitle: string;
-  onTitleChange: (value: string) => void;
-  onSubtitleChange: (value: string) => void;
-}
+const Editor: React.FC = () => {
+  const { title, subtitle, setTitle, setSubtitle } = useStory();
 
-const Editor: React.FC<EditorProps> = ({
-  title,
-  subtitle,
-  onTitleChange,
-  onSubtitleChange,
-}) => {
   return (
     <div className="flex-1">
       {/* Editor Toolbar */}
@@ -39,14 +30,14 @@ const Editor: React.FC<EditorProps> = ({
           className="w-full text-2xl font-bold mb-2.5 pb-2.5 border-b border-gray-100 focus:outline-none"
           placeholder="Enter story title..."
           value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <input
           type="text"
           className="w-full text-base text-gray-600 mb-5 pb-2.5 border-b border-gray-100 focus:outline-none"
           placeholder="Enter subtitle..."
           value={subtitle}
-          onChange={(e) => onSubtitleChange(e.target.value)}
+          onChange={(e) => setSubtitle(e.target.value)}
         />
       </div>
     </div>

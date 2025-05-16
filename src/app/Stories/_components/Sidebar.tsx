@@ -1,24 +1,18 @@
 import React from 'react';
+import { useStory } from '../StoryContext';
 
-interface SidebarProps {
-  publishedDate?: string;
-  lastUpdated?: string;
-  views?: number;
-  downloads?: number;
-  shares?: number;
-  citations?: number;
-  status?: string;
-}
+const Sidebar: React.FC = () => {
+  const {
+    status,
+    publishedDate,
+    lastUpdated,
+    views,
+    downloads,
+    shares,
+    citations,
+    dataset,
+  } = useStory();
 
-const Sidebar: React.FC<SidebarProps> = ({
-  publishedDate = 'May 10, 2025',
-  lastUpdated = '2 days ago',
-  views = 1245,
-  downloads = 87,
-  shares = 32,
-  citations = 18,
-  status = 'Published',
-}) => {
   return (
     <aside className="w-72 flex-shrink-0">
       {/* Status Section */}

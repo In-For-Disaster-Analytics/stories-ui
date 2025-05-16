@@ -1,14 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useDetailDataset } from '../../hooks/ckan/datasets/useDetailDataset';
-// import { FiEye, FiPlus } from 'react-icons/fi';
 import AddResourceModal from '../../components/AddResourceModal/AddResourceModal';
-import { useResourceManagement } from '../../hooks/useResourceManagement';
 import ResourcesPanel from '../../components/ResourcesPanel/ResourcesPanel';
 import Footer from './_components/Footer';
 import Editor from './_components/Editor';
 import Sidebar from './_components/Sidebar';
 import Header from './_components/Header';
+import { StoryProvider, useStory } from './StoryContext';
 
 // Mock data for resources
 const mockResources = [
@@ -32,64 +30,35 @@ const mockResources = [
   },
 ];
 
-const Story: React.FC = () => {
+const StoryContent: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { dataset } = useDetailDataset(id);
-  const { isModalOpen, setIsModalOpen, isPending, error } =
-    useResourceManagement(id);
-
-  const handleAddResource = () => {
-    setIsModalOpen(true);
-  };
-
-  const handlePreviewResource = (resourceId: string) => {
-    console.log('Preview resource:', resourceId);
-    // Implement preview functionality
-  };
-
-  const handleEmbedResource = (resourceId: string) => {
-    console.log('Embed resource:', resourceId);
-    // Implement embed functionality
-  };
-
-  const handlePreview = () => {
-    // Implement preview functionality
-  };
-
-  const handleSave = () => {
-    // Implement save functionality
-  };
-
-  const handleViewPublished = () => {
-    // Implement view published story functionality
-  };
+  const {
+    isModalOpen,
+    isPending,
+    error,
+    handleCloseModal,
+    handleAddResource,
+    handlePreviewResource,
+    handleEmbedResource,
+  } = useStory();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Header
-        title={dataset?.title || dataset?.name || ''}
-        onAddResource={handleAddResource}
-        onViewPublished={handleViewPublished}
-      />
+      <Header />
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex gap-8">
           <Sidebar />
-          <Editor
-            title={dataset?.title || dataset?.name || ''}
-            subtitle="A comprehensive analysis of water quality trends and environmental impacts"
-            onTitleChange={() => {}}
-            onSubtitleChange={() => {}}
-          />
+          <Editor />
         </div>
       </main>
 
-      <Footer onPreview={handlePreview} onSave={handleSave} />
+      <Footer />
 
       <AddResourceModal
         id={id}
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         isSubmitting={isPending}
         error={error}
       />
@@ -101,6 +70,16 @@ const Story: React.FC = () => {
         onEmbedResource={handleEmbedResource}
       />
     </div>
+  );
+};
+
+const Story: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+
+  return (
+    <StoryProvider id={id || ''}>
+      <StoryContent />
+    </StoryProvider>
   );
 };
 
