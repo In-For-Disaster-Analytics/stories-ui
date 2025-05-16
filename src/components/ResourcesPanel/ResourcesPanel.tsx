@@ -69,17 +69,10 @@ const ResourcesPanel: React.FC<ResourcesPanelProps> = ({
       <div className="resources-panel-header" onMouseDown={handleMouseDown}>
         <div className="resources-panel-title">
           <FiChevronDown className="w-5 h-5" />
-          Resources
+          Existing Resources
           <span className="resources-count">{resources.length}</span>
         </div>
         <div className="resources-panel-actions">
-          <button
-            className="add-resource-floating-button"
-            onClick={onAddResource}
-            title="Add Resource"
-          >
-            <FiPlus className="w-4 h-4" />
-          </button>
           <button
             className="resources-panel-toggle"
             onClick={() => setIsExpanded(!isExpanded)}
@@ -125,10 +118,6 @@ const ResourcesPanel: React.FC<ResourcesPanelProps> = ({
             </div>
           ))}
         </div>
-        <button className="add-resource-button" onClick={onAddResource}>
-          <FiPlus className="w-4 h-4" />
-          Add Resource
-        </button>
       </div>
     </div>
   );
