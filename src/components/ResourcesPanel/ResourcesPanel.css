@@ -3,35 +3,64 @@
   bottom: 80px; /* Space for footer */
   left: 0;
   right: 0;
-  background-color: #fff;
-  box-shadow: 2px -2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1001; /* Higher than footer's z-index */
-  transition: transform 0.3s ease-in-out;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin: 16px;
+  transition: all 0.3s ease;
+  height: 200px;
   transform: translateY(
     calc(100% - 60px)
   ); /* Only show header height when collapsed */
-  height: 200px;
 }
 
 .resources-panel.expanded {
   transform: translateY(0);
 }
 
+.resources-panel.maximized {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  border-radius: 0;
+  margin: 0;
+  transform: none;
+  height: 100%;
+}
+
 .resources-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #eee;
-  cursor: ns-resize;
-  height: 60px; /* Fixed height for header */
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
 }
 
 .resources-panel-actions {
   display: flex;
+  gap: 8px;
   align-items: center;
-  gap: 12px;
+}
+
+.resources-panel-action,
+.resources-panel-toggle {
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.resources-panel-action:hover,
+.resources-panel-toggle:hover {
+  background: #e2e8f0;
+  color: #1e293b;
 }
 
 .add-resource-floating-button {
@@ -67,19 +96,6 @@
   padding: 2px 8px;
   border-radius: 12px;
   margin-left: 8px;
-}
-
-.resources-panel-toggle {
-  background: none;
-  border: none;
-  color: #666;
-  cursor: pointer;
-  padding: 4px;
-  transition: transform 0.3s ease;
-}
-
-.resources-panel-toggle svg {
-  transition: transform 0.3s ease;
 }
 
 .resources-panel-content {

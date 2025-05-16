@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Resource } from '../../../types/resource';
 import useAccessToken from '../../auth/useAccessToken';
+import GenericResponse from '../../../types/GenericResponse';
 
 export interface CreateResourceParams {
   package_id: string;
@@ -12,7 +13,7 @@ export interface CreateResourceParams {
   hash?: string;
   size?: number;
   file?: File;
-  [key: string]: string | number | File[] | undefined;
+  [key: string]: string | number | File | File[] | undefined;
 }
 
 export const useCreateResource = () => {
@@ -72,7 +73,14 @@ export const useCreateResource = () => {
           );
         }
 
-        return (await result.json()) as Resource;
+        const response = (await result.json()) as GenericResponse<Resource>;
+        if (!response.success || !response.result) {
+          throw new Error(
+            response.error?.message || 'Failed to create resource',
+          );
+        }
+
+        return response.result;
       } catch (error: unknown) {
         const errorMessage =
           error instanceof Error ? error.message : 'Unknown error occurred';

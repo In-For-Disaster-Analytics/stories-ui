@@ -49,7 +49,7 @@ export const useCreateMultipleResources = () => {
               package_id: data.package_id,
               name: resource.name || resource.file.name || 'Untitled Resource',
               description: resource.description,
-              files: [resource.file],
+              file: resource.file,
             });
 
             // Update status for successful file

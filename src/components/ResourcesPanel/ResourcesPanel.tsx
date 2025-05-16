@@ -1,72 +1,26 @@
 import React, { useState } from 'react';
-import { FiPlus, FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown, FiMaximize2, FiMinimize2 } from 'react-icons/fi';
 import './ResourcesPanel.css';
+import { useStory } from '../../app/Stories/StoryContext';
 
-interface Resource {
-  id: string;
-  name: string;
-  type: string;
-  size: string;
-}
-
-interface ResourcesPanelProps {
-  resources: Resource[];
-  onAddResource: () => void;
-  onPreviewResource: (id: string) => void;
-  onEmbedResource: (id: string) => void;
-}
-
-const ResourcesPanel: React.FC<ResourcesPanelProps> = ({
-  resources,
-  onAddResource,
-  onPreviewResource,
-  onEmbedResource,
-}) => {
+const ResourcesPanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startY, setStartY] = useState(0);
-  const [startHeight, setStartHeight] = useState(0);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const { resources } = useStory();
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-    setStartY(e.clientY);
-    setStartHeight(e.currentTarget.offsetHeight);
-    document.body.style.cursor = 'ns-resize';
+  const handlePreviewResource = (id: string) => {
+    console.log(id);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return;
-
-    const deltaY = startY - e.clientY;
-    const newHeight = Math.min(
-      Math.max(startHeight + deltaY, 50),
-      window.innerHeight * 0.8,
-    );
-    const panel = document.querySelector('.resources-panel') as HTMLElement;
-    if (panel) {
-      panel.style.height = `${newHeight}px`;
-    }
+  const handleEmbedResource = (id: string) => {
+    console.log(id);
   };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    document.body.style.cursor = '';
-  };
-
-  React.useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging]);
 
   return (
-    <div className={`resources-panel ${isExpanded ? 'expanded' : ''}`}>
-      <div className="resources-panel-header" onMouseDown={handleMouseDown}>
+    <div
+      className={`resources-panel ${isExpanded ? 'expanded' : ''} ${isMaximized ? 'maximized' : ''}`}
+    >
+      <div className="resources-panel-header">
         <div className="resources-panel-title">
           <FiChevronDown className="w-5 h-5" />
           Existing Resources
@@ -74,14 +28,28 @@ const ResourcesPanel: React.FC<ResourcesPanelProps> = ({
         </div>
         <div className="resources-panel-actions">
           <button
+            className="resources-panel-action"
+            onClick={() => setIsMaximized(!isMaximized)}
+            aria-label={isMaximized ? 'Minimize panel' : 'Maximize panel'}
+          >
+            {isMaximized ? (
+              <FiMinimize2 className="w-4 h-4" />
+            ) : (
+              <FiMaximize2 className="w-4 h-4" />
+            )}
+          </button>
+          <button
             className="resources-panel-toggle"
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => {
+              setIsExpanded(!isExpanded);
+              setIsMaximized(false);
+            }}
             aria-label="Toggle resources panel"
           >
             <FiChevronDown
               className="w-4 h-4"
               style={{
-                transform: isExpanded ? 'rotate(180deg)' : '',
+                transform: !isExpanded ? 'rotate(180deg)' : '',
               }}
             />
           </button>
@@ -97,19 +65,18 @@ const ResourcesPanel: React.FC<ResourcesPanelProps> = ({
               <div className="resource-details">
                 <div className="resource-name">{resource.name}</div>
                 <div className="resource-meta">
-                  <span>{resource.type}</span>
                   <span>{resource.size}</span>
                 </div>
                 <div className="resource-actions">
                   <button
                     className="resource-action"
-                    onClick={() => onPreviewResource(resource.id)}
+                    onClick={() => handlePreviewResource(resource.id)}
                   >
                     Preview
                   </button>
                   <button
                     className="resource-action"
-                    onClick={() => onEmbedResource(resource.id)}
+                    onClick={() => handleEmbedResource(resource.id)}
                   >
                     Embed
                   </button>

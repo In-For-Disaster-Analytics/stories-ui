@@ -10,7 +10,6 @@ const Sidebar: React.FC = () => {
     downloads,
     shares,
     citations,
-    dataset,
   } = useStory();
 
   return (

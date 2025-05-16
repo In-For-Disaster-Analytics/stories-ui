@@ -6,41 +6,10 @@ import Footer from './_components/Footer';
 import Editor from './_components/Editor';
 import Sidebar from './_components/Sidebar';
 import Header from './_components/Header';
-import { StoryProvider, useStory } from './StoryContext';
-
-// Mock data for resources
-const mockResources = [
-  {
-    id: '1',
-    name: 'Water Quality Dataset 2023',
-    type: 'CSV',
-    size: '2.4 MB',
-  },
-  {
-    id: '2',
-    name: 'Interview Recording',
-    type: 'MP3',
-    size: '15.8 MB',
-  },
-  {
-    id: '3',
-    name: 'Interview with Sean Turner - Water Resources Modeler',
-    type: 'MP4',
-    size: '45.2 MB',
-  },
-];
+import { StoryProvider } from './StoryContext';
 
 const StoryContent: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const {
-    isModalOpen,
-    isPending,
-    error,
-    handleCloseModal,
-    handleAddResource,
-    handlePreviewResource,
-    handleEmbedResource,
-  } = useStory();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -55,20 +24,9 @@ const StoryContent: React.FC = () => {
 
       <Footer />
 
-      <AddResourceModal
-        id={id}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        isSubmitting={isPending}
-        error={error}
-      />
+      <AddResourceModal id={id} />
 
-      <ResourcesPanel
-        resources={mockResources}
-        onAddResource={handleAddResource}
-        onPreviewResource={handlePreviewResource}
-        onEmbedResource={handleEmbedResource}
-      />
+      <ResourcesPanel />
     </div>
   );
 };

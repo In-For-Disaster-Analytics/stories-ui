@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FiUpload,
   FiFile,
@@ -10,13 +10,10 @@ import {
 import Modal from '../Modal/Modal';
 import { useResourceManagement } from '../../hooks/useResourceManagement';
 import { ResourceStatus } from '../../hooks/ckan/resources/useCreateMultipleResources';
+import { useStory } from '../../app/Stories/StoryContext';
 
 interface AddResourceModalProps {
   id: string;
-  isOpen: boolean;
-  onClose: () => void;
-  isSubmitting?: boolean;
-  error?: Error | null;
 }
 
 const FileStatusIcon: React.FC<{ status: ResourceStatus }> = ({ status }) => {
@@ -32,16 +29,28 @@ const FileStatusIcon: React.FC<{ status: ResourceStatus }> = ({ status }) => {
   }
 };
 
-const AddResourceModal: React.FC<AddResourceModalProps> = ({
-  id,
-  isOpen,
-  onClose,
-  isSubmitting = false,
-  error = null,
-}) => {
+const AddResourceModal: React.FC<AddResourceModalProps> = ({ id }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const { handleAddResource, getFileStatus } = useResourceManagement(id);
+  const {
+    resources,
+    setResources,
+    isModalOpen,
+    isPending,
+    setIsPending,
+    error,
+    handleCloseModal,
+  } = useStory();
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setFiles([]);
+      setErrors({});
+      setUploadSuccess(false);
+    }
+  }, [isModalOpen]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = e.target.files;
@@ -68,11 +77,12 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
-        await handleAddResource({ files });
-        // Reset form
+        setIsPending(true);
+        const newResources = await handleAddResource({ files });
+        setResources([...resources, ...newResources]);
+        setUploadSuccess(true);
         setFiles([]);
         setErrors({});
-        onClose();
       } catch (error) {
         // Error is handled by the parent component
         console.error('Error submitting form:', error);
@@ -83,26 +93,30 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
   const footer = (
     <div className="flex justify-end space-x-3">
       <button
-        onClick={onClose}
-        disabled={isSubmitting}
+        onClick={handleCloseModal}
+        disabled={isPending}
         className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Cancel
+        {uploadSuccess ? 'Done' : 'Cancel'}
       </button>
       <button
         onClick={handleSubmit}
-        disabled={isSubmitting}
-        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isPending || files.length === 0}
+        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-300"
       >
-        {isSubmitting ? 'Adding...' : 'Add Resource'}
+        {isPending
+          ? 'Adding...'
+          : files.length === 0
+            ? 'Select Files to Add'
+            : 'Add Resource'}
       </button>
     </div>
   );
 
   return (
     <Modal
-      isOpen={isOpen}
-      onClose={onClose}
+      isOpen={isModalOpen}
+      onClose={handleCloseModal}
       title="Add New Resource"
       size="lg"
       footer={footer}
@@ -114,25 +128,56 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
           </div>
         )}
 
+        {uploadSuccess && (
+          <div className="p-4 text-sm text-green-700 bg-green-100 rounded-lg flex items-center space-x-2">
+            <FiCheck className="h-5 w-5" />
+            <span>
+              Files uploaded successfully! You can add more files or close the
+              modal.
+            </span>
+          </div>
+        )}
+
         {/* File upload area */}
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-          <FiUpload className="mx-auto h-12 w-12 text-gray-400" />
+        <div
+          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ${
+            uploadSuccess ? 'border-green-300 bg-green-50' : 'border-gray-300'
+          }`}
+        >
+          <FiUpload
+            className={`mx-auto h-12 w-12 ${uploadSuccess ? 'text-green-500' : 'text-gray-400'}`}
+          />
           <div className="mt-4">
             <p className="text-sm text-gray-600">
-              Drag and drop your files here, or{' '}
-              <label className="text-blue-600 hover:text-blue-500 cursor-pointer">
-                browse
-                <input
-                  type="file"
-                  multiple
-                  className="hidden"
-                  onChange={handleFileChange}
-                  disabled={isSubmitting}
-                />
-              </label>
+              {uploadSuccess ? (
+                <>
+                  Files uploaded successfully!{' '}
+                  <button
+                    onClick={() => setUploadSuccess(false)}
+                    className="text-blue-600 hover:text-blue-500 font-medium"
+                  >
+                    Add more files
+                  </button>
+                </>
+              ) : (
+                <>
+                  Drag and drop your files here, or{' '}
+                  <label className="text-blue-600 hover:text-blue-500 cursor-pointer">
+                    browse
+                    <input
+                      type="file"
+                      multiple
+                      className="hidden"
+                      onChange={handleFileChange}
+                      disabled={isPending}
+                    />
+                  </label>
+                </>
+              )}
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              Supported formats: PDF, DOC, XLS, CSV, JPG, PNG (Max 50MB)
+              File Max Size: {import.meta.env.VITE_MAX_FILE_SIZE / 1024 / 1024}
+              MB
             </p>
           </div>
         </div>
@@ -172,7 +217,7 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
                     )}
                     <button
                       onClick={() => removeFile(index)}
-                      disabled={isSubmitting}
+                      disabled={isPending}
                       className="text-red-500 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <FiX className="h-5 w-5" />

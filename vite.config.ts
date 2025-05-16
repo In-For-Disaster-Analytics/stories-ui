@@ -15,6 +15,9 @@ export default defineConfig(({ mode }) => {
   if (!env.VITE_CKAN_BASE_URL) {
     throw new Error('VITE_CKAN_BASE_URL is required in environment variables');
   }
+  if (!env.VITE_MAX_FILE_SIZE) {
+    throw new Error('VITE_MAX_FILE_SIZE is required in environment variables');
+  }
 
   return {
     resolve: {

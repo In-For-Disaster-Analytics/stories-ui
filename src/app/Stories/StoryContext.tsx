@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 import { useDetailDataset } from '../../hooks/ckan/datasets/useDetailDataset';
+import { Resource } from '../../types/resource';
 
 // TODO: Import proper type from your CKAN types
 interface Dataset {
@@ -26,6 +33,7 @@ interface StoryContextType {
   dataset: Dataset | null;
   isModalOpen: boolean;
   isPending: boolean;
+  setIsPending: (isPending: boolean) => void;
   error: ErrorState | null;
   setTitle: (title: string) => void;
   setSubtitle: (subtitle: string) => void;
@@ -36,6 +44,8 @@ interface StoryContextType {
   handlePreview: () => void;
   handleSave: () => void;
   handleViewPublished: () => void;
+  resources: Resource[];
+  setResources: (resources: Resource[]) => void;
 }
 
 const StoryContext = createContext<StoryContextType | undefined>(undefined);
@@ -50,6 +60,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
   id,
 }) => {
   const { dataset } = useDetailDataset(id);
+  const [resources, setResources] = useState<Resource[]>([]);
   const [title, setTitle] = useState(dataset?.title || dataset?.name || '');
   const [subtitle, setSubtitle] = useState(
     'A comprehensive analysis of water quality trends and environmental impacts',
@@ -89,6 +100,12 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     // Implement view published story functionality
   };
 
+  useEffect(() => {
+    if (dataset) {
+      setResources(dataset.resources);
+    }
+  }, [dataset]);
+
   const value = {
     title,
     subtitle,
@@ -102,6 +119,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     dataset: dataset || null,
     isModalOpen,
     isPending,
+    setIsPending,
     error,
     setTitle,
     setSubtitle,
@@ -112,6 +130,8 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     handlePreview,
     handleSave,
     handleViewPublished,
+    resources,
+    setResources,
   };
 
   return (
