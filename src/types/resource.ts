@@ -28,12 +28,7 @@ export interface Resource {
   /** Meta-metadata */
   metadata: Metadata;
   /** Information about the document's MIME type */
-  mimeType: {
-    /** The resource's direct MIME type */
-    resource?: string;
-    /** The MIME type of resources contained within archives */
-    inner?: string;
-  };
+  mimetype: string;
   /** The resource's short name, may not be human-readable */
   name: string;
   /** The resource's url */

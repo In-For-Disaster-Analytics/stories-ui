@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { FiChevronDown, FiMaximize2, FiMinimize2 } from 'react-icons/fi';
 import './ResourcesPanel.css';
 import { useStory } from '../../app/Stories/StoryContext';
+import { useTranscribe } from '../../hooks/tapis/apps/useTranscribe';
 
 const ResourcesPanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const { resources } = useStory();
+
+  const { transcribe, isLoading, error, jobResponse } = useTranscribe();
 
   const handlePreviewResource = (id: string) => {
     console.log(id);
@@ -14,6 +17,12 @@ const ResourcesPanel: React.FC = () => {
 
   const handleEmbedResource = (id: string) => {
     console.log(id);
+  };
+
+  const handleTranscribeResource = (url: string) => {
+    transcribe({
+      audioFileUrl: url,
+    });
   };
 
   return (
@@ -65,7 +74,7 @@ const ResourcesPanel: React.FC = () => {
               <div className="resource-details">
                 <div className="resource-name">{resource.name}</div>
                 <div className="resource-meta">
-                  <span>{resource.size}</span>
+                  <span>{resource.mimetype}</span>
                 </div>
                 <div className="resource-actions">
                   <button
@@ -80,6 +89,14 @@ const ResourcesPanel: React.FC = () => {
                   >
                     Embed
                   </button>
+                  {resource.mimetype === 'audio/mpeg' && (
+                    <button
+                      className="resource-action"
+                      onClick={() => handleTranscribeResource(resource.url)}
+                    >
+                      Transcribe
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
