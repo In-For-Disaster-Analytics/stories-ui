@@ -1,18 +1,33 @@
 import { useSubmitJob } from '../jobs/useSubmit';
-import { ReqSubmitJob } from '@tapis/tapis-typescript-jobs';
+import { useTranscriptionStatus } from '../jobs/useTranscriptionStatus';
+import { ReqSubmitJob, RespSubmitJob } from '@tapis/tapis-typescript-jobs';
 
 interface TranscribeJobParams {
   audioFileUrl: string;
   minSpeakers?: number;
+  resourceId: string;
 }
 
 export const useTranscribe = () => {
-  const { submitJob, isLoading, error, jobResponse } = useSubmitJob();
+  const {
+    submitJob,
+    isLoading: isSubmitting,
+    error: submitError,
+    data,
+  } = useSubmitJob();
+  const {
+    startPolling,
+    stopPolling,
+    pollingState,
+    errors: pollingErrors,
+    isLoading: isPolling,
+  } = useTranscriptionStatus();
 
   const transcribe = async ({
     audioFileUrl,
     minSpeakers = 1,
-  }: TranscribeJobParams) => {
+    resourceId,
+  }: TranscribeJobParams): Promise<RespSubmitJob> => {
     const jobRequest: ReqSubmitJob = {
       name: `whisper-transcription-${Date.now()}`,
       appId: 'whisper-transcription',
@@ -59,14 +74,25 @@ export const useTranscribe = () => {
       archiveOnAppError: true,
       tags: ['portalName: PTDATAX'],
     };
-    console.log(jobRequest);
-    return submitJob(jobRequest);
+
+    try {
+      const response = await submitJob(jobRequest);
+      if (response?.result?.uuid) {
+        startPolling(response.result.uuid, resourceId);
+      }
+      return response;
+    } catch (error) {
+      console.error('Error submitting transcription job:', error);
+      throw error;
+    }
   };
 
   return {
     transcribe,
-    isLoading,
-    error,
-    jobResponse,
+    isLoading: isSubmitting || isPolling,
+    error: submitError || Object.values(pollingErrors)[0],
+    data,
+    pollingState,
+    stopPolling,
   };
 };
