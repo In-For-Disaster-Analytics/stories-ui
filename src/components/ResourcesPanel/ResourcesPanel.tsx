@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { FiChevronDown, FiMaximize2, FiMinimize2 } from 'react-icons/fi';
 import './ResourcesPanel.css';
 import { useStory } from '../../app/Stories/StoryContext';
-import { useTranscribe } from '../../hooks/tapis/apps/useTranscribe';
 
 const ResourcesPanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const { resources } = useStory();
-
-  const { transcribe, isLoading, error, jobResponse } = useTranscribe();
 
   const handlePreviewResource = (id: string) => {
     console.log(id);
@@ -20,9 +17,10 @@ const ResourcesPanel: React.FC = () => {
   };
 
   const handleTranscribeResource = (url: string) => {
-    transcribe({
-      audioFileUrl: url,
-    });
+    console.log(url);
+    // transcribe({
+    //   audioFileUrl: url,
+    // });
   };
 
   return (

@@ -1,13 +1,11 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Home from '../Home';
 import ProtectedRoute from '../common/ProtectedRoute';
 import Login from '../Login/Login';
-import NewStory from '../Stories/NewStory';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loading } from '../common/Loading';
-import Story from '../Stories/Story';
-
+import StoriesRouter from '../Stories/_Router';
+import StoriesList from '../Pages/StoriesList';
 const Router: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
   if (isLoading) {
@@ -20,17 +18,10 @@ const Router: React.FC = () => {
         <Login />
       </Route>
       <ProtectedRoute isAuthenticated={isAuthenticated} exact path="/">
-        <Home />
+        <StoriesList />
       </ProtectedRoute>
-      <ProtectedRoute isAuthenticated={isAuthenticated} path="/stories/:id">
-        <Story />
-      </ProtectedRoute>
-      <ProtectedRoute
-        isAuthenticated={isAuthenticated}
-        exact
-        path="/stories/new"
-      >
-        <NewStory />
+      <ProtectedRoute isAuthenticated={isAuthenticated} path="/stories">
+        <StoriesRouter />
       </ProtectedRoute>
     </Switch>
   );

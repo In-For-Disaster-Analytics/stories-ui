@@ -1,8 +1,10 @@
 import React from 'react';
 import { FiEye, FiPlus } from 'react-icons/fi';
 import { useStory } from '../StoryContext';
+import { Link, useParams } from 'react-router-dom';
 
 const Header: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const { title, handleAddResource, handleViewPublished } = useStory();
 
   return (
@@ -34,6 +36,14 @@ const Header: React.FC = () => {
               <FiPlus className="w-4 h-4" />
               Add Resource
             </button>
+            {/*Go to resources*/}
+            <Link
+              to={`/stories/${id}/resources`}
+              className="flex items-center gap-2 bg-white text-blue-600 border border-blue-600 px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-50"
+            >
+              <FiEye className="w-4 h-4" />
+              View Resources
+            </Link>
           </div>
         </div>
       </div>

@@ -30,9 +30,9 @@ export const useListDatasets = (options?: DatasetSearchOptions) => {
           }
         }
         if (options?.limit)
-          queryParams.append('limit', options.limit.toString());
+          queryParams.append('rows', options.limit.toString());
         if (options?.offset)
-          queryParams.append('offset', options.offset.toString());
+          queryParams.append('start', options.offset.toString());
         if (options?.sort) {
           if (typeof options.sort === 'string') {
             queryParams.append('sort', options.sort);
