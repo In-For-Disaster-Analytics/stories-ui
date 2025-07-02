@@ -1,0 +1,1177 @@
+{#
+  Renders a single resource with icons and view links.
+
+  res - A resource dict to render
+  pkg - A package dict that the resource belongs to
+  can_edit - Whether the user is allowed to edit the resource
+  url_is_edit - Whether the link to the resource should be to editing it (set to False to make the link view the resource)
+  is_activity_archive - Whether this is an old version of the dataset (and therefore read-only)
+
+  Example:
+
+    {% snippet "package/snippets/resource_item.html", res=resource, pkg_dict=pkg_dict, can_edit=True, url_is_edit=False %}
+
+#}
+
+{% set url_action = pkg.type ~ ('_resource.edit' if url_is_edit and can_edit else '_resource.read') %}
+{% set url = h.url_for(url_action, id=pkg.id if is_activity_archive else pkg.name, resource_id=res.id, **({'activity_id': request.args['activity_id']} if 'activity_id' in request.args else {})) %}
+{% set token = h.oauth2_get_stored_token() %}
+{% set token_access_token = token.access_token if token else None %}
+
+
+<li class="resource-item" data-id="{{ res.id }}">
+  {% block resource_item_title %}
+  <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
+    {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ h.get_translated(res, 'format') }}</span>
+    {{ h.popular('views', res.tracking_summary.total, min=10) if res.tracking_summary }}
+  </a>
+  {% endblock %}
+
+  {% block resource_item_description %}
+    <p class="description">
+      {% if res.description %}
+        {{ h.markdown_extract(h.get_translated(res, 'description'), extract_length=80) }}
+      {% endif %}
+    </p>
+  {% endblock %}
+
+  {% block resource_item_explore %}
+  {% if not url_is_edit %}
+  <div class="dropdown btn-group">
+    <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-share"></i>
+      {{ _('Explore') }}
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      {% block resource_item_explore_links %}
+      <li>
+        <a href="{{ url }}">
+          {% if not is_activity_archive and res.has_views %}
+            <i class="fa fa-bar-chart-o"></i>
+            {{ _('Preview') }}
+          {% else %}
+            <i class="fa fa-info-circle"></i>
+            {{ _('More information') }}
+          {% endif %}
+        </a>
+      </li>
+      {% if res.url and h.is_url(res.url) %}
+      <li>
+        <a href="{{ res.url }}" class="resource-url-analytics" target="_blank">
+          {% if res.has_views or res.url_type == 'upload' %}
+            <i class="fa fa-arrow-circle-o-down"></i>
+            {{ _('Download') }}
+          {% else %}
+            <i class="fa fa-external-link"></i>
+            {{ _('Go to resource') }}
+          {% endif %}
+        </a>
+      </li>
+      {% endif %}
+
+      <!-- NEW: DYNAMO Analysis Option -->
+        {% if token %}
+      <li class="divider"></li>
+      <li>
+        <a href="#" onclick="openMintAnalysis('{{ res.id }}', '{{ res.name }}', '{{ res.format }}', '{{ pkg.name }}', '{{ pkg.title }}', '{{ res.url }}', '{{ token_access_token }}'); return false;">
+          <i class="fa fa-flask"></i>
+          {{ _('Analyze on CKAN') }}
+        </a>
+      </li>
+      {% endif %}
+
+      {% if can_edit %}
+      <li class="divider"></li>
+      <li>
+        <a href="{{ h.url_for(pkg.type ~ '_resource.edit', id=pkg.name, resource_id=res.id) }}">
+          <i class="fa fa-pencil-square-o"></i>
+          {{ _('Edit') }}
+        </a>
+      </li>
+      {% endif %}
+      {% endblock %}
+    </ul>
+  </div>
+  {% endif %}
+  {% endblock %}
+</li>
+
+<!-- DYNAMO Analysis Modal -->
+<div id="mintAnalysisModal" class="mint-modal">
+    <div class="mint-modal-content">
+        <div class="mint-modal-header">
+            <div class="mint-modal-title">🔬 DYNAMO Analysis</div>
+            <span class="mint-close" onclick="closeMintAnalysis()">&times;</span>
+        </div>
+        <div class="mint-modal-body">
+            <!-- Analysis Type Selection -->
+            <div id="analysisTypeSection">
+                <h4 style="margin-bottom: 20px; color: #333;">Choose Analysis Type:</h4>
+
+                <div id="analysisOptions" class="analysis-grid">
+                    <!-- Analysis options will be dynamically generated here -->
+                </div>
+            </div>
+
+            <!-- Problem Statement Selection/Creation -->
+            <div id="problemStatementSection" style="display: none;">
+                <h4 style="margin-bottom: 20px; color: #333;">Problem Statement:</h4>
+
+                <div id="selectedAnalysisInfo" class="selected-analysis-info">
+                    <!-- Selected analysis type info will be shown here -->
+                </div>
+
+                <div id="existingProblemStatements" class="problem-statements-list">
+                    <h5>Existing Problem Statements:</h5>
+                    <div id="problemStatementsList" class="problem-statements-grid">
+                        <!-- Problem statements will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="divider" style="margin: 20px 0; border-top: 1px solid #eee;"></div>
+
+                <div id="createProblemStatement" class="create-problem-section">
+                    <h5>Create New Problem Statement:</h5>
+                    <form id="problemStatementForm" class="problem-form">
+                        <div class="form-group">
+                            <label for="problemName">Problem Name:</label>
+                            <input type="text" id="problemName" name="name" required
+                                   placeholder="e.g., Water Management Analysis 2024" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="problemRegion">Region ID:</label>
+                            <select id="problemRegion" name="regionid" required class="form-control">
+                                <option value="">Select a region</option>
+                                <option value="alaska">Alaska</option>
+                                <option value="texas">Texas</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" id="startDate" name="start_date" required class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" id="endDate" name="end_date" required class="form-control">
+                            </div>
+                        </div>
+                        <button type="submit" class="mint-btn">Create Problem Statement</button>
+                    </form>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="backToAnalysisTypes()" class="mint-btn" style="background: #95a5a6;">← Back to Analysis Types</button>
+                </div>
+            </div>
+
+            <!-- Analysis Configuration -->
+            <div id="analysisConfiguration" style="display: none;">
+                <h4 style="margin-bottom: 20px; color: #333;">Analysis Configuration:</h4>
+
+                <div id="selectedAnalysisInfo2" class="selected-analysis-info">
+                    <!-- Selected analysis type info will be shown here -->
+                </div>
+
+                <div class="form-group">
+                    <label for="taskName">Task Name:</label>
+                    <input type="text" id="taskName" name="taskName" required
+                           placeholder="e.g., Data Analysis Task" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="subtaskName">Subtask Name:</label>
+                    <input type="text" id="subtaskName" name="subtaskName" required
+                           placeholder="e.g., Data Processing Subtask" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" id="inputDataId" name="inputDataId" required>
+                </div>
+
+                <button onclick="startMintAnalysis()" class="mint-btn">Start Analysis</button>
+                <button onclick="backToProblemStatements()" class="mint-btn" style="background: #95a5a6;">Back</button>
+            </div>
+
+            <!-- Progress and Results -->
+            <div id="analysisProgress" style="display: none;">
+                <div class="mint-loading">
+                    <div class="mint-spinner"></div>
+                    <p id="progressMessage">Initializing analysis...</p>
+                    <div id="progressSteps" class="progress-steps">
+                        <!-- Progress steps will be shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="analysisResults" style="display: none;">
+                <!-- Results will be shown here -->
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="#" class="mint-btn" onclick="closeMintAnalysis()">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentResourceData = null;
+let currentProblemStatementId = null;
+let currentTaskId = null;
+let currentSubtaskId = null;
+let currentAnalysisType = null;
+let currentToken = null;
+let currentProblemStatement = null;
+
+// API Configuration
+const MINT_API_BASE = '{{ h.get_ensemble_manager_api_url() }}';
+
+// Analysis type configurations
+const ANALYSIS_TYPES = {
+    audioTranscription: {
+        name: 'Audio Transcription',
+        icon: '🎤',
+        description: 'Transcribe audio files into text',
+        modelId: 'https://api.models.mint.tacc.utexas.edu/v1.8.0/modelconfigurations/7c2c8d5f-322b-4c1c-8a85-2c49580eadde?username=mint@isi.edu',
+        responseVariables: [],
+        drivingVariables: [],
+        inputDataId: 'https://w3id.org/okn/i/mint/7932809f-e71f-423c-ad33-60672ff173b4',
+        setupRequest: {
+            model_id: 'https://api.models.mint.tacc.utexas.edu/v1.8.0/modelconfigurations/7c2c8d5f-322b-4c1c-8a85-2c49580eadde?username=mint@isi.edu',
+            parameters:
+                [
+                    {
+                    id: 'https://w3id.org/okn/i/mint/2bf48012-8087-4ffe-b1db-774e80e7bc24',
+                    value: '1'
+                    },
+            ],
+            data:
+                [
+                    {
+                    id: 'https://w3id.org/okn/i/mint/7932809f-e71f-423c-ad33-60672ff173b4',
+                    dataset: {}
+                    }
+                ]
+            }
+
+    },
+};
+
+function openMintAnalysis(resourceId, resourceName, resourceFormat, packageId, packageTitle, resourceUrl, token) {
+    currentResourceData = {
+        id: resourceId,
+        name: resourceName,
+        format: resourceFormat,
+        package: packageId,
+        packageTitle: packageTitle,
+        url: resourceUrl
+    };
+    currentToken = token;
+
+    // Generate analysis options dynamically
+    generateAnalysisOptions();
+
+    // Show modal and start with analysis type selection
+    document.getElementById('mintAnalysisModal').style.display = 'block';
+    showAnalysisTypeSelection();
+
+    // Close any open dropdowns
+    $('.dropdown').removeClass('open');
+}
+
+function generateAnalysisOptions() {
+    const analysisOptionsContainer = document.getElementById('analysisOptions');
+
+    const optionsHTML = Object.entries(ANALYSIS_TYPES).map(([key, config]) => `
+        <div class="analysis-card" onclick="selectAnalysisType('${key}')">
+            <div class="analysis-icon">${config.icon}</div>
+            <h5>${config.name}</h5>
+            <p>${config.description}</p>
+        </div>
+    `).join('');
+
+    analysisOptionsContainer.innerHTML = optionsHTML;
+}
+
+function closeMintAnalysis() {
+    document.getElementById('mintAnalysisModal').style.display = 'none';
+    currentResourceData = null;
+    currentProblemStatementId = null;
+    currentTaskId = null;
+    currentSubtaskId = null;
+    currentAnalysisType = null;
+    currentToken = null;
+    currentProblemStatement = null;
+    resetToInitialState();
+}
+
+function resetToInitialState() {
+    document.getElementById('analysisTypeSection').style.display = 'block';
+    document.getElementById('problemStatementSection').style.display = 'none';
+    document.getElementById('analysisConfiguration').style.display = 'none';
+    document.getElementById('analysisProgress').style.display = 'none';
+    document.getElementById('analysisResults').style.display = 'none';
+    document.getElementById('problemStatementForm').reset();
+    currentAnalysisType = null;
+    currentProblemStatement = null;
+}
+
+function showAnalysisTypeSelection() {
+    document.getElementById('analysisTypeSection').style.display = 'block';
+    document.getElementById('problemStatementSection').style.display = 'none';
+    document.getElementById('analysisConfiguration').style.display = 'none';
+    document.getElementById('analysisProgress').style.display = 'none';
+    document.getElementById('analysisResults').style.display = 'none';
+}
+
+function selectAnalysisType(analysisType) {
+    currentAnalysisType = analysisType;
+    const analysisConfig = ANALYSIS_TYPES[analysisType];
+
+    if (!analysisConfig) {
+        alert('Invalid analysis type selected.');
+        return;
+    }
+
+    // Show selected analysis info
+    const selectedAnalysisInfo = `
+        <div class="selected-analysis-banner">
+            <div class="analysis-icon">${analysisConfig.icon}</div>
+            <div class="analysis-details">
+                <h5>${analysisConfig.name}</h5>
+                <p>${analysisConfig.description}</p>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('selectedAnalysisInfo').innerHTML = selectedAnalysisInfo;
+    document.getElementById('selectedAnalysisInfo2').innerHTML = selectedAnalysisInfo;
+
+    // Hide analysis type selection and show problem statement section
+    document.getElementById('analysisTypeSection').style.display = 'none';
+    document.getElementById('problemStatementSection').style.display = 'block';
+
+    // Load problem statements
+    loadProblemStatements(currentToken);
+}
+
+function backToAnalysisTypes() {
+    document.getElementById('problemStatementSection').style.display = 'none';
+    document.getElementById('analysisConfiguration').style.display = 'none';
+    document.getElementById('analysisProgress').style.display = 'none';
+    document.getElementById('analysisResults').style.display = 'none';
+    showAnalysisTypeSelection();
+
+    currentProblemStatementId = null;
+    currentTaskId = null;
+    currentSubtaskId = null;
+    currentProblemStatement = null;
+}
+
+async function loadProblemStatements(token) {
+    // Show loading indicator
+    const container = document.getElementById('problemStatementsList');
+    container.innerHTML = `
+        <div class="mint-loading" style="padding: 20px;">
+            <div class="mint-spinner"></div>
+            <p>Loading problem statements...</p>
+        </div>
+    `;
+
+    try {
+        const response = await fetch(`${MINT_API_BASE}/problemStatements`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (response.ok) {
+            const problemStatements = await response.json();
+            displayProblemStatements(problemStatements);
+        } else {
+            console.error('Failed to load problem statements');
+            container.innerHTML =
+                '<p style="color: #e74c3c;">Failed to load problem statements. Please try again.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading problem statements:', error);
+        container.innerHTML =
+            '<p style="color: #e74c3c;">Error loading problem statements. Please check your connection.</p>';
+    }
+}
+
+function displayProblemStatements(problemStatements) {
+    const container = document.getElementById('problemStatementsList');
+
+    if (problemStatements.length === 0) {
+        container.innerHTML = '<p style="color: #7f8c8d;">No problem statements found. Create a new one below.</p>';
+        return;
+    }
+
+    const html = problemStatements.map(ps => `
+        <div class="problem-statement-card" onclick="selectProblemStatement('${ps.id}', '${ps.name}', '${ps.regionid || 'texas'}', '${ps.dates?.start_date || ''}', '${ps.dates?.end_date || ''}')">
+            <h6>${ps.name}</h6>
+            <p><strong>Region:</strong> ${ps.regionid || 'texas'}</p>
+            <p><strong>Period:</strong> ${formatDate(ps.dates?.start_date)} - ${formatDate(ps.dates?.end_date)}</p>
+            <p><strong>Tasks:</strong> ${ps.tasks?.length || 0}</p>
+        </div>
+    `).join('');
+
+    container.innerHTML = html;
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString();
+}
+
+function selectProblemStatement(problemStatementId, problemStatementName, regionid, start_date, end_date) {
+    currentProblemStatementId = problemStatementId;
+
+    console.log('selectProblemStatement called with:', {
+        problemStatementId,
+        problemStatementName,
+        regionid,
+        start_date,
+        end_date
+    });
+
+    // Store the problem statement data directly from parameters
+    currentProblemStatement = {
+        id: problemStatementId,
+        name: problemStatementName,
+        regionid: regionid || 'texas',
+        dates: {
+            start_date: start_date || '',
+            end_date: end_date || ''
+        }
+    };
+
+    console.log('Stored currentProblemStatement:', currentProblemStatement);
+
+    // Highlight selected problem statement
+    document.querySelectorAll('.problem-statement-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    event.target.closest('.problem-statement-card').classList.add('selected');
+
+    // Show analysis configuration
+    document.getElementById('problemStatementSection').style.display = 'none';
+    document.getElementById('analysisConfiguration').style.display = 'block';
+
+    // Pre-fill configuration based on analysis type
+    prefillAnalysisConfiguration();
+}
+
+function prefillAnalysisConfiguration() {
+    const analysisConfig = ANALYSIS_TYPES[currentAnalysisType];
+
+    // Pre-fill task name to be dataset-focused
+    document.getElementById('taskName').value = `Dataset Analysis - ${currentResourceData.packageTitle}`;
+
+    // Pre-fill subtask name to be analysis-specific
+    document.getElementById('subtaskName').value = `${analysisConfig.name} - ${currentResourceData.name}`;
+
+    document.getElementById('inputDataId').value = analysisConfig.inputDataId;
+}
+
+// Handle problem statement form submission
+document.getElementById('problemStatementForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const problemData = {
+        name: formData.get('name'),
+        regionid: formData.get('regionid'),
+        dates: {
+            start_date: formData.get('start_date') + 'T00:00:00Z',
+            end_date: formData.get('end_date') + 'T23:59:59Z'
+        }
+    };
+
+    try {
+        const response = await fetch(`${MINT_API_BASE}/problemStatements`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + currentToken
+            },
+            body: JSON.stringify(problemData)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            currentProblemStatementId = result.id;
+
+            // Store the created problem statement data
+            currentProblemStatement = {
+                id: result.id,
+                name: problemData.name,
+                regionid: problemData.regionid,
+                dates: problemData.dates
+            };
+
+            // Show success message and proceed to analysis configuration
+            alert('Problem statement created successfully!');
+            document.getElementById('problemStatementSection').style.display = 'none';
+            document.getElementById('analysisConfiguration').style.display = 'block';
+
+            // Pre-fill configuration
+            prefillAnalysisConfiguration();
+        } else {
+            alert('Failed to create problem statement. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error creating problem statement:', error);
+        alert('Error creating problem statement. Please check your connection.');
+    }
+});
+
+function backToProblemStatements() {
+    document.getElementById('analysisConfiguration').style.display = 'none';
+    document.getElementById('problemStatementSection').style.display = 'block';
+    currentProblemStatementId = null;
+}
+
+async function startMintAnalysis() {
+    if (!currentProblemStatementId) {
+        alert('Please select or create a problem statement first.');
+        return;
+    }
+
+    if (!currentAnalysisType) {
+        alert('Please select an analysis type first.');
+        return;
+    }
+
+    const taskName = document.getElementById('taskName').value;
+    const subtaskName = document.getElementById('subtaskName').value;
+    const inputDataId = document.getElementById('inputDataId').value;
+
+    if (!taskName || !subtaskName) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    // Show progress section
+    document.getElementById('analysisConfiguration').style.display = 'none';
+    document.getElementById('analysisProgress').style.display = 'block';
+
+    const progressSteps = document.getElementById('progressSteps');
+    progressSteps.innerHTML = `
+        <div class="progress-step" id="step1">1. Creating task and subtask...</div>
+        <div class="progress-step" id="step2">2. Setting up model configuration...</div>
+        <div class="progress-step" id="step3">3. Submitting analysis...</div>
+    `;
+
+    const analysisConfig = ANALYSIS_TYPES[currentAnalysisType];
+    const model_id = analysisConfig.modelId;
+
+    try {
+        // Step 1: Create task and subtask
+        updateProgress('step1', 'Creating task and subtask...', 'active');
+        const taskSubtaskResult = await createTaskAndSubtask(taskName, subtaskName, inputDataId);
+
+        if (!taskSubtaskResult.success) {
+            throw new Error('Failed to create task and subtask');
+        }
+
+        currentTaskId = taskSubtaskResult.taskId;
+        currentSubtaskId = taskSubtaskResult.subtaskId;
+        updateProgress('step1', 'Task and subtask created successfully!', 'completed');
+
+        // Step 2: Setup model configuration
+        updateProgress('step2', 'Setting up model configuration...', 'active');
+        const setupResult = await setupModelConfiguration(inputDataId);
+
+        if (!setupResult.success) {
+            throw new Error('Failed to setup model configuration');
+        }
+
+        updateProgress('step2', 'Model configuration setup complete!', 'completed');
+
+        // Step 3: Submit subtask
+        updateProgress('step3', 'Submitting analysis...', 'active');
+        const submitResult = await submitSubtask(model_id);
+
+        if (!submitResult.success) {
+            throw new Error('Failed to submit subtask');
+        }
+
+        updateProgress('step3', 'Analysis submitted successfully!', 'completed');
+
+        // Show results
+        showAnalysisResults();
+
+    } catch (error) {
+        console.error('Analysis failed:', error);
+        document.getElementById('progressMessage').innerHTML = `
+            <p style="color: #e74c3c;">Analysis failed: ${error.message}</p>
+            <button onclick="backToAnalysisConfiguration()" class="mint-btn">Try Again</button>
+        `;
+    }
+}
+
+async function createTaskAndSubtask(taskName, subtaskName, inputDataId) {
+    // Check if a task already exists for this dataset by name pattern
+    const existingTask = await findExistingTaskForDataset(currentResourceData.package);
+
+    if (existingTask) {
+        // Use existing task, only create new subtask
+        currentTaskId = existingTask.id;
+        const subtaskResult = await createSubtaskOnly(subtaskName, inputDataId);
+        return { success: true, taskId: currentTaskId, subtaskId: subtaskResult.subtaskId };
+    } else {
+        // Create new task and subtask
+        const taskSubtaskResult = await createNewTaskAndSubtask(taskName, subtaskName, inputDataId);
+        return { success: true, taskId: taskSubtaskResult.taskId, subtaskId: taskSubtaskResult.subtaskId };
+    }
+}
+
+async function findExistingTaskForDataset(datasetId) {
+    // Get all tasks for the problem statement
+    const response = await fetch(`${MINT_API_BASE}/problemStatements/${currentProblemStatementId}/tasks`, {
+        headers: {
+            "Authorization": "Bearer " + currentToken
+        }
+    });
+
+    if (response.ok) {
+        const tasks = await response.json();
+        // Look for task with dataset identifier in the name
+        const datasetTaskName = `Dataset Analysis - ${currentResourceData.packageTitle}`;
+        return tasks.find(task => task.name === datasetTaskName);
+    }
+    return null;
+}
+
+async function createSubtaskOnly(subtaskName, inputDataId) {
+    // Create only a subtask under existing task
+    const analysisConfig = ANALYSIS_TYPES[currentAnalysisType];
+
+    const subtaskData = {
+        name: subtaskName,
+        driving_variables: analysisConfig.drivingVariables || [],
+        response_variables: analysisConfig.responseVariables || [],
+        dates: {
+            start_date: currentProblemStatement.dates.start_date,
+            end_date: currentProblemStatement.dates.end_date
+        },
+        dataset_id: currentResourceData.package
+    };
+
+    const response = await fetch(`${MINT_API_BASE}/problemStatements/${currentProblemStatementId}/tasks/${currentTaskId}/subtasks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + currentToken
+        },
+        body: JSON.stringify(subtaskData)
+    });
+
+    if (response.ok) {
+        const result = await response.json();
+        return { success: true, subtaskId: result.id };
+    } else {
+        return { success: false, error: await response.text() };
+    }
+}
+
+async function createNewTaskAndSubtask(taskName, subtaskName, inputDataId) {
+    // Create new task and subtask
+    const analysisConfig = ANALYSIS_TYPES[currentAnalysisType];
+
+    // First, create the task
+    const taskData = {
+        name: taskName,
+        dates: {
+            start_date: currentProblemStatement.dates.start_date,
+            end_date: currentProblemStatement.dates.end_date
+        }
+    };
+
+    const taskResponse = await fetch(`${MINT_API_BASE}/problemStatements/${currentProblemStatementId}/tasks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + currentToken
+        },
+        body: JSON.stringify(taskData)
+    });
+
+    if (!taskResponse.ok) {
+        return { success: false, error: await taskResponse.text() };
+    }
+
+    const taskResult = await taskResponse.json();
+    // Then, create the subtask under the new task
+    const subtaskData = {
+        name: subtaskName,
+        driving_variables: analysisConfig.drivingVariables || [],
+        response_variables: analysisConfig.responseVariables || [],
+        dates: {
+            start_date: currentProblemStatement.dates.start_date,
+            end_date: currentProblemStatement.dates.end_date
+        },
+        dataset_id: currentResourceData.package
+    };
+
+    const subtaskResponse = await fetch(`${MINT_API_BASE}/problemStatements/${currentProblemStatementId}/tasks/${taskResult.id}/subtasks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + currentToken
+        },
+        body: JSON.stringify(subtaskData)
+    });
+
+    if (!subtaskResponse.ok) {
+        return { success: false, error: await subtaskResponse.text() };
+    }
+
+    const subtaskResult = await subtaskResponse.json();
+    return { success: true, taskId: taskResult.id, subtaskId: subtaskResult.id };
+}
+
+async function setupModelConfiguration(inputDataId) {
+    const analysisConfig = ANALYSIS_TYPES[currentAnalysisType];
+    const setupRequest = analysisConfig.setupRequest;
+
+    // Update the dataset and resource information with current resource data
+    if (setupRequest && setupRequest.data && setupRequest.data.length > 0) {
+        const data = setupRequest.data.find(item => item.id === inputDataId);
+        if (data) {
+            data.dataset = {
+                id: currentResourceData.package,
+                resources: [{
+                    id: currentResourceData.id,
+                    url: currentResourceData.url
+                }]
+            }
+        } else {
+            console.error('Input data ID not found in setup request:', inputDataId);
+            return { success: false, error: 'Input data ID not found in setup request' };
+        }
+    }
+
+    const response = await fetch(`${MINT_API_BASE}/problemStatements/${currentProblemStatementId}/tasks/${currentTaskId}/subtasks/${currentSubtaskId}/setup`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + currentToken
+        },
+        body: JSON.stringify(setupRequest)
+    });
+
+    if (response.ok) {
+        return { success: true };
+    } else {
+        return { success: false, error: await response.text() };
+    }
+}
+
+async function submitSubtask(model_id) {
+    const requestData = {
+        model_id: model_id
+    };
+
+    const response = await fetch(`${MINT_API_BASE}/problemStatements/${currentProblemStatementId}/tasks/${currentTaskId}/subtasks/${currentSubtaskId}/submit`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + currentToken
+        },
+        body: JSON.stringify(requestData)
+    });
+
+    if (response.ok) {
+        return { success: true };
+    } else {
+        return { success: false, error: await response.text() };
+    }
+}
+
+function updateProgress(stepId, message, status) {
+    const step = document.getElementById(stepId);
+    step.textContent = message;
+    step.className = `progress-step ${status}`;
+}
+
+function showAnalysisResults() {
+    document.getElementById('analysisProgress').style.display = 'none';
+    document.getElementById('analysisResults').style.display = 'block';
+
+    const analysisConfig = ANALYSIS_TYPES[currentAnalysisType];
+
+    // Get region from current problem statement, default to 'texas' if not available
+    const region = currentProblemStatement?.regionid || 'texas';
+
+    // Generate DYNAMO Dashboard URL using CKAN configuration
+    const dynamoDashboardUrl = '{{ h.get_dynamo_dashboard_url() }}';
+    const mintDashboardUrl = `${dynamoDashboardUrl}/${region}/modeling/problem_statement/${currentProblemStatementId}/${currentTaskId}/${currentSubtaskId}/runs`;
+
+    document.getElementById('analysisResults').innerHTML = `
+        <div class="mint-success">✅ ${analysisConfig.name} Successfully Submitted!</div>
+        <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+            <h4>Analysis Details:</h4>
+            <ul style="margin: 15px 0; padding-left: 20px; color: #666;">
+                <li><strong>Analysis Type:</strong> ${analysisConfig.name}</li>
+                <li><strong>Problem Statement ID:</strong> ${currentProblemStatementId}</li>
+                <li><strong>Task ID:</strong> ${currentTaskId}</li>
+                <li><strong>Subtask ID:</strong> ${currentSubtaskId}</li>
+                <li><strong>Resource:</strong> ${currentResourceData.name}</li>
+                <li><strong>Region:</strong> ${region}</li>
+            </ul>
+            <p>Your ${analysisConfig.name.toLowerCase()} has been submitted to the DYNAMO and is now being processed.</p>
+            <a href="${mintDashboardUrl}" target="_blank" class="mint-btn">📊 View in DYNAMO Dashboard</a>
+            <a href="#" class="mint-btn" onclick="alert('Opening execution logs...')">📋 View Execution Logs</a>
+        </div>
+    `;
+}
+
+function backToAnalysisConfiguration() {
+    document.getElementById('analysisProgress').style.display = 'none';
+    document.getElementById('analysisConfiguration').style.display = 'block';
+
+    // Clear any previous error messages
+    document.getElementById('progressMessage').innerHTML = 'Initializing analysis...';
+
+    // Reset progress steps
+    const progressSteps = document.getElementById('progressSteps');
+    if (progressSteps) {
+        progressSteps.innerHTML = `
+            <div class="progress-step" id="step1">1. Creating task and subtask...</div>
+            <div class="progress-step" id="step2">2. Setting up model configuration...</div>
+            <div class="progress-step" id="step3">3. Submitting analysis...</div>
+        `;
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('mintAnalysisModal');
+    if (event.target === modal) {
+        closeMintAnalysis();
+    }
+}
+</script>
+
+<style>
+/* Existing styles remain the same */
+.mint-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.mint-modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.mint-modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mint-modal-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.mint-close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.mint-close:hover {
+    opacity: 0.7;
+}
+
+.mint-modal-body {
+    padding: 30px;
+}
+
+.mint-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.mint-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.mint-loading {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.mint-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.mint-success {
+    background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* New styles for problem statements */
+.problem-statements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.problem-statement-card {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.problem-statement-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+}
+
+.problem-statement-card.selected {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #f8f9ff, #e8ecff);
+}
+
+.problem-statement-card h6 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-weight: bold;
+}
+
+.problem-statement-card p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.create-problem-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+
+.problem-form {
+    display: grid;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-control {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-text {
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+.divider {
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+/* Progress steps */
+.progress-steps {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.progress-step {
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background: #f8f9fa;
+    border-left: 4px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active {
+    background: #e3f2fd;
+    border-left-color: #2196f3;
+    color: #1976d2;
+}
+
+.progress-step.completed {
+    background: #e8f5e8;
+    border-left-color: #4caf50;
+    color: #2e7d32;
+}
+
+.progress-step.error {
+    background: #ffebee;
+    border-left-color: #f44336;
+    color: #c62828;
+}
+
+/* Analysis grid and cards */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.analysis-card {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    padding: 25px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.analysis-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+    transform: translateY(-5px);
+}
+
+.analysis-card:active {
+    transform: translateY(-2px);
+}
+
+.analysis-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.analysis-card h5 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.analysis-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+/* Selected analysis banner */
+.selected-analysis-info {
+    margin-bottom: 25px;
+}
+
+.selected-analysis-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.selected-analysis-banner .analysis-icon {
+    font-size: 2.5em;
+    margin: 0;
+}
+
+.selected-analysis-banner .analysis-details h5 {
+    margin: 0 0 5px 0;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.selected-analysis-banner .analysis-details p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9em;
+}
+</style>
