@@ -1,6 +1,6 @@
-# Upstream Viz
+# Stories UI
 
-A UI to capture and display stories.
+A React application for capturing and displaying stories with integrated resource management and audio/video transcription capabilities powered by DYNAMO Ensemble Manager.
 
 1. Clone the repository:
 
@@ -21,6 +21,8 @@ A UI to capture and display stories.
    VITE_TAPIS_API_BASE_URL=your_tapis_api_url
    VITE_CKAN_BASE_URL=your_ckan_base_url
    VITE_MAX_FILE_SIZE=52428800  # 50MB in bytes
+   VITE_DYNAMO_API_BASE_URL=your_dynamo_api_url  # For transcription features
+   VITE_DYNAMO_DASHBOARD_URL=your_dynamo_dashboard_url  # For viewing transcription results
    ```
 
 4. Start the development server:
@@ -35,6 +37,8 @@ The following environment variables are required:
 - `VITE_TAPIS_API_BASE_URL`: Base URL for the Tapis API
 - `VITE_CKAN_BASE_URL`: Base URL for the CKAN instance
 - `VITE_MAX_FILE_SIZE`: Maximum file size in bytes for resource uploads (default: 52428800 for 50MB)
+- `VITE_DYNAMO_API_BASE_URL`: Base URL for DYNAMO Ensemble Manager API (optional, for transcription features)
+- `VITE_DYNAMO_DASHBOARD_URL`: Base URL for DYNAMO Dashboard (optional, for viewing transcription results)
 
 ### Available Scripts
 
@@ -74,12 +78,9 @@ The Stories application allows you to add various types of resources to your sto
 
 The application supports the following file formats:
 
-- PDF
-- DOC
-- XLS
-- CSV
-- JPG
-- PNG
+- **Documents**: PDF, DOC, XLS, CSV
+- **Images**: JPG, PNG
+- **Media**: Audio files (MP3, WAV, etc.) and Video files (MP4, AVI, etc.) with transcription support
 
 **Note:** Maximum file size is configured in the environment variables (`VITE_MAX_FILE_SIZE`). The default is set to 50MB, but this can be adjusted based on your CKAN instance configuration.
 
@@ -121,9 +122,77 @@ Once resources are added, you can:
      - Embed option
 
 2. **Resource Actions**
-   - Preview: View the resource content
-   - Embed: Insert the resource into your story
-   - Remove: Delete resources from your story
+   - **Preview**: View the resource content
+   - **Embed**: Insert the resource into your story
+   - **Transcribe**: Convert audio/video files to text using DYNAMO (available for audio and video files)
+   - **Download**: Download the resource file
+   - **Remove**: Delete resources from your story
+
+## Audio/Video Transcription
+
+The Stories application includes integrated transcription capabilities powered by DYNAMO Ensemble Manager, allowing you to convert audio and video files into text.
+
+### Transcription Features
+
+- **Supported Media**: Audio files (MP3, WAV, etc.) and Video files (MP4, AVI, etc.)
+- **DYNAMO Integration**: Uses DYNAMO Ensemble Manager for processing
+- **Workflow Management**: Organize transcriptions into problem statements, tasks, and subtasks
+- **Progress Tracking**: Real-time updates on transcription status
+- **Dashboard Integration**: View results and monitor progress in DYNAMO Dashboard
+
+### How to Transcribe Media Files
+
+1. **Upload Media File**
+   - Add an audio or video file as a resource to your story
+   - The "Transcribe" button will automatically appear for supported media files
+
+2. **Start Transcription**
+   - Click the "Transcribe" button on any audio/video resource
+   - A modal will open with the transcription workflow
+
+3. **Transcription Workflow**
+   
+   **Step 1: Choose Analysis Type**
+   - Select "Audio/Video Transcription" from available analysis options
+   
+   **Step 2: Problem Statement**
+   - Choose an existing problem statement or create a new one
+   - Problem statements help organize related transcription tasks
+   - Specify region (Texas or Alaska) and time period
+   
+   **Step 3: Configuration**
+   - Set task and subtask names for organization
+   - Names are auto-generated but can be customized
+   
+   **Step 4: Processing**
+   - The system automatically:
+     - Creates or reuses existing tasks
+     - Configures the transcription model
+     - Submits the job to DYNAMO
+   
+   **Step 5: Results**
+   - View submission confirmation
+   - Access links to DYNAMO Dashboard for monitoring
+   - Track transcription progress and results
+
+### Transcription Management
+
+- **Problem Statements**: Group related transcription tasks by research topic or project
+- **Tasks & Subtasks**: Organize transcriptions within problem statements
+- **Reusable Workflows**: Existing problem statements can be reused for new transcriptions
+- **Dashboard Monitoring**: Use DYNAMO Dashboard to track progress and view results
+
+### Configuration Requirements
+
+To enable transcription features, configure these environment variables:
+
+```bash
+# Required for transcription functionality
+VITE_DYNAMO_API_BASE_URL=https://your-dynamo-api.example.com/v1
+VITE_DYNAMO_DASHBOARD_URL=https://your-dynamo-dashboard.example.com
+```
+
+**Note**: Transcription features require a valid DYNAMO Ensemble Manager instance and appropriate authentication through your Tapis account.
 
 ### Best Practices
 
@@ -159,6 +228,13 @@ If you encounter issues while adding resources:
    - Try refreshing the page
    - Check if the resource is still available
    - Verify file permissions
+
+3. **Transcription Issues**
+   - Verify DYNAMO API configuration (`VITE_DYNAMO_API_BASE_URL`)
+   - Check authentication with Tapis
+   - Ensure media file is in a supported format
+   - Monitor progress in DYNAMO Dashboard
+   - Contact support if transcription jobs fail or hang
 
 ### Security Considerations
 
