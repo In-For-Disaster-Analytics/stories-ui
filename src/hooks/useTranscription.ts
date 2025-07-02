@@ -4,9 +4,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { 
   dynamoApiService, 
   ProblemStatement, 
-  ANALYSIS_TYPES 
+  ANALYSIS_TYPES,
+  SubmitSubtaskResponse 
 } from '../services/dynamoApi';
 import { Resource } from '../types/resource';
+import { useExecutionPolling, PollingConfig } from './useExecutionPolling';
 
 export interface TranscriptionStep {
   id: string;
@@ -34,6 +36,10 @@ export const useTranscription = () => {
   const { accessToken } = useAuth();
   const [steps, setSteps] = useState<TranscriptionStep[]>([]);
   const [currentResult, setCurrentResult] = useState<TranscriptionResult | null>(null);
+  const [pollingConfig, setPollingConfig] = useState<PollingConfig | null>(null);
+
+  // Use the execution polling hook
+  const executionPolling = useExecutionPolling(pollingConfig);
 
   // Query to fetch problem statements
   const {
@@ -177,6 +183,13 @@ export const useTranscription = () => {
 
       updateStep('step3', 'Analysis submitted successfully!', 'completed');
 
+      // Start polling for execution status
+      setPollingConfig({
+        problemStatementId: config.problemStatementId,
+        taskId,
+        subtaskId,
+      });
+
       const result: TranscriptionResult = {
         problemStatementId: config.problemStatementId,
         taskId,
@@ -216,8 +229,10 @@ export const useTranscription = () => {
   const resetTranscription = useCallback(() => {
     setSteps([]);
     setCurrentResult(null);
+    setPollingConfig(null);
+    executionPolling.resetPolling();
     transcriptionMutation.reset();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [executionPolling]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     // Data
@@ -233,6 +248,8 @@ export const useTranscription = () => {
     createProblemStatement: createProblemStatementMutation.mutateAsync,
     startTranscription: transcriptionMutation.mutateAsync,
     resetTranscription,
+    startPolling: executionPolling.startPolling,
+    stopPolling: executionPolling.stopPolling,
     
     // Mutation states
     transcriptionError: transcriptionMutation.error,
@@ -241,5 +258,15 @@ export const useTranscription = () => {
     // Problem statement creation
     isCreatingProblem: createProblemStatementMutation.isPending,
     createProblemError: createProblemStatementMutation.error,
+    
+    // Execution polling states
+    executions: executionPolling.executions,
+    isPolling: executionPolling.isPolling,
+    isExecutionComplete: executionPolling.isComplete,
+    executionError: executionPolling.error,
+    executionSummary: executionPolling.getExecutionSummary(),
+    hasSuccessfulExecution: executionPolling.hasSuccessfulExecution(),
+    hasFailedExecution: executionPolling.hasFailedExecution(),
+    latestExecution: executionPolling.getLatestExecution(),
   };
 };

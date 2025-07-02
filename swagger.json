@@ -1944,6 +1944,96 @@
           }
         }
       },
+      "Execution": {
+        "type": "object",
+        "description": "An execution instance representing a model run",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the execution"
+          },
+          "modelid": {
+            "type": "string",
+            "description": "The model identifier for this execution"
+          },
+          "bindings": {
+            "type": "object",
+            "description": "Input bindings for the execution",
+            "additionalProperties": true
+          },
+          "runid": {
+            "type": "string",
+            "description": "The run identifier"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the execution started"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the execution ended"
+          },
+          "execution_engine": {
+            "type": "string",
+            "enum": [
+              "wings",
+              "localex",
+              "tapis"
+            ],
+            "description": "The execution engine used"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "FAILURE",
+              "SUCCESS",
+              "RUNNING",
+              "WAITING"
+            ],
+            "description": "Current status of the execution"
+          },
+          "run_progress": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Execution progress percentage (0-100)"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Results from the completed execution"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "Whether this execution is selected"
+          }
+        }
+      },
+      "SubmitSubtaskResponse": {
+        "type": "object",
+        "description": "Response from submitting a subtask for execution",
+        "properties": {
+          "thread": {
+            "$ref": "#/components/schemas/Thread",
+            "description": "The updated thread/subtask information"
+          },
+          "executions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Execution"
+            },
+            "description": "List of executions created for this subtask submission"
+          }
+        },
+        "required": [
+          "thread",
+          "executions"
+        ]
+      },
       "ModelThread": {
         "description": "",
         "required": [
@@ -3179,6 +3269,100 @@
         }
       }
     },
+    "/problemStatements/{problemStatementId}/tasks/{taskId}/subtasks/{subtaskId}/executions": {
+      "get": {
+        "summary": "Get all executions for a subtask",
+        "description": "Returns a list of all executions associated with a specific subtask",
+        "security": [
+          {
+            "BearerAuth": [],
+            "oauth2": []
+          }
+        ],
+        "tags": [
+          "Subtasks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "problemStatementId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The problem statement ID"
+          },
+          {
+            "in": "path",
+            "name": "taskId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The task ID"
+          },
+          {
+            "in": "path",
+            "name": "subtaskId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The subtask ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of executions for the subtask",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "executions": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Execution"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subtask not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/problemStatements/{problemStatementId}/tasks/{taskId}/subtasks/{subtaskId}/executions/{executionId}/outputs": {
       "post": {
         "summary": "Register Tapis Execution Outputs",
@@ -3871,7 +4055,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Thread"
+                  "$ref": "#/components/schemas/SubmitSubtaskResponse"
                 }
               }
             }

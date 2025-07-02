@@ -58,6 +58,37 @@ export interface SubmitRequest {
   model_id: string;
 }
 
+export interface Execution {
+  id: string;
+  modelid: string;
+  bindings?: Record<string, any>;
+  runid?: string;
+  status?: string;
+  run_progress?: number;
+  results?: any[];
+  selected?: boolean;
+}
+
+export interface Thread {
+  name?: string;
+  modelid: string;
+  datasets?: Record<string, any>;
+  parameters?: Record<string, any>;
+}
+
+export interface SubmitSubtaskResponse {
+  thread: Thread;
+  executions: Execution[];
+}
+
+export interface SubtaskWithExecutions extends Subtask {
+  executions?: Execution[];
+}
+
+export interface ExecutionsResponse {
+  executions: Execution[];
+}
+
 export interface AnalysisConfig {
   name: string;
   icon: string;
@@ -217,13 +248,41 @@ class DynamoApiService {
     subtaskId: string,
     submitRequest: SubmitRequest,
     token: string
-  ): Promise<void> {
-    await this.makeRequest<void>(
+  ): Promise<SubmitSubtaskResponse> {
+    return this.makeRequest<SubmitSubtaskResponse>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}/submit`,
       {
         method: 'POST',
         body: JSON.stringify(submitRequest),
       },
+      token
+    );
+  }
+
+  // Get executions for a subtask (for polling)
+  async getSubtaskExecutions(
+    problemStatementId: string,
+    taskId: string,
+    subtaskId: string,
+    token: string
+  ): Promise<ExecutionsResponse> {
+    return this.makeRequest<ExecutionsResponse>(
+      `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}/executions`,
+      { method: 'GET' },
+      token
+    );
+  }
+
+  // Get subtask with executions for polling (fallback method)
+  async getSubtaskWithExecutions(
+    problemStatementId: string,
+    taskId: string,
+    subtaskId: string,
+    token: string
+  ): Promise<SubtaskWithExecutions> {
+    return this.makeRequest<SubtaskWithExecutions>(
+      `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}`,
+      { method: 'GET' },
       token
     );
   }

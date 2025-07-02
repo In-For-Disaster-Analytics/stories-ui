@@ -55,6 +55,17 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
     isTranscriptionSuccess,
     isCreatingProblem,
     createProblemError,
+    // Execution polling
+    executions,
+    isPolling,
+    isExecutionComplete,
+    executionError,
+    executionSummary,
+    hasSuccessfulExecution,
+    hasFailedExecution,
+    latestExecution,
+    startPolling,
+    stopPolling,
   } = useTranscription();
 
   useEffect(() => {
@@ -70,8 +81,10 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
   useEffect(() => {
     if (isTranscriptionSuccess && currentResult) {
       setCurrentStep('results');
+      // Start polling after successful submission
+      startPolling();
     }
-  }, [isTranscriptionSuccess, currentResult]);
+  }, [isTranscriptionSuccess, currentResult, startPolling]);
 
   if (!isOpen || !resource) return null;
 
@@ -504,6 +517,102 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
                   {analysisConfig?.name} Successfully Submitted!
                 </h3>
               </div>
+
+              {/* Execution Status */}
+              {(isPolling || executions.length > 0) && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                  <h4 className="font-semibold mb-4 flex items-center">
+                    <div className={`w-3 h-3 rounded-full mr-2 ${isPolling ? 'bg-blue-500 animate-pulse' : isExecutionComplete ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                    Execution Status
+                  </h4>
+                  
+                  {isPolling && (
+                    <div className="flex items-center mb-3">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                      <span className="text-sm text-blue-800">Monitoring execution progress...</span>
+                    </div>
+                  )}
+
+                  {executionSummary.total > 0 && (
+                    <div className="space-y-2 mb-4">
+                      <div className="flex justify-between text-sm">
+                        <span>Total Executions:</span>
+                        <span className="font-medium">{executionSummary.total}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span>Running:</span>
+                        <span className="font-medium text-blue-600">{executionSummary.running}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span>Completed:</span>
+                        <span className="font-medium text-green-600">{executionSummary.completed}</span>
+                      </div>
+                      {executionSummary.failed > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span>Failed:</span>
+                          <span className="font-medium text-red-600">{executionSummary.failed}</span>
+                        </div>
+                      )}
+                      <div className="mt-3">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>Overall Progress:</span>
+                          <span className="font-medium">{executionSummary.progress}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${executionSummary.progress}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {latestExecution && (
+                    <div className="text-sm text-gray-600">
+                      <span className="font-medium">Latest Status:</span> {latestExecution.status || 'Unknown'}
+                      {latestExecution.run_progress && (
+                        <span className="ml-2">({latestExecution.run_progress}%)</span>
+                      )}
+                    </div>
+                  )}
+
+                  {hasSuccessfulExecution && (
+                    <div className="mt-3 p-3 bg-green-100 border border-green-200 rounded-md">
+                      <p className="text-green-800 text-sm font-medium">
+                        ✅ Transcription completed successfully!
+                      </p>
+                    </div>
+                  )}
+
+                  {hasFailedExecution && (
+                    <div className="mt-3 p-3 bg-red-100 border border-red-200 rounded-md">
+                      <p className="text-red-800 text-sm font-medium">
+                        ❌ Some executions failed. Check the DYNAMO dashboard for details.
+                      </p>
+                    </div>
+                  )}
+
+                  {executionError && (
+                    <div className="mt-3 p-3 bg-yellow-100 border border-yellow-200 rounded-md">
+                      <p className="text-yellow-800 text-sm font-medium">
+                        ⚠️ Monitoring error: {executionError.message}
+                      </p>
+                    </div>
+                  )}
+
+                  {isPolling && (
+                    <div className="mt-4">
+                      <button
+                        onClick={stopPolling}
+                        className="text-sm text-blue-600 hover:text-blue-800 underline"
+                      >
+                        Stop monitoring
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
                 <h4 className="font-semibold mb-4">Analysis Details:</h4>
