@@ -65,7 +65,7 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
       setSelectedProblemStatement(null);
       setConfig({});
     }
-  }, [isOpen, resetTranscription]);
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (isTranscriptionSuccess && currentResult) {

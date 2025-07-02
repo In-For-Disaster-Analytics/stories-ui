@@ -85,7 +85,7 @@ export const useTranscription = () => {
       // Check for existing task
       const existingTask = await dynamoApiService.findExistingTaskForDataset(
         config.problemStatementId,
-        resource.dataset.id || '',
+        resource.dataset?.id || '',
         resource.name,
         accessToken
       );
@@ -104,7 +104,7 @@ export const useTranscription = () => {
             driving_variables: analysisConfig.drivingVariables,
             response_variables: analysisConfig.responseVariables,
             dates: problemStatement.dates,
-            dataset_id: resource.dataset.id || ''
+            dataset_id: resource.dataset?.id || ''
           },
           accessToken
         );
@@ -130,7 +130,7 @@ export const useTranscription = () => {
             driving_variables: analysisConfig.drivingVariables,
             response_variables: analysisConfig.responseVariables,
             dates: problemStatement.dates,
-            dataset_id: resource.dataset.id || ''
+            dataset_id: resource.dataset?.id || ''
           },
           accessToken
         );
@@ -146,7 +146,7 @@ export const useTranscription = () => {
       const dataItem = setupRequest.data.find(item => item.id === analysisConfig.inputDataId);
       if (dataItem) {
         dataItem.dataset = {
-          id: resource.dataset.id || '',
+          id: resource.dataset?.id || '',
           resources: [{
             id: resource.id,
             url: resource.url
@@ -217,7 +217,7 @@ export const useTranscription = () => {
     setSteps([]);
     setCurrentResult(null);
     transcriptionMutation.reset();
-  }, []); // Note: transcriptionMutation.reset is stable from TanStack Query
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     // Data
