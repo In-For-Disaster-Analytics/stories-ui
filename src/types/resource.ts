@@ -129,10 +129,7 @@ export default function parseResource(resource: RawResource): Resource {
       modified: parseDate(metadata_modified),
       language: metadata_language,
     },
-    mimeType: {
-      resource: mimetype,
-      inner: mimetype_inner,
-    },
+    mimetype: mimetype || '',
     modified: parseDate(last_modified),
     name: name ?? '',
     dataset: {

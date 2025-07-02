@@ -11,6 +11,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: Error | null;
+  accessToken: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -25,6 +26,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,10 +35,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           // You might want to add an API call here to validate the token
           // For now, we'll just check if it exists
+          setAccessToken(token);
           setIsAuthenticated(true);
         } catch (error) {
           console.error('Error checking authentication:', error);
           localStorage.removeItem('access_token');
+          setAccessToken(null);
           setIsAuthenticated(false);
         }
       }
@@ -58,10 +62,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         response.result?.access_token &&
         response.result.access_token.access_token
       ) {
-        localStorage.setItem(
-          'access_token',
-          response.result.access_token.access_token,
-        );
+        const token = response.result.access_token.access_token;
+        localStorage.setItem('access_token', token);
+        setAccessToken(token);
         setIsAuthenticated(true);
       } else {
         throw new Error('No access token received');
@@ -100,6 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('access_token');
+    setAccessToken(null);
     setIsAuthenticated(false);
   };
 
@@ -109,6 +113,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isAuthenticated,
         isLoading,
         error,
+        accessToken,
         login: handleLogin,
         logout,
       }}

@@ -15,6 +15,8 @@ Create a `.env` file with these variables:
 - `VITE_TAPIS_API_BASE_URL` - Base URL for Tapis API
 - `VITE_CKAN_BASE_URL` - Base URL for CKAN instance  
 - `VITE_MAX_FILE_SIZE` - Maximum file size in bytes (default: 52428800 for 50MB)
+- `VITE_DYNAMO_API_BASE_URL` - Base URL for DYNAMO Ensemble Manager API (default: http://localhost:3000/v1)
+- `VITE_DYNAMO_DASHBOARD_URL` - Base URL for DYNAMO Dashboard (default: https://dashboard.dynamo.mint.edu)
 
 ## Architecture Overview
 
@@ -82,3 +84,32 @@ The application has a comprehensive file upload system:
 - Support for multiple file uploads
 
 When working with file uploads, always check the `VITE_MAX_FILE_SIZE` environment variable and validate file types against the supported formats list.
+
+### Audio Transcription System
+
+The application includes an integrated audio transcription system powered by DYNAMO Ensemble Manager:
+
+**Key Components**:
+- `TranscriptionModal` - Multi-step modal for configuring and starting transcription
+- `useTranscription` hook - Manages transcription workflow and API calls
+- `dynamoApiService` - API service for DYNAMO Ensemble Manager communication
+
+**Transcription Workflow**:
+1. **Analysis Type Selection** - Choose from available analysis types (currently Audio/Video Transcription)
+2. **Problem Statement Management** - Select existing or create new problem statements with region and time period
+3. **Task/Subtask Configuration** - Configure task and subtask names for the analysis
+4. **Model Setup** - Automatically configure the audio transcription model with resource data
+5. **Submission** - Submit the transcription job to DYNAMO for processing
+6. **Results** - View submission confirmation and links to DYNAMO dashboard
+
+**Integration Points**:
+- Resources with `audio/*` or `video/*` mimetype automatically show "Transcribe" button
+- Uses JWT authentication from `AuthContext`
+- Integrated with existing resource management system
+- Dashboard links for monitoring transcription progress
+
+**Configuration**:
+- Transcription models and parameters are defined in `services/dynamoApi.ts`
+- Default model ID: `7c2c8d5f-322b-4c1c-8a85-2c49580eadde`
+- Supports both audio and video file transcription
+- Supports Texas and Alaska regions
