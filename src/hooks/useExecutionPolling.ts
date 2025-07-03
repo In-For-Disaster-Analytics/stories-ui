@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  dynamoApiService, 
-  Execution 
-} from '../services/dynamoApi';
+import { dynamoApiService, Execution } from '../services/dynamoApi';
 
 export interface PollingConfig {
   problemStatementId: string;
@@ -49,53 +46,64 @@ export const useExecutionPolling = (config: PollingConfig | null) => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    setStatus(prev => ({ ...prev, isPolling: false }));
+    setStatus((prev) => ({ ...prev, isPolling: false }));
   }, []);
 
-  const checkExecutions = useCallback(async (currentConfig: PollingConfig): Promise<boolean> => {
-    if (!accessToken) {
-      throw new Error('No access token available');
-    }
+  const checkExecutions = useCallback(
+    async (currentConfig: PollingConfig): Promise<boolean> => {
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
 
-    try {
-      const response = await dynamoApiService.getSubtaskExecutions(
-        currentConfig.problemStatementId,
-        currentConfig.taskId,
-        currentConfig.subtaskId,
-        accessToken
-      );
+      try {
+        const response = await dynamoApiService.getSubtaskExecutions(
+          currentConfig.problemStatementId,
+          currentConfig.taskId,
+          currentConfig.subtaskId,
+          accessToken,
+        );
 
-      const executions = response.executions || [];
-      const stopStatuses = currentConfig.stopOnStatus || ['SUCCESS', 'FAILURE', 'FAILED', 'CANCELLED'];
-      
-      // Check if any execution has reached a final status
-      const hasCompletedExecution = executions.some(execution => 
-        execution.status && stopStatuses.includes(execution.status.toUpperCase())
-      );
+        const executions = response.executions || [];
+        const stopStatuses = currentConfig.stopOnStatus || [
+          'SUCCESS',
+          'FAILURE',
+          'FAILED',
+          'CANCELLED',
+        ];
 
-      setStatus(prev => ({
-        ...prev,
-        executions,
-        isComplete: hasCompletedExecution,
-        lastUpdated: new Date(),
-        attempts: prev.attempts + 1,
-        hasError: false,
-        error: null,
-      }));
+        // Check if any execution has reached a final status
+        const hasCompletedExecution = executions.some(
+          (execution) =>
+            execution.status &&
+            stopStatuses.includes(execution.status.toUpperCase()),
+        );
 
-      return hasCompletedExecution;
-    } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error('Unknown error occurred');
-      setStatus(prev => ({
-        ...prev,
-        hasError: true,
-        error: errorObj,
-        lastUpdated: new Date(),
-        attempts: prev.attempts + 1,
-      }));
-      throw errorObj;
-    }
-  }, [accessToken]);
+        setStatus((prev) => ({
+          ...prev,
+          executions,
+          isComplete: hasCompletedExecution,
+          lastUpdated: new Date(),
+          attempts: prev.attempts + 1,
+          hasError: false,
+          error: null,
+        }));
+
+        return hasCompletedExecution;
+      } catch (error) {
+        const errorObj =
+          error instanceof Error ? error : new Error('Unknown error occurred');
+        setStatus((prev) => ({
+          ...prev,
+          hasError: true,
+          error: errorObj,
+          lastUpdated: new Date(),
+          attempts: prev.attempts + 1,
+        }));
+        throw errorObj;
+      }
+    },
+    [accessToken],
+  );
 
   const startPolling = useCallback(async () => {
     const currentConfig = configRef.current;
@@ -104,7 +112,7 @@ export const useExecutionPolling = (config: PollingConfig | null) => {
     const interval = currentConfig.interval || 5000;
     const maxAttempts = currentConfig.maxAttempts || 120;
 
-    setStatus(prev => ({
+    setStatus((prev) => ({
       ...prev,
       isPolling: true,
       isComplete: false,
@@ -136,9 +144,11 @@ export const useExecutionPolling = (config: PollingConfig | null) => {
 
       try {
         // Get current attempts from state
-        setStatus(prevStatus => {
+        setStatus((prevStatus) => {
           if (prevStatus.attempts >= maxAttempts) {
-            const timeoutError = new Error(`Polling timeout: Maximum attempts (${maxAttempts}) reached`);
+            const timeoutError = new Error(
+              `Polling timeout: Maximum attempts (${maxAttempts}) reached`,
+            );
             stopPolling();
             return {
               ...prevStatus,
@@ -197,12 +207,19 @@ export const useExecutionPolling = (config: PollingConfig | null) => {
     }
 
     const total = executions.length;
-    const completed = executions.filter(e => e.status && ['SUCCESS'].includes(e.status.toUpperCase())).length;
-    const failed = executions.filter(e => e.status && ['FAILURE', 'FAILED', 'CANCELLED'].includes(e.status.toUpperCase())).length;
+    const completed = executions.filter(
+      (e) => e.status && ['SUCCESS'].includes(e.status.toUpperCase()),
+    ).length;
+    const failed = executions.filter(
+      (e) =>
+        e.status &&
+        ['FAILURE', 'FAILED', 'CANCELLED'].includes(e.status.toUpperCase()),
+    ).length;
     const running = total - completed - failed;
-    const progress = executions.reduce((sum, e) => sum + (e.run_progress || 0), 0) / total;
+    const progress =
+      executions.reduce((sum, e) => sum + (e.run_progress || 0), 0) / total;
 
-    return { total, running, completed, failed, progress: Math.round(progress) };
+    return { total, running, completed, failed, progress };
   }, [status.executions]);
 
   const getLatestExecution = useCallback((): Execution | null => {
@@ -212,28 +229,34 @@ export const useExecutionPolling = (config: PollingConfig | null) => {
   }, [status.executions]);
 
   const hasSuccessfulExecution = useCallback((): boolean => {
-    return status.executions.some(e => e.status && e.status.toUpperCase() === 'SUCCESS');
+    return status.executions.some(
+      (e) => e.status && e.status.toUpperCase() === 'SUCCESS',
+    );
   }, [status.executions]);
 
   const hasFailedExecution = useCallback((): boolean => {
-    return status.executions.some(e => e.status && ['FAILURE', 'FAILED', 'CANCELLED'].includes(e.status.toUpperCase()));
+    return status.executions.some(
+      (e) =>
+        e.status &&
+        ['FAILURE', 'FAILED', 'CANCELLED'].includes(e.status.toUpperCase()),
+    );
   }, [status.executions]);
 
   return {
     // Status
     ...status,
-    
+
     // Actions
     startPolling,
     stopPolling,
     resetPolling,
-    
+
     // Helpers
     getExecutionSummary,
     getLatestExecution,
     hasSuccessfulExecution,
     hasFailedExecution,
-    
+
     // Computed properties
     canStart: !!config && !!accessToken && !status.isPolling,
   };
