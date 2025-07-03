@@ -48,15 +48,15 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
     ...Array.from(new Set(resources.map((r) => r.mimetype))),
   ];
 
-  const handlePreviewResource = (id: string) => {
-    console.log('Preview resource:', id);
-    // TODO: Implement preview functionality
-  };
+  // const handlePreviewResource = (id: string) => {
+  //   console.log('Preview resource:', id);
+  //   // TODO: Implement preview functionality
+  // };
 
-  const handleEmbedResource = (id: string) => {
-    console.log('Embed resource:', id);
-    // TODO: Implement embed functionality
-  };
+  // const handleEmbedResource = (id: string) => {
+  //   console.log('Embed resource:', id);
+  //   // TODO: Implement embed functionality
+  // };
 
   const handleTranscribeResource = (resource: Resource) => {
     setSelectedResourceForTranscription(resource);
@@ -229,7 +229,7 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
 
                           {/* Resource Actions */}
                           <div className="mt-4 flex flex-wrap gap-2">
-                            <button
+                            {/* <button
                               onClick={() => handlePreviewResource(resource.id)}
                               className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                             >
@@ -243,7 +243,7 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
                             >
                               <FiCode className="w-3 h-3 mr-1" />
                               Embed
-                            </button>
+                            </button> */}
 
                             {resource.mimetype !== null &&
                               (resource.mimetype.startsWith('audio/') ||
