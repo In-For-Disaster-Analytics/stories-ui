@@ -5,6 +5,7 @@ import {
   dynamoApiService,
   ProblemStatement,
   ANALYSIS_TYPES,
+  Subtask,
 } from '../services/dynamoApi';
 import { Resource } from '../types/resource';
 import { useExecutionPolling, PollingConfig } from './useExecutionPolling';
@@ -154,7 +155,7 @@ export const useTranscription = () => {
             response_variables: analysisConfig.responseVariables,
             dates: problemStatement.dates,
             dataset_id: resource.dataset?.id || '',
-          },
+          } as Subtask,
           accessToken,
         );
         subtaskId = subtask.id!;

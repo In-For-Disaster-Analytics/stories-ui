@@ -245,6 +245,7 @@ class DynamoApiService {
     subtask: Omit<Subtask, 'id'>,
     token: string,
   ): Promise<Subtask> {
+    console.log('creating subtask', JSON.stringify(subtask));
     return this.makeRequest<Subtask>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks`,
       {
