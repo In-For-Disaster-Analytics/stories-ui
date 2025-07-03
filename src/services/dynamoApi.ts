@@ -246,11 +246,21 @@ class DynamoApiService {
     token: string,
   ): Promise<Subtask> {
     console.log('creating subtask', JSON.stringify(subtask));
+    const body = {
+      name: subtask.name,
+      test: 'test',
+      driving_variables: subtask.driving_variables,
+      response_variables: subtask.response_variables,
+      dates: subtask.dates,
+      dataset_id: subtask.dataset_id,
+    };
+
+    console.log('subtask body', JSON.stringify(body));
     return this.makeRequest<Subtask>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks`,
       {
         method: 'POST',
-        body: JSON.stringify(subtask),
+        body: JSON.stringify(body),
       },
       token,
     );

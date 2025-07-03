@@ -77,7 +77,8 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
     document.body.removeChild(link);
   };
 
-  const getResourceIcon = (mimetype: string) => {
+  const getResourceIcon = (mimetype: string | null) => {
+    if (!mimetype) return '📎';
     if (mimetype.startsWith('image/')) return '🖼️';
     if (mimetype.startsWith('video/')) return '🎥';
     if (mimetype.startsWith('audio/')) return '🎵';
@@ -87,7 +88,8 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
     return '📎';
   };
 
-  const getMimeTypeDisplayName = (mimetype: string) => {
+  const getMimeTypeDisplayName = (mimetype: string | null) => {
+    if (!mimetype) return 'Other Files';
     if (mimetype.startsWith('image/')) return 'Images';
     if (mimetype.startsWith('video/')) return 'Videos';
     if (mimetype.startsWith('audio/')) return 'Audio';
@@ -243,18 +245,19 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
                               Embed
                             </button>
 
-                            {(resource.mimetype.startsWith('audio/') ||
-                              resource.mimetype.startsWith('video/')) && (
-                              <button
-                                onClick={() =>
-                                  handleTranscribeResource(resource)
-                                }
-                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                              >
-                                <FiMic className="w-3 h-3 mr-1" />
-                                Transcribe
-                              </button>
-                            )}
+                            {resource.mimetype !== null &&
+                              (resource.mimetype.startsWith('audio/') ||
+                                resource.mimetype.startsWith('video/')) && (
+                                <button
+                                  onClick={() =>
+                                    handleTranscribeResource(resource)
+                                  }
+                                  className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                >
+                                  <FiMic className="w-3 h-3 mr-1" />
+                                  Transcribe
+                                </button>
+                              )}
 
                             <button
                               onClick={() =>
