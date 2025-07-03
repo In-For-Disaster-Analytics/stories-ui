@@ -3,7 +3,7 @@
  * Handles communication with the DYNAMO API for transcription and analysis tasks
  */
 
-export interface TimePeriod {  
+export interface TimePeriod {
   start_date: string;
   end_date: string;
 }
@@ -61,19 +61,19 @@ export interface SubmitRequest {
 export interface Execution {
   id: string;
   modelid: string;
-  bindings?: Record<string, any>;
+  bindings?: Record<string, unknown>;
   runid?: string;
   status?: string;
   run_progress?: number;
-  results?: any[];
+  results?: unknown[];
   selected?: boolean;
 }
 
 export interface Thread {
   name?: string;
   modelid: string;
-  datasets?: Record<string, any>;
-  parameters?: Record<string, any>;
+  datasets?: Record<string, unknown>;
+  parameters?: Record<string, unknown>;
 }
 
 export interface SubmitSubtaskResponse {
@@ -87,6 +87,27 @@ export interface SubtaskWithExecutions extends Subtask {
 
 export interface ExecutionsResponse {
   executions: Execution[];
+}
+
+export interface Execution_Result {
+  model_io?: {
+    id: string;
+    name: string;
+    type: string;
+    variables: string[];
+    value?: unknown;
+    position?: number;
+    format?: string;
+  };
+  resource: {
+    id: string;
+    name: string;
+    url: string;
+    time_period?: TimePeriod;
+    spatial_coverage?: Record<string, unknown>;
+    selected?: boolean;
+    type?: string;
+  };
 }
 
 export interface AnalysisConfig {
@@ -106,50 +127,54 @@ export const ANALYSIS_TYPES: Record<string, AnalysisConfig> = {
     name: 'Audio/Video Transcription',
     icon: '🎤',
     description: 'Transcribe audio and video files into text',
-    modelId: 'https://api.models.mint.tacc.utexas.edu/v1.8.0/modelconfigurations/7c2c8d5f-322b-4c1c-8a85-2c49580eadde?username=mint@isi.edu',
+    modelId:
+      'https://api.models.mint.tacc.utexas.edu/v1.8.0/modelconfigurations/7c2c8d5f-322b-4c1c-8a85-2c49580eadde?username=mint@isi.edu',
     responseVariables: [],
     drivingVariables: [],
-    inputDataId: 'https://w3id.org/okn/i/mint/7932809f-e71f-423c-ad33-60672ff173b4',
+    inputDataId:
+      'https://w3id.org/okn/i/mint/7932809f-e71f-423c-ad33-60672ff173b4',
     setupRequest: {
-      model_id: 'https://api.models.mint.tacc.utexas.edu/v1.8.0/modelconfigurations/7c2c8d5f-322b-4c1c-8a85-2c49580eadde?username=mint@isi.edu',
+      model_id:
+        'https://api.models.mint.tacc.utexas.edu/v1.8.0/modelconfigurations/7c2c8d5f-322b-4c1c-8a85-2c49580eadde?username=mint@isi.edu',
       parameters: [
         {
           id: 'https://w3id.org/okn/i/mint/2bf48012-8087-4ffe-b1db-774e80e7bc24',
-          value: '1'
-        }
+          value: '1',
+        },
       ],
       data: [
         {
           id: 'https://w3id.org/okn/i/mint/7932809f-e71f-423c-ad33-60672ff173b4',
           dataset: {
             id: '',
-            resources: []
-          }
-        }
-      ]
-    }
-  }
+            resources: [],
+          },
+        },
+      ],
+    },
+  },
 };
 
 class DynamoApiService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = import.meta.env.VITE_DYNAMO_API_BASE_URL || 'http://localhost:3000/v1';
+    this.baseUrl =
+      import.meta.env.VITE_DYNAMO_API_BASE_URL || 'http://localhost:3000/v1';
   }
 
   private async makeRequest<T>(
     endpoint: string,
     options: RequestInit,
-    token: string
+    token: string,
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const config: RequestInit = {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         ...options.headers,
       },
     };
@@ -158,7 +183,9 @@ class DynamoApiService {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`API request failed: ${response.status} ${response.statusText} - ${errorText}`);
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText} - ${errorText}`,
+      );
     }
 
     return response.json();
@@ -166,12 +193,16 @@ class DynamoApiService {
 
   // Problem Statement operations
   async getProblemStatements(token: string): Promise<ProblemStatement[]> {
-    return this.makeRequest<ProblemStatement[]>('/problemStatements', { method: 'GET' }, token);
+    return this.makeRequest<ProblemStatement[]>(
+      '/problemStatements',
+      { method: 'GET' },
+      token,
+    );
   }
 
   async createProblemStatement(
     problemStatement: Omit<ProblemStatement, 'id'>,
-    token: string
+    token: string,
   ): Promise<ProblemStatement> {
     return this.makeRequest<ProblemStatement>(
       '/problemStatements',
@@ -179,7 +210,7 @@ class DynamoApiService {
         method: 'POST',
         body: JSON.stringify(problemStatement),
       },
-      token
+      token,
     );
   }
 
@@ -188,14 +219,14 @@ class DynamoApiService {
     return this.makeRequest<Task[]>(
       `/problemStatements/${problemStatementId}/tasks`,
       { method: 'GET' },
-      token
+      token,
     );
   }
 
   async createTask(
     problemStatementId: string,
     task: Omit<Task, 'id'>,
-    token: string
+    token: string,
   ): Promise<Task> {
     return this.makeRequest<Task>(
       `/problemStatements/${problemStatementId}/tasks`,
@@ -203,7 +234,7 @@ class DynamoApiService {
         method: 'POST',
         body: JSON.stringify(task),
       },
-      token
+      token,
     );
   }
 
@@ -212,7 +243,7 @@ class DynamoApiService {
     problemStatementId: string,
     taskId: string,
     subtask: Omit<Subtask, 'id'>,
-    token: string
+    token: string,
   ): Promise<Subtask> {
     return this.makeRequest<Subtask>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks`,
@@ -220,7 +251,7 @@ class DynamoApiService {
         method: 'POST',
         body: JSON.stringify(subtask),
       },
-      token
+      token,
     );
   }
 
@@ -230,7 +261,7 @@ class DynamoApiService {
     taskId: string,
     subtaskId: string,
     setupRequest: SetupRequest,
-    token: string
+    token: string,
   ): Promise<void> {
     await this.makeRequest<void>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}/setup`,
@@ -238,7 +269,7 @@ class DynamoApiService {
         method: 'POST',
         body: JSON.stringify(setupRequest),
       },
-      token
+      token,
     );
   }
 
@@ -247,7 +278,7 @@ class DynamoApiService {
     taskId: string,
     subtaskId: string,
     submitRequest: SubmitRequest,
-    token: string
+    token: string,
   ): Promise<SubmitSubtaskResponse> {
     return this.makeRequest<SubmitSubtaskResponse>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}/submit`,
@@ -255,7 +286,7 @@ class DynamoApiService {
         method: 'POST',
         body: JSON.stringify(submitRequest),
       },
-      token
+      token,
     );
   }
 
@@ -264,12 +295,12 @@ class DynamoApiService {
     problemStatementId: string,
     taskId: string,
     subtaskId: string,
-    token: string
+    token: string,
   ): Promise<ExecutionsResponse> {
     return this.makeRequest<ExecutionsResponse>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}/executions`,
       { method: 'GET' },
-      token
+      token,
     );
   }
 
@@ -278,12 +309,27 @@ class DynamoApiService {
     problemStatementId: string,
     taskId: string,
     subtaskId: string,
-    token: string
+    token: string,
   ): Promise<SubtaskWithExecutions> {
     return this.makeRequest<SubtaskWithExecutions>(
       `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}`,
       { method: 'GET' },
-      token
+      token,
+    );
+  }
+
+  // Register outputs for a completed execution
+  async registerOutputs(
+    problemStatementId: string,
+    taskId: string,
+    subtaskId: string,
+    executionId: string,
+    token: string,
+  ): Promise<Execution_Result[]> {
+    return this.makeRequest<Execution_Result[]>(
+      `/problemStatements/${problemStatementId}/tasks/${taskId}/subtasks/${subtaskId}/executions/${executionId}/outputs`,
+      { method: 'POST' },
+      token,
     );
   }
 
@@ -292,12 +338,12 @@ class DynamoApiService {
     problemStatementId: string,
     _datasetId: string,
     packageTitle: string,
-    token: string
+    token: string,
   ): Promise<Task | null> {
     try {
       const tasks = await this.getTasks(problemStatementId, token);
       const datasetTaskName = `Dataset Analysis - ${packageTitle}`;
-      return tasks.find(task => task.name === datasetTaskName) || null;
+      return tasks.find((task) => task.name === datasetTaskName) || null;
     } catch (error) {
       console.error('Error finding existing task:', error);
       return null;
@@ -309,9 +355,11 @@ class DynamoApiService {
     region: string,
     problemStatementId: string,
     taskId: string,
-    subtaskId: string
+    subtaskId: string,
   ): string {
-    const dashboardBaseUrl = import.meta.env.VITE_DYNAMO_DASHBOARD_URL || 'https://dashboard.dynamo.mint.edu';
+    const dashboardBaseUrl =
+      import.meta.env.VITE_DYNAMO_DASHBOARD_URL ||
+      'https://dashboard.dynamo.mint.edu';
     return `${dashboardBaseUrl}/${region}/modeling/problem_statement/${problemStatementId}/${taskId}/${subtaskId}/runs`;
   }
 }

@@ -223,6 +223,250 @@
           }
         }
       },
+      "ModelIO": {
+        "type": "object",
+        "description": "Model input/output specification",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the input/output"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the input/output"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of variables"
+          },
+          "value": {
+            "$ref": "#/components/schemas/Dataslice",
+            "description": "Associated dataslice"
+          },
+          "position": {
+            "type": "number",
+            "description": "Position in the model configuration"
+          },
+          "format": {
+            "type": "string",
+            "description": "Format of the input/output"
+          }
+        },
+        "required": [
+          "variables"
+        ]
+      },
+      "DataResource": {
+        "type": "object",
+        "description": "A data resource representing a file or dataset",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the resource"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL to access the resource"
+          },
+          "time_period": {
+            "$ref": "#/components/schemas/TimePeriod",
+            "description": "Time period covered by the resource"
+          },
+          "spatial_coverage": {
+            "type": "object",
+            "description": "Spatial coverage information"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "Whether this resource is selected"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the resource"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "Dataslice": {
+        "type": "object",
+        "description": "A slice of data from a dataset",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the dataslice"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/Dataset",
+            "description": "Parent dataset"
+          },
+          "total_resources": {
+            "type": "number",
+            "description": "Total number of resources"
+          },
+          "selected_resources": {
+            "type": "number",
+            "description": "Number of selected resources"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataResource"
+            },
+            "description": "List of data resources"
+          },
+          "resources_loaded": {
+            "type": "boolean",
+            "description": "Whether resources are loaded"
+          },
+          "time_period": {
+            "$ref": "#/components/schemas/TimePeriod",
+            "description": "Time period covered"
+          },
+          "spatial_coverage": {
+            "type": "object",
+            "description": "Spatial coverage information"
+          }
+        },
+        "required": [
+          "resources"
+        ]
+      },
+      "Dataset": {
+        "type": "object",
+        "description": "A dataset containing multiple resources",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the dataset"
+          },
+          "region": {
+            "type": "string",
+            "description": "Geographic region"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of variables in the dataset"
+          },
+          "datatype": {
+            "type": "string",
+            "description": "Type of data"
+          },
+          "time_period": {
+            "$ref": "#/components/schemas/TimePeriod",
+            "description": "Time period covered by the dataset"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the dataset"
+          },
+          "version": {
+            "type": "string",
+            "description": "Version of the dataset"
+          },
+          "limitations": {
+            "type": "string",
+            "description": "Known limitations"
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source",
+            "description": "Source information"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dataset categories"
+          },
+          "is_cached": {
+            "type": "boolean",
+            "description": "Whether the dataset is cached"
+          },
+          "resource_repr": {
+            "type": "object",
+            "description": "Resource representation"
+          },
+          "dataset_repr": {
+            "type": "object",
+            "description": "Dataset representation"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataResource"
+            },
+            "description": "List of resources in the dataset"
+          },
+          "resources_loaded": {
+            "type": "boolean",
+            "description": "Whether resources are loaded"
+          },
+          "resource_count": {
+            "type": "number",
+            "description": "Number of resources"
+          },
+          "spatial_coverage": {
+            "type": "object",
+            "description": "Spatial coverage information"
+          }
+        },
+        "required": [
+          "region",
+          "datatype",
+          "time_period",
+          "description",
+          "version",
+          "limitations",
+          "source"
+        ]
+      },
+      "Source": {
+        "type": "object",
+        "description": "Source information for a dataset",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the source"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL of the source"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the source"
+          }
+        },
+        "required": [
+          "name",
+          "url",
+          "type"
+        ]
+      },
       "DatasetSpecification": {
         "description": "A dataset specification",
         "properties": {
@@ -1963,7 +2207,8 @@
           },
           "runid": {
             "type": "string",
-            "description": "The run identifier"
+            "nullable": true,
+            "description": "The run identifier (may be null if not yet assigned)"
           },
           "start_time": {
             "type": "string",
@@ -1973,7 +2218,8 @@
           "end_time": {
             "type": "string",
             "format": "date-time",
-            "description": "When the execution ended"
+            "nullable": true,
+            "description": "When the execution ended (null if still running or not started)"
           },
           "execution_engine": {
             "type": "string",
@@ -1982,7 +2228,8 @@
               "localex",
               "tapis"
             ],
-            "description": "The execution engine used"
+            "nullable": true,
+            "description": "The execution engine used (may be null if not yet assigned)"
           },
           "status": {
             "type": "string",
@@ -1992,13 +2239,15 @@
               "RUNNING",
               "WAITING"
             ],
-            "description": "Current status of the execution"
+            "nullable": true,
+            "description": "Current status of the execution (may be null if not yet started)"
           },
           "run_progress": {
             "type": "number",
             "minimum": 0,
             "maximum": 100,
-            "description": "Execution progress percentage (0-100)"
+            "nullable": true,
+            "description": "Execution progress percentage (0-100, null if not available)"
           },
           "results": {
             "type": "array",
@@ -2032,6 +2281,23 @@
         "required": [
           "thread",
           "executions"
+        ]
+      },
+      "Execution_Result": {
+        "type": "object",
+        "description": "A result from an execution containing execution details, model IO, and resource information",
+        "properties": {
+          "model_io": {
+            "$ref": "#/components/schemas/ModelIO",
+            "description": "The model input/output specification"
+          },
+          "resource": {
+            "$ref": "#/components/schemas/DataResource",
+            "description": "The data resource associated with this result"
+          }
+        },
+        "required": [
+          "resource"
         ]
       },
       "ModelThread": {
@@ -3419,11 +3685,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Execution_Result"
                   }
                 }
               }
@@ -4146,97 +4410,6 @@
           },
           "default": {
             "description": "Default error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/problemStatements/{problemStatementId}/tasks/{taskId}/subtasks/{subtaskId}/outputs": {
-      "post": {
-        "summary": "Register Tapis Execution Outputs",
-        "description": "Register the outputs of a successful Tapis execution in the data catalog",
-        "operationId": "registerTapisExecutionOutputs",
-        "tags": [
-          "Tapis"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          },
-          {
-            "oauth2": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "problemStatementId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "taskId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "subtaskId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Outputs registered successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request or registration failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {

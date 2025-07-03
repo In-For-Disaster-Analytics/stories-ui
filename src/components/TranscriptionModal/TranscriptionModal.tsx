@@ -11,7 +11,13 @@ import {
   useTranscription,
   TranscriptionConfig,
 } from '../../hooks/useTranscription';
-import { ProblemStatement, ANALYSIS_TYPES } from '../../services/dynamoApi';
+import {
+  ProblemStatement,
+  ANALYSIS_TYPES,
+  dynamoApiService,
+  Execution_Result,
+} from '../../services/dynamoApi';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface TranscriptionModalProps {
   isOpen: boolean;
@@ -42,6 +48,12 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
     start_date: '',
     end_date: '',
   });
+  const [registrationResults, setRegistrationResults] = useState<
+    Execution_Result[]
+  >([]);
+  const [isRegisteringOutputs, setIsRegisteringOutputs] = useState(false);
+
+  const { accessToken } = useAuth();
 
   const {
     problemStatements,
@@ -75,6 +87,8 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
       setSelectedAnalysisType('');
       setSelectedProblemStatement(null);
       setConfig({});
+      setRegistrationResults([]);
+      setIsRegisteringOutputs(false);
     }
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -155,7 +169,45 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
       setSelectedAnalysisType('');
       setSelectedProblemStatement(null);
       setConfig({});
+      setRegistrationResults([]);
+      setIsRegisteringOutputs(false);
     }, 300);
+  };
+
+  const handleRegisterOutputs = async () => {
+    if (
+      !currentResult ||
+      !latestExecution ||
+      !selectedProblemStatement ||
+      !accessToken
+    ) {
+      console.error('Missing required data for registering outputs');
+      return;
+    }
+
+    setIsRegisteringOutputs(true);
+    try {
+      const results = await dynamoApiService.registerOutputs(
+        currentResult.problemStatementId,
+        currentResult.taskId,
+        currentResult.subtaskId,
+        latestExecution.id,
+        accessToken,
+      );
+      setRegistrationResults(results);
+      console.log(
+        'Outputs registered successfully for execution:',
+        latestExecution.id,
+        'with',
+        results.length,
+        'resources',
+      );
+    } catch (error) {
+      console.error('Failed to register outputs:', error);
+      setRegistrationResults([]);
+    } finally {
+      setIsRegisteringOutputs(false);
+    }
   };
 
   const analysisConfig = selectedAnalysisType
@@ -522,14 +574,18 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
               {(isPolling || executions.length > 0) && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
                   <h4 className="font-semibold mb-4 flex items-center">
-                    <div className={`w-3 h-3 rounded-full mr-2 ${isPolling ? 'bg-blue-500 animate-pulse' : isExecutionComplete ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                    <div
+                      className={`w-3 h-3 rounded-full mr-2 ${isPolling ? 'bg-blue-500 animate-pulse' : isExecutionComplete ? 'bg-green-500' : 'bg-gray-400'}`}
+                    ></div>
                     Execution Status
                   </h4>
-                  
+
                   {isPolling && (
                     <div className="flex items-center mb-3">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                      <span className="text-sm text-blue-800">Monitoring execution progress...</span>
+                      <span className="text-sm text-blue-800">
+                        Monitoring execution progress...
+                      </span>
                     </div>
                   )}
 
@@ -537,31 +593,43 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
                     <div className="space-y-2 mb-4">
                       <div className="flex justify-between text-sm">
                         <span>Total Executions:</span>
-                        <span className="font-medium">{executionSummary.total}</span>
+                        <span className="font-medium">
+                          {executionSummary.total}
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Running:</span>
-                        <span className="font-medium text-blue-600">{executionSummary.running}</span>
+                        <span className="font-medium text-blue-600">
+                          {executionSummary.running}
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Completed:</span>
-                        <span className="font-medium text-green-600">{executionSummary.completed}</span>
+                        <span className="font-medium text-green-600">
+                          {executionSummary.completed}
+                        </span>
                       </div>
                       {executionSummary.failed > 0 && (
                         <div className="flex justify-between text-sm">
                           <span>Failed:</span>
-                          <span className="font-medium text-red-600">{executionSummary.failed}</span>
+                          <span className="font-medium text-red-600">
+                            {executionSummary.failed}
+                          </span>
                         </div>
                       )}
                       <div className="mt-3">
                         <div className="flex justify-between text-sm mb-1">
                           <span>Overall Progress:</span>
-                          <span className="font-medium">{executionSummary.progress}%</span>
+                          <span className="font-medium">
+                            {Math.round(executionSummary.progress * 100)}%
+                          </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${executionSummary.progress}%` }}
+                            style={{
+                              width: `${Math.round(executionSummary.progress * 100)}%`,
+                            }}
                           ></div>
                         </div>
                       </div>
@@ -570,9 +638,12 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
 
                   {latestExecution && (
                     <div className="text-sm text-gray-600">
-                      <span className="font-medium">Latest Status:</span> {latestExecution.status || 'Unknown'}
+                      <span className="font-medium">Latest Status:</span>{' '}
+                      {latestExecution.status || 'Unknown'}
                       {latestExecution.run_progress && (
-                        <span className="ml-2">({latestExecution.run_progress}%)</span>
+                        <span className="ml-2">
+                          ({latestExecution.run_progress * 100} %)
+                        </span>
                       )}
                     </div>
                   )}
@@ -582,13 +653,39 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
                       <p className="text-green-800 text-sm font-medium">
                         ✅ Transcription completed successfully!
                       </p>
+                      <button
+                        onClick={() => handleRegisterOutputs()}
+                        disabled={isRegisteringOutputs}
+                        className="mt-2 inline-flex items-center px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        {isRegisteringOutputs ? (
+                          <>
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
+                            Registering...
+                          </>
+                        ) : (
+                          <>
+                            <FiFileText className="w-3 h-3 mr-1" />
+                            Register Outputs
+                          </>
+                        )}
+                      </button>
+                      {registrationResults.length > 0 && (
+                        <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-green-800 text-sm">
+                          ✅ Successfully registered{' '}
+                          {registrationResults.length} resource
+                          {registrationResults.length !== 1 ? 's' : ''} to the
+                          data catalog
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {hasFailedExecution && (
                     <div className="mt-3 p-3 bg-red-100 border border-red-200 rounded-md">
                       <p className="text-red-800 text-sm font-medium">
-                        ❌ Some executions failed. Check the DYNAMO dashboard for details.
+                        ❌ Some executions failed. Check the DYNAMO dashboard
+                        for details.
                       </p>
                     </div>
                   )}

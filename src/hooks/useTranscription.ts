@@ -1,11 +1,10 @@
 import { useState, useCallback } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  dynamoApiService, 
-  ProblemStatement, 
+import {
+  dynamoApiService,
+  ProblemStatement,
   ANALYSIS_TYPES,
-  SubmitSubtaskResponse 
 } from '../services/dynamoApi';
 import { Resource } from '../types/resource';
 import { useExecutionPolling, PollingConfig } from './useExecutionPolling';
@@ -35,8 +34,11 @@ export interface TranscriptionResult {
 export const useTranscription = () => {
   const { accessToken } = useAuth();
   const [steps, setSteps] = useState<TranscriptionStep[]>([]);
-  const [currentResult, setCurrentResult] = useState<TranscriptionResult | null>(null);
-  const [pollingConfig, setPollingConfig] = useState<PollingConfig | null>(null);
+  const [currentResult, setCurrentResult] =
+    useState<TranscriptionResult | null>(null);
+  const [pollingConfig, setPollingConfig] = useState<PollingConfig | null>(
+    null,
+  );
 
   // Use the execution polling hook
   const executionPolling = useExecutionPolling(pollingConfig);
@@ -45,7 +47,7 @@ export const useTranscription = () => {
   const {
     data: problemStatements = [],
     isLoading: isLoadingProblems,
-    refetch: refetchProblems
+    refetch: refetchProblems,
   } = useQuery({
     queryKey: ['problemStatements'],
     queryFn: () => dynamoApiService.getProblemStatements(accessToken!),
@@ -66,7 +68,7 @@ export const useTranscription = () => {
     mutationFn: async ({
       resource,
       config,
-      problemStatement
+      problemStatement,
     }: {
       resource: Resource;
       config: TranscriptionConfig;
@@ -79,21 +81,36 @@ export const useTranscription = () => {
 
       // Initialize steps
       const initialSteps: TranscriptionStep[] = [
-        { id: 'step1', title: 'Creating task and subtask', status: 'pending', message: 'Preparing to create task and subtask...' },
-        { id: 'step2', title: 'Setting up model configuration', status: 'pending', message: 'Waiting for task creation...' },
-        { id: 'step3', title: 'Submitting analysis', status: 'pending', message: 'Waiting for model setup...' }
+        {
+          id: 'step1',
+          title: 'Creating task and subtask',
+          status: 'pending',
+          message: 'Preparing to create task and subtask...',
+        },
+        {
+          id: 'step2',
+          title: 'Setting up model configuration',
+          status: 'pending',
+          message: 'Waiting for task creation...',
+        },
+        {
+          id: 'step3',
+          title: 'Submitting analysis',
+          status: 'pending',
+          message: 'Waiting for model setup...',
+        },
       ];
       setSteps(initialSteps);
 
       // Step 1: Create task and subtask
       updateStep('step1', 'Creating task and subtask...', 'active');
-      
+
       // Check for existing task
       const existingTask = await dynamoApiService.findExistingTaskForDataset(
         config.problemStatementId,
         resource.dataset?.id || '',
         resource.name,
-        accessToken
+        accessToken,
       );
 
       let taskId: string;
@@ -110,9 +127,9 @@ export const useTranscription = () => {
             driving_variables: analysisConfig.drivingVariables,
             response_variables: analysisConfig.responseVariables,
             dates: problemStatement.dates,
-            dataset_id: resource.dataset?.id || ''
+            dataset_id: resource.dataset?.id || '',
           },
-          accessToken
+          accessToken,
         );
         subtaskId = subtask.id!;
       } else {
@@ -121,9 +138,9 @@ export const useTranscription = () => {
           config.problemStatementId,
           {
             name: config.taskName,
-            dates: problemStatement.dates
+            dates: problemStatement.dates,
           },
-          accessToken
+          accessToken,
         );
         taskId = task.id!;
 
@@ -136,27 +153,35 @@ export const useTranscription = () => {
             driving_variables: analysisConfig.drivingVariables,
             response_variables: analysisConfig.responseVariables,
             dates: problemStatement.dates,
-            dataset_id: resource.dataset?.id || ''
+            dataset_id: resource.dataset?.id || '',
           },
-          accessToken
+          accessToken,
         );
         subtaskId = subtask.id!;
       }
 
-      updateStep('step1', 'Task and subtask created successfully!', 'completed');
+      updateStep(
+        'step1',
+        'Task and subtask created successfully!',
+        'completed',
+      );
 
       // Step 2: Setup model configuration
       updateStep('step2', 'Setting up model configuration...', 'active');
-      
+
       const setupRequest = { ...analysisConfig.setupRequest };
-      const dataItem = setupRequest.data.find(item => item.id === analysisConfig.inputDataId);
+      const dataItem = setupRequest.data.find(
+        (item) => item.id === analysisConfig.inputDataId,
+      );
       if (dataItem) {
         dataItem.dataset = {
           id: resource.dataset?.id || '',
-          resources: [{
-            id: resource.id,
-            url: resource.url
-          }]
+          resources: [
+            {
+              id: resource.id,
+              url: resource.url,
+            },
+          ],
         };
       }
 
@@ -165,20 +190,20 @@ export const useTranscription = () => {
         taskId,
         subtaskId,
         setupRequest,
-        accessToken
+        accessToken,
       );
 
       updateStep('step2', 'Model configuration setup complete!', 'completed');
 
       // Step 3: Submit subtask
       updateStep('step3', 'Submitting analysis...', 'active');
-      
+
       await dynamoApiService.submitSubtask(
         config.problemStatementId,
         taskId,
         subtaskId,
         { model_id: analysisConfig.modelId },
-        accessToken
+        accessToken,
       );
 
       updateStep('step3', 'Analysis submitted successfully!', 'completed');
@@ -198,9 +223,9 @@ export const useTranscription = () => {
           problemStatement.regionid,
           config.problemStatementId,
           taskId,
-          subtaskId
+          subtaskId,
         ),
-        region: problemStatement.regionid
+        region: problemStatement.regionid,
       };
 
       setCurrentResult(result);
@@ -208,23 +233,26 @@ export const useTranscription = () => {
     },
     onError: (error: Error) => {
       // Find the current active step and mark it as error
-      setSteps(prevSteps => 
-        prevSteps.map(step => 
-          step.status === 'active' 
+      setSteps((prevSteps) =>
+        prevSteps.map((step) =>
+          step.status === 'active'
             ? { ...step, status: 'error', message: `Error: ${error.message}` }
-            : step
-        )
+            : step,
+        ),
       );
-    }
+    },
   });
 
-  const updateStep = useCallback((stepId: string, message: string, status: TranscriptionStep['status']) => {
-    setSteps(prevSteps =>
-      prevSteps.map(step =>
-        step.id === stepId ? { ...step, message, status } : step
-      )
-    );
-  }, []);
+  const updateStep = useCallback(
+    (stepId: string, message: string, status: TranscriptionStep['status']) => {
+      setSteps((prevSteps) =>
+        prevSteps.map((step) =>
+          step.id === stepId ? { ...step, message, status } : step,
+        ),
+      );
+    },
+    [],
+  );
 
   const resetTranscription = useCallback(() => {
     setSteps([]);
@@ -239,26 +267,26 @@ export const useTranscription = () => {
     problemStatements,
     steps,
     currentResult,
-    
+
     // Loading states
     isLoadingProblems,
     isTranscribing: transcriptionMutation.isPending,
-    
+
     // Actions
     createProblemStatement: createProblemStatementMutation.mutateAsync,
     startTranscription: transcriptionMutation.mutateAsync,
     resetTranscription,
     startPolling: executionPolling.startPolling,
     stopPolling: executionPolling.stopPolling,
-    
+
     // Mutation states
     transcriptionError: transcriptionMutation.error,
     isTranscriptionSuccess: transcriptionMutation.isSuccess,
-    
+
     // Problem statement creation
     isCreatingProblem: createProblemStatementMutation.isPending,
     createProblemError: createProblemStatementMutation.error,
-    
+
     // Execution polling states
     executions: executionPolling.executions,
     isPolling: executionPolling.isPolling,
