@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Dataset } from '../../../types/Dataset';
+import { RawDataset } from '../../../types/Dataset';
 import useAccessToken from '../../auth/useAccessToken';
 
 export const useDetailDataset = (datasetId: string) => {
@@ -7,7 +7,7 @@ export const useDetailDataset = (datasetId: string) => {
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['dataset', datasetId],
-    queryFn: async (): Promise<Dataset> => {
+    queryFn: async (): Promise<RawDataset> => {
       try {
         const headers: HeadersInit = {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export const useDetailDataset = (datasetId: string) => {
         }
 
         const response = await result.json();
-        return response.result;
+        return response.result as RawDataset;
       } catch (error: unknown) {
         const errorMessage =
           error instanceof Error ? error.message : 'Unknown error occurred';

@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { useDetailDataset } from '../../hooks/ckan/datasets/useDetailDataset';
 import { Resource } from '../../types/resource';
+import { RawResource } from '../../types/resource';
 
 // TODO: Import proper type from your CKAN types
 interface Dataset {
@@ -102,7 +103,28 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
 
   useEffect(() => {
     if (dataset) {
-      setResources(dataset.resources);
+      setResources(
+        dataset.resources.map((resource: RawResource) => {
+          return {
+            id: resource.id,
+            name: resource.name,
+            description: resource.description,
+            format: resource.format,
+            size: resource.size,
+            url: resource.url,
+            created: resource.created,
+            modified: resource.modified,
+            state: resource.state,
+            hash: resource.hash,
+            languages: resource.language,
+            mimetype: resource.mimetype,
+            additionalData: resource.additionalData,
+            dataset: {
+              id: resource.package_id,
+            },
+          } as Resource;
+        }),
+      );
     }
   }, [dataset]);
 
