@@ -8,13 +8,7 @@ import React, {
 import { useDetailDataset } from '../../hooks/ckan/datasets/useDetailDataset';
 import { Resource } from '../../types/resource';
 import { RawResource } from '../../types/resource';
-
-// TODO: Import proper type from your CKAN types
-interface Dataset {
-  title?: string;
-  name?: string;
-  // Add other dataset properties as needed
-}
+import { RawDataset } from '../../types/Dataset';
 
 interface ErrorState {
   message: string;
@@ -31,7 +25,7 @@ interface StoryContextType {
   downloads: number;
   shares: number;
   citations: number;
-  dataset: Dataset | null;
+  dataset: RawDataset | null;
   isModalOpen: boolean;
   isPending: boolean;
   setIsPending: (isPending: boolean) => void;

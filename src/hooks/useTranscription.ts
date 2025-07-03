@@ -9,6 +9,7 @@ import {
 } from '../services/dynamoApi';
 import { Resource } from '../types/resource';
 import { useExecutionPolling, PollingConfig } from './useExecutionPolling';
+import { useStory } from '../app/Stories/StoryContext';
 
 export interface TranscriptionStep {
   id: string;
@@ -34,6 +35,7 @@ export interface TranscriptionResult {
 
 export const useTranscription = () => {
   const { accessToken } = useAuth();
+  const { dataset } = useStory();
   const [steps, setSteps] = useState<TranscriptionStep[]>([]);
   const [currentResult, setCurrentResult] =
     useState<TranscriptionResult | null>(null);
@@ -106,10 +108,13 @@ export const useTranscription = () => {
       // Step 1: Create task and subtask
       updateStep('step1', 'Creating task and subtask...', 'active');
 
+      // Use dataset ID from story context if available, otherwise fall back to resource dataset ID
+      const datasetId = dataset?.id || resource.dataset?.id || '';
+
       // Check for existing task
       const existingTask = await dynamoApiService.findExistingTaskForDataset(
         config.problemStatementId,
-        resource.dataset?.id || '',
+        datasetId,
         resource.name,
         accessToken,
       );
@@ -120,16 +125,17 @@ export const useTranscription = () => {
       if (existingTask) {
         taskId = existingTask.id!;
         // Create only subtask
+        const subtaskData = {
+          name: config.subtaskName,
+          driving_variables: analysisConfig.drivingVariables,
+          response_variables: analysisConfig.responseVariables,
+          dates: problemStatement.dates,
+          dataset_id: datasetId,
+        };
         const subtask = await dynamoApiService.createSubtask(
           config.problemStatementId,
           taskId,
-          {
-            name: config.subtaskName,
-            driving_variables: analysisConfig.drivingVariables,
-            response_variables: analysisConfig.responseVariables,
-            dates: problemStatement.dates,
-            dataset_id: resource.dataset?.id || '',
-          },
+          subtaskData,
           accessToken,
         );
         subtaskId = subtask.id!;
@@ -146,16 +152,17 @@ export const useTranscription = () => {
         taskId = task.id!;
 
         // Create subtask
+        const subtaskData = {
+          name: config.subtaskName,
+          driving_variables: analysisConfig.drivingVariables,
+          response_variables: analysisConfig.responseVariables,
+          dates: problemStatement.dates,
+          dataset_id: datasetId,
+        } as Subtask;
         const subtask = await dynamoApiService.createSubtask(
           config.problemStatementId,
           taskId,
-          {
-            name: config.subtaskName,
-            driving_variables: analysisConfig.drivingVariables,
-            response_variables: analysisConfig.responseVariables,
-            dates: problemStatement.dates,
-            dataset_id: resource.dataset?.id || '',
-          } as Subtask,
+          subtaskData,
           accessToken,
         );
         subtaskId = subtask.id!;
@@ -176,7 +183,7 @@ export const useTranscription = () => {
       );
       if (dataItem) {
         dataItem.dataset = {
-          id: resource.dataset?.id || '',
+          id: datasetId,
           resources: [
             {
               id: resource.id,
