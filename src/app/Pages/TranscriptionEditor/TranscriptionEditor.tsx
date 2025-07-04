@@ -66,15 +66,18 @@ const TranscriptionEditor: React.FC = () => {
     try {
       // Check if URL is from CKAN TACC and add auth headers
       const headers: HeadersInit = {};
+      let data: TranscriptionData;
       if (resource.url.includes('ckan.tacc.utexas.edu') && accessToken) {
-        headers['Authorization'] = accessToken;
+        headers['Authorization'] = `${accessToken}`;
+        const response = await fetch(resource.url, {
+          method: 'GET',
+          headers,
+        });
+        data = await response.json();
+      } else {
+        const response = await fetch(resource.url);
+        data = await response.json();
       }
-
-      const response = await fetch(resource.url, {
-        method: 'GET',
-        headers,
-      });
-      const data: TranscriptionData = await response.json();
 
       // Convert speakers to segments for easier editing
       const segments: TranscriptionSegment[] = data.speakers.map((speaker) => ({
