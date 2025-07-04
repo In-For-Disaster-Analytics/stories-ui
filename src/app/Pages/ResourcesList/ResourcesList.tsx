@@ -7,7 +7,7 @@ import {
   FiMic,
   FiEdit,
 } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useStory } from '../../Stories/StoryContext';
 import TranscriptionModal from '../../../components/TranscriptionModal/TranscriptionModal';
 import { Resource } from '../../../types/resource';
@@ -30,7 +30,7 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
     selectedResourceForTranscription,
     setSelectedResourceForTranscription,
   ] = useState<Resource | null>(null);
-  const { resources } = useStory();
+  const { resources, dataset } = useStory();
   const history = useHistory();
 
   // Filter resources based on search query and mime type
@@ -79,7 +79,7 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
   };
 
   const handleEditTranscription = (resource: Resource) => {
-    history.push(`/transcription-editor/${resource.id}`, {
+    history.push(`/stories/${dataset?.id}/resources/${resource.id}/transcriptionEditor`, {
       resource,
     });
   };

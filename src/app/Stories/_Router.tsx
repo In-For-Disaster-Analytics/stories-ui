@@ -1,9 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Story from './Story';
-import Resources from './Resources/Resources';
 import NewStory from './NewStory';
 import StoriesList from '../Pages/StoriesList';
+import SingleStoryRouter from './SingleStoryRouter';
 
 const StoriesRouter: React.FC = () => {
   return (
@@ -14,11 +13,8 @@ const StoriesRouter: React.FC = () => {
       <Route exact path="/stories">
         <StoriesList />
       </Route>
-      <Route exact path="/stories/:id">
-        <Story />
-      </Route>
-      <Route path="/stories/:id/resources">
-        <Resources />
+      <Route path="/stories/:id">
+        <SingleStoryRouter />
       </Route>
     </Switch>
   );

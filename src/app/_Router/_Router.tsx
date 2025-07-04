@@ -6,7 +6,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Loading } from '../common/Loading';
 import StoriesRouter from '../Stories/_Router';
 import StoriesList from '../Pages/StoriesList';
-import TranscriptionEditor from '../Pages/TranscriptionEditor';
 const Router: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
   if (isLoading) {
@@ -20,9 +19,6 @@ const Router: React.FC = () => {
       </Route>
       <ProtectedRoute isAuthenticated={isAuthenticated} exact path="/">
         <StoriesList />
-      </ProtectedRoute>
-      <ProtectedRoute isAuthenticated={isAuthenticated} exact path="/transcription-editor/:resourceId">
-        <TranscriptionEditor />
       </ProtectedRoute>
       <ProtectedRoute isAuthenticated={isAuthenticated} path="/stories">
         <StoriesRouter />

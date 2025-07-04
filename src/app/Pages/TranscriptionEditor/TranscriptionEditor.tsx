@@ -10,6 +10,7 @@ import {
   FiPlus,
   FiTrash2,
   FiScissors,
+  FiMusic,
 } from 'react-icons/fi';
 import { Resource } from '../../../types/resource';
 import {
@@ -17,6 +18,7 @@ import {
   TranscriptionSegment,
   TranscriptionEditorConfig,
 } from '../../../types/transcription';
+import { useStory } from '../../Stories/StoryContext';
 
 const TranscriptionEditor: React.FC = () => {
   const { resourceId } = useParams<{ resourceId: string }>();
@@ -24,6 +26,7 @@ const TranscriptionEditor: React.FC = () => {
   const history = useHistory();
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { resources, dataset } = useStory();
 
   // Get resource from navigation state
   const resource = (location.state as { resource?: Resource })?.resource;
@@ -34,19 +37,25 @@ const TranscriptionEditor: React.FC = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [selectedMediaResource, setSelectedMediaResource] = useState<Resource | null>(null);
   const [config, setConfig] = useState<TranscriptionEditorConfig>({
     seekOnClick: true,
     maxCPS: 20,
   });
 
+  // Get available audio/video resources from the dataset
+  const mediaResources = resources.filter((r) => 
+    r.mimetype?.startsWith('audio/') || r.mimetype?.startsWith('video/')
+  );
+
   const getMediaElement = useCallback((): HTMLMediaElement | null => {
-    if (resource?.mimetype?.startsWith('audio/')) {
+    if (selectedMediaResource?.mimetype?.startsWith('audio/')) {
       return audioRef.current;
-    } else if (resource?.mimetype?.startsWith('video/')) {
+    } else if (selectedMediaResource?.mimetype?.startsWith('video/')) {
       return videoRef.current;
     }
     return null;
-  }, [resource]);
+  }, [selectedMediaResource]);
 
   // Load transcription data
   const fetchTranscriptionData = useCallback(async () => {
@@ -192,8 +201,19 @@ const TranscriptionEditor: React.FC = () => {
     alert('Transcription saved successfully!');
   };
 
+  const handleMediaResourceSelect = (mediaResource: Resource) => {
+    setSelectedMediaResource(mediaResource);
+    setCurrentTime(0);
+    setIsPlaying(false);
+  };
+
+  const getResourceDisplayName = (resource: Resource): string => {
+    const type = resource.mimetype?.startsWith('audio/') ? '🎵' : '🎥';
+    return `${type} ${resource.name}`;
+  };
+
   // Suppress unused variable warnings
-  console.log('Resource ID:', resourceId);
+  console.log('Story ID:', dataset?.id, 'Resource ID:', resourceId);
 
   if (!resource) {
     return (
@@ -262,64 +282,104 @@ const TranscriptionEditor: React.FC = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Media Player</h3>
               
-              {/* Audio/Video Element */}
+              {/* Media Resource Selector */}
               <div className="mb-4">
-                {resource.mimetype?.startsWith('audio/') && (
-                  <audio
-                    ref={audioRef}
-                    src={resource.url}
-                    className="w-full"
-                    controls
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                  />
-                )}
-                {resource.mimetype?.startsWith('video/') && (
-                  <video
-                    ref={videoRef}
-                    src={resource.url}
-                    className="w-full rounded-lg"
-                    controls
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                  />
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <FiMusic className="inline w-4 h-4 mr-2" />
+                  Select Audio/Video
+                </label>
+                {mediaResources.length > 0 ? (
+                  <select
+                    value={selectedMediaResource?.id || ''}
+                    onChange={(e) => {
+                      const selected = mediaResources.find(r => r.id === e.target.value);
+                      if (selected) handleMediaResourceSelect(selected);
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  >
+                    <option value="">Select media file...</option>
+                    {mediaResources.map((mediaResource) => (
+                      <option key={mediaResource.id} value={mediaResource.id}>
+                        {getResourceDisplayName(mediaResource)}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="text-sm text-gray-500 p-3 bg-gray-50 rounded-lg">
+                    No audio or video files found in this dataset
+                  </div>
                 )}
               </div>
 
+              {/* Audio/Video Element */}
+              {selectedMediaResource && (
+                <div className="mb-4">
+                  {selectedMediaResource.mimetype?.startsWith('audio/') && (
+                    <audio
+                      ref={audioRef}
+                      src={selectedMediaResource.url}
+                      className="w-full"
+                      controls
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                    />
+                  )}
+                  {selectedMediaResource.mimetype?.startsWith('video/') && (
+                    <video
+                      ref={videoRef}
+                      src={selectedMediaResource.url}
+                      className="w-full rounded-lg"
+                      controls
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                    />
+                  )}
+                </div>
+              )}
+
               {/* Custom Controls */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={togglePlayPause}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                  >
-                    {isPlaying ? <FiPause className="w-4 h-4" /> : <FiPlay className="w-4 h-4" />}
-                  </button>
-                  <div className="flex items-center space-x-2">
-                    <FiVolume2 className="w-4 h-4 text-gray-500" />
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={volume}
-                      onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                      className="w-20"
+              {selectedMediaResource && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={togglePlayPause}
+                      className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                    >
+                      {isPlaying ? <FiPause className="w-4 h-4" /> : <FiPlay className="w-4 h-4" />}
+                    </button>
+                    <div className="flex items-center space-x-2">
+                      <FiVolume2 className="w-4 h-4 text-gray-500" />
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={volume}
+                        onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                        className="w-20"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="text-sm text-gray-500 text-center">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </div>
+                  
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-100"
+                      style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
                     />
                   </div>
                 </div>
-                
-                <div className="text-sm text-gray-500 text-center">
-                  {formatTime(currentTime)} / {formatTime(duration)}
+              )}
+
+              {!selectedMediaResource && mediaResources.length > 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <FiMusic className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <p className="text-sm">Select an audio or video file to start</p>
                 </div>
-                
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-100"
-                    style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-                  />
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
