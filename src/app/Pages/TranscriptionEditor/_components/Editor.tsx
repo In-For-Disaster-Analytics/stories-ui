@@ -86,30 +86,40 @@ const Editor: React.FC<EditorProps> = ({
                 return (
                   <tr 
                     key={index} 
-                    className={`hover:bg-gray-50 ${
+                    className={`hover:bg-gray-50 cursor-pointer ${
                       isPlaying 
                         ? 'bg-blue-50 border-l-4 border-blue-400' 
                         : ''
                     }`}
+                    onClick={() => onTimestampClick(segment.timestamp[0])}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-1">
                         <button
-                          onClick={() => onAddSegment(index)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAddSegment(index);
+                          }}
                           className="text-green-600 hover:text-green-900"
                           title="Add segment"
                         >
                           <FiPlus className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => onSplitSegment(index)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSplitSegment(index);
+                          }}
                           className="text-blue-600 hover:text-blue-900"
                           title="Split segment"
                         >
                           <FiScissors className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => onDeleteSegment(index)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDeleteSegment(index);
+                          }}
                           className="text-red-600 hover:text-red-900"
                           title="Delete segment"
                         >
@@ -124,6 +134,7 @@ const Editor: React.FC<EditorProps> = ({
                         onChange={(e) =>
                           onUpdateSegment(index, 'speaker', e.target.value)
                         }
+                        onClick={(e) => e.stopPropagation()}
                         className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                       />
                     </td>
@@ -149,6 +160,7 @@ const Editor: React.FC<EditorProps> = ({
                         onChange={(e) =>
                           onUpdateSegment(index, 'text', e.target.value)
                         }
+                        onClick={(e) => e.stopPropagation()}
                         className={`w-full px-2 py-1 border rounded text-sm resize-y ${
                           isHighCPS
                             ? 'border-red-300 bg-red-50'

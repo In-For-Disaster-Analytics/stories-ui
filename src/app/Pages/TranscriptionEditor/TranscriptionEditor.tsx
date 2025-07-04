@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import { FiArrowLeft, FiSettings, FiSave } from 'react-icons/fi';
+import { FiArrowLeft, FiSave } from 'react-icons/fi';
 import { Resource } from '../../../types/resource';
 import {
   TranscriptionData,
@@ -24,8 +24,7 @@ const TranscriptionEditor: React.FC = () => {
   const [segments, setSegments] = useState<TranscriptionSegment[]>([]);
   const [selectedMediaResource, setSelectedMediaResource] =
     useState<Resource | null>(null);
-  const [config, setConfig] = useState<TranscriptionEditorConfig>({
-    seekOnClick: true,
+  const [config] = useState<TranscriptionEditorConfig>({
     maxCPS: 20,
   });
 
@@ -100,12 +99,14 @@ const TranscriptionEditor: React.FC = () => {
       Math.abs(mediaElement.currentTime - currentPlayTimeRef.current) >
         tolerance
     ) {
-      console.log(
-        'Syncing time:',
-        mediaElement.currentTime,
-        currentPlayTimeRef.current,
-      );
-      mediaElement.currentTime = currentPlayTimeRef.current;
+      try {
+        const targetTime = currentPlayTimeRef.current;
+        if (targetTime >= 0 && targetTime <= (mediaElement.duration || Infinity)) {
+          mediaElement.currentTime = targetTime;
+        }
+      } catch (error) {
+        console.error('Seeking failed:', error);
+      }
       isSeekingRef.current = false; // Reset seeking flag
     }
   }, [displayTime, canPlay, getMediaElement]);
@@ -134,9 +135,7 @@ const TranscriptionEditor: React.FC = () => {
   };
 
   const handleTimestampClick = (time: number) => {
-    if (config.seekOnClick) {
-      seekToTime(time);
-    }
+    seekToTime(time);
   };
 
   const updateSegment = (
@@ -253,19 +252,6 @@ const TranscriptionEditor: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <button
-                onClick={() =>
-                  setConfig({ ...config, seekOnClick: !config.seekOnClick })
-                }
-                className={`inline-flex items-center px-3 py-2 border text-sm font-medium rounded-md ${
-                  config.seekOnClick
-                    ? 'border-blue-300 text-blue-700 bg-blue-50'
-                    : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
-                }`}
-              >
-                <FiSettings className="w-4 h-4 mr-2" />
-                Seek on Click
-              </button>
               <button
                 onClick={saveTranscription}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"

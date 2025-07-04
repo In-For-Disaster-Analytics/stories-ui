@@ -22,7 +22,6 @@ export interface TranscriptionData {
 }
 
 export interface TranscriptionEditorConfig {
-  seekOnClick: boolean;
   maxCPS: number; // Maximum characters per second threshold
 }
 
