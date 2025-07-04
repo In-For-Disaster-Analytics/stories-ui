@@ -8,6 +8,7 @@ import {
 interface EditorProps {
   segments: TranscriptionSegment[];
   config: TranscriptionEditorConfig;
+  currentTime: number;
   onUpdateSegment: (
     index: number,
     field: keyof TranscriptionSegment,
@@ -22,6 +23,7 @@ interface EditorProps {
 const Editor: React.FC<EditorProps> = ({
   segments,
   config,
+  currentTime,
   onUpdateSegment,
   onAddSegment,
   onDeleteSegment,
@@ -36,6 +38,12 @@ const Editor: React.FC<EditorProps> = ({
 
   const calculateCPS = (text: string, duration: number): number => {
     return duration > 0 ? text.length / duration : 0;
+  };
+
+  const isSegmentPlaying = (segment: TranscriptionSegment): boolean => {
+    return (
+      currentTime >= segment.timestamp[0] && currentTime <= segment.timestamp[1]
+    );
   };
 
   return (
@@ -73,9 +81,17 @@ const Editor: React.FC<EditorProps> = ({
                 const duration = segment.timestamp[1] - segment.timestamp[0];
                 const cps = calculateCPS(segment.text, duration);
                 const isHighCPS = cps > config.maxCPS;
+                const isPlaying = isSegmentPlaying(segment);
 
                 return (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr 
+                    key={index} 
+                    className={`hover:bg-gray-50 ${
+                      isPlaying 
+                        ? 'bg-blue-50 border-l-4 border-blue-400' 
+                        : ''
+                    }`}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-1">
                         <button

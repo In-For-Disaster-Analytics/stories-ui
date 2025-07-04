@@ -296,6 +296,7 @@ const TranscriptionEditor: React.FC = () => {
           <Editor
             segments={segments}
             config={config}
+            currentTime={displayTime}
             onUpdateSegment={updateSegment}
             onAddSegment={addSegment}
             onDeleteSegment={deleteSegment}
