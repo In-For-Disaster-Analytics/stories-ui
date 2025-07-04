@@ -9,6 +9,7 @@ import {
 } from '../../../types/transcription';
 import { useStory } from '../../Stories/StoryContext';
 import { useUpdateResource } from '../../../hooks/ckan/resources/useUpdateResource';
+import useAccessToken from '../../../hooks/auth/useAccessToken';
 import { Sidebar, Editor } from './_components';
 
 const TranscriptionEditor: React.FC = () => {
@@ -22,6 +23,7 @@ const TranscriptionEditor: React.FC = () => {
     isPending: isSaving,
     error: saveError,
   } = useUpdateResource();
+  const { accessToken } = useAccessToken();
 
   // Get resource from navigation state
   const resource = (location.state as { resource?: Resource })?.resource;
@@ -62,7 +64,16 @@ const TranscriptionEditor: React.FC = () => {
     if (!resource) return;
 
     try {
-      const response = await fetch(resource.url);
+      // Check if URL is from CKAN TACC and add auth headers
+      const headers: HeadersInit = {};
+      if (resource.url.includes('ckan.tacc.utexas.edu') && accessToken) {
+        headers['Authorization'] = accessToken;
+      }
+
+      const response = await fetch(resource.url, {
+        method: 'GET',
+        headers,
+      });
       const data: TranscriptionData = await response.json();
 
       // Convert speakers to segments for easier editing
@@ -75,7 +86,7 @@ const TranscriptionEditor: React.FC = () => {
     } catch (error) {
       console.error('Error loading transcription data:', error);
     }
-  }, [resource]);
+  }, [resource, accessToken]);
 
   useEffect(() => {
     if (resource) {
