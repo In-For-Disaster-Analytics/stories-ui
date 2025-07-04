@@ -7,7 +7,7 @@ import {
   FiMic,
   FiEdit,
 } from 'react-icons/fi';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useStory } from '../../Stories/StoryContext';
 import TranscriptionModal from '../../../components/TranscriptionModal/TranscriptionModal';
 import { Resource } from '../../../types/resource';
@@ -79,9 +79,12 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
   };
 
   const handleEditTranscription = (resource: Resource) => {
-    history.push(`/stories/${dataset?.id}/resources/${resource.id}/transcriptionEditor`, {
-      resource,
-    });
+    history.push(
+      `/stories/${dataset?.id}/resources/${resource.id}/transcriptionEditor`,
+      {
+        resource,
+      },
+    );
   };
 
   const isTranscriptionFile = (resource: Resource): boolean => {

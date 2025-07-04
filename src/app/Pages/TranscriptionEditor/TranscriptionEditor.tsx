@@ -1,17 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useLocation, useHistory } from 'react-router-dom';
-import {
-  FiArrowLeft,
-  FiPlay,
-  FiPause,
-  FiVolume2,
-  FiSettings,
-  FiSave,
-  FiPlus,
-  FiTrash2,
-  FiScissors,
-  FiMusic,
-} from 'react-icons/fi';
+import { useLocation, useHistory } from 'react-router-dom';
+import { FiArrowLeft, FiSettings, FiSave } from 'react-icons/fi';
 import { Resource } from '../../../types/resource';
 import {
   TranscriptionData,
@@ -19,33 +8,39 @@ import {
   TranscriptionEditorConfig,
 } from '../../../types/transcription';
 import { useStory } from '../../Stories/StoryContext';
+import { Sidebar, Editor } from './_components';
 
 const TranscriptionEditor: React.FC = () => {
-  const { resourceId } = useParams<{ resourceId: string }>();
   const location = useLocation();
   const history = useHistory();
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { resources, dataset } = useStory();
+  const { resources } = useStory();
 
   // Get resource from navigation state
   const resource = (location.state as { resource?: Resource })?.resource;
 
   // State management
   const [segments, setSegments] = useState<TranscriptionSegment[]>([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
-  const [selectedMediaResource, setSelectedMediaResource] = useState<Resource | null>(null);
+  const [selectedMediaResource, setSelectedMediaResource] =
+    useState<Resource | null>(null);
   const [config, setConfig] = useState<TranscriptionEditorConfig>({
     seekOnClick: true,
     maxCPS: 20,
   });
 
+  // Use refs to avoid re-renders for frequently changing values
+  const currentPlayTimeRef = useRef(0);
+  const isSeekingRef = useRef(false);
+  const lastUpdateTimeRef = useRef(0);
+
+  // State for UI updates (throttled)
+  const [displayTime, setDisplayTime] = useState(0);
+  const [canPlay, setCanPlay] = useState(false);
+
   // Get available audio/video resources from the dataset
-  const mediaResources = resources.filter((r) => 
-    r.mimetype?.startsWith('audio/') || r.mimetype?.startsWith('video/')
+  const mediaResources = resources.filter(
+    (r) => r.mimetype?.startsWith('audio/') || r.mimetype?.startsWith('video/'),
   );
 
   const getMediaElement = useCallback((): HTMLMediaElement | null => {
@@ -64,9 +59,9 @@ const TranscriptionEditor: React.FC = () => {
     try {
       const response = await fetch(resource.url);
       const data: TranscriptionData = await response.json();
-      
+
       // Convert speakers to segments for easier editing
-      const segments: TranscriptionSegment[] = data.speakers.map(speaker => ({
+      const segments: TranscriptionSegment[] = data.speakers.map((speaker) => ({
         speaker: speaker.speaker,
         timestamp: speaker.timestamp,
         text: speaker.text,
@@ -83,44 +78,59 @@ const TranscriptionEditor: React.FC = () => {
     }
   }, [resource, fetchTranscriptionData]);
 
-  // Media player event handlers
-  useEffect(() => {
-    const mediaElement = getMediaElement();
-    if (!mediaElement) return;
-
-    const handleTimeUpdate = () => setCurrentTime(mediaElement.currentTime);
-    const handleDurationChange = () => setDuration(mediaElement.duration);
-    const handleEnded = () => setIsPlaying(false);
-
-    mediaElement.addEventListener('timeupdate', handleTimeUpdate);
-    mediaElement.addEventListener('durationchange', handleDurationChange);
-    mediaElement.addEventListener('ended', handleEnded);
-
-    return () => {
-      mediaElement.removeEventListener('timeupdate', handleTimeUpdate);
-      mediaElement.removeEventListener('durationchange', handleDurationChange);
-      mediaElement.removeEventListener('ended', handleEnded);
-    };
-  }, [getMediaElement]);
-
-  const togglePlayPause = () => {
-    const mediaElement = getMediaElement();
-    if (!mediaElement) return;
-
-    if (isPlaying) {
-      mediaElement.pause();
-    } else {
-      mediaElement.play();
+  // Throttled time update for UI (only update display every 100ms)
+  const updateDisplayTime = useCallback((time: number) => {
+    const now = Date.now();
+    if (now - lastUpdateTimeRef.current > 100) {
+      setDisplayTime(time);
+      lastUpdateTimeRef.current = now;
     }
-    setIsPlaying(!isPlaying);
-  };
+  }, []);
+
+  // Time synchronization with tolerance to prevent infinite loops
+  useEffect(() => {
+    const tolerance = 0.1; // Tolerance level in seconds
+    const mediaElement = getMediaElement();
+
+    // Only sync if we're seeking (not during normal playback)
+    if (
+      canPlay &&
+      mediaElement &&
+      isSeekingRef.current &&
+      Math.abs(mediaElement.currentTime - currentPlayTimeRef.current) >
+        tolerance
+    ) {
+      console.log(
+        'Syncing time:',
+        mediaElement.currentTime,
+        currentPlayTimeRef.current,
+      );
+      mediaElement.currentTime = currentPlayTimeRef.current;
+      isSeekingRef.current = false; // Reset seeking flag
+    }
+  }, [displayTime, canPlay, getMediaElement]);
+
+  // Stable event handlers to prevent re-renders
+  const handleTimeUpdate = useCallback(
+    (time: number) => {
+      currentPlayTimeRef.current = time;
+      updateDisplayTime(time);
+    },
+    [updateDisplayTime],
+  );
+
+  const handleCanPlay = useCallback(() => {
+    setCanPlay(true);
+  }, []);
+
+  const handleLoadedMetadata = useCallback(() => {
+    setCanPlay(true);
+  }, []);
 
   const seekToTime = (time: number) => {
-    const mediaElement = getMediaElement();
-    if (!mediaElement) return;
-
-    mediaElement.currentTime = time;
-    setCurrentTime(time);
+    currentPlayTimeRef.current = time;
+    isSeekingRef.current = true;
+    setDisplayTime(time);
   };
 
   const handleTimestampClick = (time: number) => {
@@ -129,28 +139,17 @@ const TranscriptionEditor: React.FC = () => {
     }
   };
 
-  const handleVolumeChange = (newVolume: number) => {
-    const mediaElement = getMediaElement();
-    if (!mediaElement) return;
-
-    mediaElement.volume = newVolume;
-    setVolume(newVolume);
-  };
-
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const calculateCPS = (text: string, duration: number): number => {
-    return duration > 0 ? text.length / duration : 0;
-  };
-
-  const updateSegment = (index: number, field: keyof TranscriptionSegment, value: string | [number, number]) => {
+  const updateSegment = (
+    index: number,
+    field: keyof TranscriptionSegment,
+    value: string | [number, number],
+  ) => {
     const newSegments = [...segments];
     if (field === 'timestamp') {
-      newSegments[index] = { ...newSegments[index], [field]: value as [number, number] };
+      newSegments[index] = {
+        ...newSegments[index],
+        [field]: value as [number, number],
+      };
     } else {
       newSegments[index] = { ...newSegments[index], [field]: value as string };
     }
@@ -160,7 +159,10 @@ const TranscriptionEditor: React.FC = () => {
   const addSegment = (afterIndex: number) => {
     const newSegment: TranscriptionSegment = {
       speaker: 'SPEAKER_NEW',
-      timestamp: [segments[afterIndex]?.timestamp[1] || 0, (segments[afterIndex]?.timestamp[1] || 0) + 5],
+      timestamp: [
+        segments[afterIndex]?.timestamp[1] || 0,
+        (segments[afterIndex]?.timestamp[1] || 0) + 5,
+      ],
       text: 'New segment text',
     };
     const newSegments = [...segments];
@@ -177,13 +179,13 @@ const TranscriptionEditor: React.FC = () => {
     const segment = segments[index];
     const midTime = (segment.timestamp[0] + segment.timestamp[1]) / 2;
     const textMid = Math.floor(segment.text.length / 2);
-    
+
     const firstHalf: TranscriptionSegment = {
       ...segment,
       timestamp: [segment.timestamp[0], midTime],
       text: segment.text.substring(0, textMid),
     };
-    
+
     const secondHalf: TranscriptionSegment = {
       ...segment,
       timestamp: [midTime, segment.timestamp[1]],
@@ -203,23 +205,19 @@ const TranscriptionEditor: React.FC = () => {
 
   const handleMediaResourceSelect = (mediaResource: Resource) => {
     setSelectedMediaResource(mediaResource);
-    setCurrentTime(0);
-    setIsPlaying(false);
+    setCanPlay(false);
+    currentPlayTimeRef.current = 0;
+    setDisplayTime(0);
+    isSeekingRef.current = false;
   };
-
-  const getResourceDisplayName = (resource: Resource): string => {
-    const type = resource.mimetype?.startsWith('audio/') ? '🎵' : '🎥';
-    return `${type} ${resource.name}`;
-  };
-
-  // Suppress unused variable warnings
-  console.log('Story ID:', dataset?.id, 'Resource ID:', resourceId);
 
   if (!resource) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Resource not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Resource not found
+          </h2>
           <button
             onClick={() => history.goBack()}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
@@ -232,6 +230,7 @@ const TranscriptionEditor: React.FC = () => {
     );
   }
 
+  console.log('TranscriptionEditor', 're-render');
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -247,13 +246,17 @@ const TranscriptionEditor: React.FC = () => {
                 Back
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Edit Transcription</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Edit Transcription
+                </h1>
                 <p className="text-gray-600">{resource.name}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <button
-                onClick={() => setConfig({ ...config, seekOnClick: !config.seekOnClick })}
+                onClick={() =>
+                  setConfig({ ...config, seekOnClick: !config.seekOnClick })
+                }
                 className={`inline-flex items-center px-3 py-2 border text-sm font-medium rounded-md ${
                   config.seekOnClick
                     ? 'border-blue-300 text-blue-700 bg-blue-50'
@@ -277,222 +280,28 @@ const TranscriptionEditor: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Media Player */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Media Player</h3>
-              
-              {/* Media Resource Selector */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <FiMusic className="inline w-4 h-4 mr-2" />
-                  Select Audio/Video
-                </label>
-                {mediaResources.length > 0 ? (
-                  <select
-                    value={selectedMediaResource?.id || ''}
-                    onChange={(e) => {
-                      const selected = mediaResources.find(r => r.id === e.target.value);
-                      if (selected) handleMediaResourceSelect(selected);
-                    }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  >
-                    <option value="">Select media file...</option>
-                    {mediaResources.map((mediaResource) => (
-                      <option key={mediaResource.id} value={mediaResource.id}>
-                        {getResourceDisplayName(mediaResource)}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <div className="text-sm text-gray-500 p-3 bg-gray-50 rounded-lg">
-                    No audio or video files found in this dataset
-                  </div>
-                )}
-              </div>
+          {/* Sidebar Component */}
+          <Sidebar
+            mediaResources={mediaResources}
+            selectedMediaResource={selectedMediaResource}
+            audioRef={audioRef}
+            videoRef={videoRef}
+            onMediaResourceSelect={handleMediaResourceSelect}
+            onTimeUpdate={handleTimeUpdate}
+            onCanPlay={handleCanPlay}
+            onLoadedMetadata={handleLoadedMetadata}
+          />
 
-              {/* Audio/Video Element */}
-              {selectedMediaResource && (
-                <div className="mb-4">
-                  {selectedMediaResource.mimetype?.startsWith('audio/') && (
-                    <audio
-                      ref={audioRef}
-                      src={selectedMediaResource.url}
-                      className="w-full"
-                      controls
-                      onPlay={() => setIsPlaying(true)}
-                      onPause={() => setIsPlaying(false)}
-                    />
-                  )}
-                  {selectedMediaResource.mimetype?.startsWith('video/') && (
-                    <video
-                      ref={videoRef}
-                      src={selectedMediaResource.url}
-                      className="w-full rounded-lg"
-                      controls
-                      onPlay={() => setIsPlaying(true)}
-                      onPause={() => setIsPlaying(false)}
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* Custom Controls */}
-              {selectedMediaResource && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <button
-                      onClick={togglePlayPause}
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      {isPlaying ? <FiPause className="w-4 h-4" /> : <FiPlay className="w-4 h-4" />}
-                    </button>
-                    <div className="flex items-center space-x-2">
-                      <FiVolume2 className="w-4 h-4 text-gray-500" />
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.1"
-                        value={volume}
-                        onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                        className="w-20"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="text-sm text-gray-500 text-center">
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-100"
-                      style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {!selectedMediaResource && mediaResources.length > 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  <FiMusic className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="text-sm">Select an audio or video file to start</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Transcription Editor */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Transcription Segments ({segments.length})
-                </h3>
-              </div>
-              
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Speaker
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Start
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        End
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Text
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {segments.map((segment, index) => {
-                      const duration = segment.timestamp[1] - segment.timestamp[0];
-                      const cps = calculateCPS(segment.text, duration);
-                      const isHighCPS = cps > config.maxCPS;
-                      
-                      return (
-                        <tr key={index} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center space-x-1">
-                              <button
-                                onClick={() => addSegment(index)}
-                                className="text-green-600 hover:text-green-900"
-                                title="Add segment"
-                              >
-                                <FiPlus className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => splitSegment(index)}
-                                className="text-blue-600 hover:text-blue-900"
-                                title="Split segment"
-                              >
-                                <FiScissors className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => deleteSegment(index)}
-                                className="text-red-600 hover:text-red-900"
-                                title="Delete segment"
-                              >
-                                <FiTrash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <input
-                              type="text"
-                              value={segment.speaker}
-                              onChange={(e) => updateSegment(index, 'speaker', e.target.value)}
-                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                            />
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <button
-                              onClick={() => handleTimestampClick(segment.timestamp[0])}
-                              className="text-blue-600 hover:text-blue-900 text-sm font-mono"
-                            >
-                              {formatTime(segment.timestamp[0])}
-                            </button>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <button
-                              onClick={() => handleTimestampClick(segment.timestamp[1])}
-                              className="text-blue-600 hover:text-blue-900 text-sm font-mono"
-                            >
-                              {formatTime(segment.timestamp[1])}
-                            </button>
-                          </td>
-                          <td className="px-6 py-4">
-                            <textarea
-                              value={segment.text}
-                              onChange={(e) => updateSegment(index, 'text', e.target.value)}
-                              className={`w-full px-2 py-1 border rounded text-sm resize-none ${
-                                isHighCPS ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                              }`}
-                              rows={2}
-                            />
-                            {isHighCPS && (
-                              <div className="text-xs text-red-600 mt-1">
-                                High CPS: {cps.toFixed(1)} chars/sec
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          {/* Editor Component */}
+          <Editor
+            segments={segments}
+            config={config}
+            onUpdateSegment={updateSegment}
+            onAddSegment={addSegment}
+            onDeleteSegment={deleteSegment}
+            onSplitSegment={splitSegment}
+            onTimestampClick={handleTimestampClick}
+          />
         </div>
       </div>
     </div>
