@@ -4,10 +4,10 @@ import {
   FiSearch,
   FiFilter,
   FiDownload,
-  FiEye,
-  FiCode,
   FiMic,
+  FiEdit,
 } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 import { useStory } from '../../Stories/StoryContext';
 import TranscriptionModal from '../../../components/TranscriptionModal/TranscriptionModal';
 import { Resource } from '../../../types/resource';
@@ -30,7 +30,8 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
     selectedResourceForTranscription,
     setSelectedResourceForTranscription,
   ] = useState<Resource | null>(null);
-  const { resources } = useStory();
+  const { resources, dataset } = useStory();
+  const history = useHistory();
 
   // Filter resources based on search query and mime type
   const filteredResources = resources.filter((resource) => {
@@ -75,6 +76,23 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleEditTranscription = (resource: Resource) => {
+    history.push(
+      `/stories/${dataset?.id}/resources/${resource.id}/transcriptionEditor`,
+      {
+        resource,
+      },
+    );
+  };
+
+  const isTranscriptionFile = (resource: Resource): boolean => {
+    return (
+      resource.mimetype === 'application/json' ||
+      resource.name.toLowerCase().endsWith('.json') ||
+      resource.format === 'JSON'
+    );
   };
 
   const getResourceIcon = (mimetype: string | null) => {
@@ -244,6 +262,18 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
                               <FiCode className="w-3 h-3 mr-1" />
                               Embed
                             </button> */}
+
+                            {isTranscriptionFile(resource) && (
+                              <button
+                                onClick={() =>
+                                  handleEditTranscription(resource)
+                                }
+                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                              >
+                                <FiEdit className="w-3 h-3 mr-1" />
+                                Edit Transcription
+                              </button>
+                            )}
 
                             {resource.mimetype !== null &&
                               (resource.mimetype.startsWith('audio/') ||
