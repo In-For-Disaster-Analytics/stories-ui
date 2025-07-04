@@ -8,6 +8,7 @@ import {
   TranscriptionEditorConfig,
 } from '../../../types/transcription';
 import { useStory } from '../../Stories/StoryContext';
+import { useUpdateResource } from '../../../hooks/ckan/resources/useUpdateResource';
 import { Sidebar, Editor } from './_components';
 
 const TranscriptionEditor: React.FC = () => {
@@ -16,6 +17,11 @@ const TranscriptionEditor: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { resources } = useStory();
+  const {
+    updateResourceAsync,
+    isPending: isSaving,
+    error: saveError,
+  } = useUpdateResource();
 
   // Get resource from navigation state
   const resource = (location.state as { resource?: Resource })?.resource;
@@ -101,7 +107,10 @@ const TranscriptionEditor: React.FC = () => {
     ) {
       try {
         const targetTime = currentPlayTimeRef.current;
-        if (targetTime >= 0 && targetTime <= (mediaElement.duration || Infinity)) {
+        if (
+          targetTime >= 0 &&
+          targetTime <= (mediaElement.duration || Infinity)
+        ) {
           mediaElement.currentTime = targetTime;
         }
       } catch (error) {
@@ -197,9 +206,55 @@ const TranscriptionEditor: React.FC = () => {
   };
 
   const saveTranscription = async () => {
-    // TODO: Implement save functionality
-    console.log('Saving transcription:', segments);
-    alert('Transcription saved successfully!');
+    if (!resource || !segments.length) {
+      alert('No transcription data to save');
+      return;
+    }
+
+    try {
+      // Convert segments back to TranscriptionData format
+      const transcriptionData: TranscriptionData = {
+        speakers: segments.map((segment) => ({
+          speaker: segment.speaker,
+          timestamp: segment.timestamp,
+          text: segment.text,
+        })),
+        chunks: segments.map((segment) => ({
+          timestamp: segment.timestamp,
+          text: segment.text,
+        })),
+        text: segments.map((segment) => segment.text).join(' '),
+      };
+
+      // Create a file with the updated transcription data
+      const transcriptionBlob = new Blob(
+        [JSON.stringify(transcriptionData, null, 2)],
+        {
+          type: resource.mimetype || 'application/json',
+        },
+      );
+
+      const transcriptionFile = new File(
+        [transcriptionBlob],
+        resource.name || 'transcription.json',
+        { type: resource.mimetype || 'application/json' },
+      );
+
+      // Update the resource with the new transcription data
+      await updateResourceAsync({
+        id: resource.id,
+        file: transcriptionFile,
+        name: resource.name,
+        description: resource.description || 'Updated transcription data',
+        format: resource.format || 'JSON',
+        mimetype: resource.mimetype || 'application/json',
+      });
+
+      alert('Transcription saved successfully!');
+    } catch (error) {
+      console.error('Error saving transcription:', error);
+      alert('Failed to save transcription. Please try again.');
+    }
   };
 
   const handleMediaResourceSelect = (mediaResource: Resource) => {
@@ -254,10 +309,15 @@ const TranscriptionEditor: React.FC = () => {
             <div className="flex items-center space-x-2">
               <button
                 onClick={saveTranscription}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                disabled={isSaving || !segments.length}
+                className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md ${
+                  isSaving || !segments.length
+                    ? 'text-gray-400 bg-gray-300 cursor-not-allowed'
+                    : 'text-white bg-green-600 hover:bg-green-700'
+                }`}
               >
                 <FiSave className="w-4 h-4 mr-2" />
-                Save
+                {isSaving ? 'Saving...' : 'Save'}
               </button>
             </div>
           </div>
@@ -265,6 +325,15 @@ const TranscriptionEditor: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Error Display */}
+        {saveError && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+            <div className="text-sm text-red-600">
+              <strong>Save Error:</strong> {saveError.message}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Component */}
           <Sidebar

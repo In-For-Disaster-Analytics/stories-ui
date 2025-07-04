@@ -90,7 +90,8 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
   const isTranscriptionFile = (resource: Resource): boolean => {
     return (
       resource.mimetype === 'application/json' ||
-      resource.name.toLowerCase().endsWith('.json')
+      resource.name.toLowerCase().endsWith('.json') ||
+      resource.format === 'JSON'
     );
   };
 
