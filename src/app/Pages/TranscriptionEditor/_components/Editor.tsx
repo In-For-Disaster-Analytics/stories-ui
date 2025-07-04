@@ -47,7 +47,7 @@ const Editor: React.FC<EditorProps> = ({
   };
 
   return (
-    <div className="lg:col-span-2">
+    <div className="lg:col-span-3">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">
@@ -59,16 +59,16 @@ const Editor: React.FC<EditorProps> = ({
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="w-40 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Speaker
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="w-20 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Start
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="w-20 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   End
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -149,12 +149,12 @@ const Editor: React.FC<EditorProps> = ({
                         onChange={(e) =>
                           onUpdateSegment(index, 'text', e.target.value)
                         }
-                        className={`w-full px-2 py-1 border rounded text-sm resize-none ${
+                        className={`w-full px-2 py-1 border rounded text-sm resize-y ${
                           isHighCPS
                             ? 'border-red-300 bg-red-50'
                             : 'border-gray-300'
                         }`}
-                        rows={2}
+                        rows={4}
                       />
                       {isHighCPS && (
                         <div className="text-xs text-red-600 mt-1">
