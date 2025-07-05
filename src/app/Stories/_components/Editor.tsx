@@ -83,9 +83,6 @@ const EditorContent: React.FC = () => {
 const Editor: React.FC = () => {
   return (
     <div className="flex-1 container gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Editor Toolbar */}
-      <EditorToolbar />
-      {/* Editor Content */}
       <EditorContent />
     </div>
   );
