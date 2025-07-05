@@ -3,12 +3,12 @@ import { BsCheckCircle } from 'react-icons/bs';
 import { useStory } from '../StoryContext';
 
 const Footer: React.FC = () => {
-  const { 
-    handlePreview, 
-    handleSave, 
-    isDirty, 
-    isUpdating, 
-    updateError 
+  const {
+    handlePreview,
+    handleSave,
+    hasUnsavedChanges,
+    isUpdating,
+    updateError,
   } = useStory();
 
   return (
@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1.5 text-sm text-gray-600">
             <BsCheckCircle className="w-3.5 h-3.5" />
-            {isDirty ? 'Changes pending' : 'All changes saved'}
+            {hasUnsavedChanges ? 'Changes pending' : 'All changes saved'}
             {updateError && (
               <span className="text-red-600 ml-2">
                 • Error: {updateError.message}
@@ -33,9 +33,9 @@ const Footer: React.FC = () => {
             </button>
             <button
               onClick={handleSave}
-              disabled={!isDirty || isUpdating}
+              disabled={!hasUnsavedChanges || isUpdating}
               className={`px-5 py-2 text-sm font-medium rounded-full ${
-                !isDirty || isUpdating
+                !hasUnsavedChanges || isUpdating
                   ? 'text-gray-400 bg-gray-300 cursor-not-allowed'
                   : 'text-white bg-blue-600 hover:bg-blue-700'
               }`}

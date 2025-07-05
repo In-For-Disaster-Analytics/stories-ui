@@ -45,9 +45,10 @@ interface StoryContextType {
   resources: Resource[];
   setResources: (resources: Resource[]) => void;
   // Dataset update functionality
+  isDatasetLoading: boolean;
   datasetTitle: string;
   datasetDescription: string;
-  isDirty: boolean;
+  hasUnsavedChanges: boolean;
   isUpdating: boolean;
   updateError: ErrorState | null;
   setDatasetTitle: (title: string) => void;
@@ -71,15 +72,21 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
   children,
   id,
 }) => {
-  const { dataset, refetch } = useDetailDataset(id);
+  const {
+    dataset,
+    refetch,
+    isLoading: isDatasetLoading,
+  } = useDetailDataset(id);
+  console.log('isDatasetLoading', isDatasetLoading);
+  console.log('dataset', dataset);
   const {
     updateDatasetAsync,
     isPending: isUpdatingDataset,
     error: datasetUpdateError,
   } = useUpdateDataset();
-  
+
   const [resources, setResources] = useState<Resource[]>([]);
-  
+
   // Notes resource management
   const {
     notes,
@@ -92,7 +99,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     datasetId: id,
     resources,
   });
-  
+
   const [title, setTitle] = useState(dataset?.title || dataset?.name || '');
   const [subtitle, setSubtitle] = useState(
     'A comprehensive analysis of water quality trends and environmental impacts',
@@ -100,12 +107,14 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<ErrorState | null>(null);
-  
+
   // Dataset editing state
   const [datasetTitle, setDatasetTitle] = useState(dataset?.title || '');
-  const [datasetDescription, setDatasetDescription] = useState(dataset?.notes || '');
+  const [datasetDescription, setDatasetDescription] = useState(
+    dataset?.notes || '',
+  );
   const [updateError, setUpdateError] = useState<ErrorState | null>(null);
-  
+
   // Track original notes for dirty detection
   const [originalNotes, setOriginalNotes] = useState('');
   const hasLoadedInitialNotes = useRef(false);
@@ -134,14 +143,14 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
   };
 
   const handleSave = async () => {
-    if (!dataset || !isDirty) return;
+    if (!dataset || !hasUnsavedChanges) return;
 
     try {
       // Save dataset metadata if changed
-      const hasDatasetChanges = 
-        datasetTitle !== (dataset?.title || '') || 
+      const hasDatasetChanges =
+        datasetTitle !== (dataset?.title || '') ||
         datasetDescription !== (dataset?.notes || '');
-      
+
       if (hasDatasetChanges) {
         await updateDatasetAsync({
           id: dataset.id,
@@ -149,14 +158,14 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
           notes: datasetDescription,
         });
       }
-      
+
       // Save notes if changed
       const hasNotesChanges = notes !== originalNotes;
       if (hasNotesChanges) {
         await saveNotes(notes);
         setOriginalNotes(notes);
       }
-      
+
       // Refresh dataset to get updated data
       await refetch();
     } catch (error) {
@@ -192,7 +201,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
           } as Resource;
         }),
       );
-      
+
       // Update dataset editing state when dataset changes
       setDatasetTitle(dataset.title || '');
       setDatasetDescription(dataset.notes || '');
@@ -209,10 +218,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
   }, [isNotesLoading, notesError, notes]);
 
   // Check if dataset has unsaved changes
-  const isDirty = 
-    datasetTitle !== (dataset?.title || '') || 
-    datasetDescription !== (dataset?.notes || '') ||
-    notes !== originalNotes;
+  const hasUnsavedChanges = notes !== originalNotes;
 
   // Handle dataset update errors
   useEffect(() => {
@@ -255,7 +261,8 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     // Dataset update functionality
     datasetTitle,
     datasetDescription,
-    isDirty,
+    hasUnsavedChanges,
+    isDatasetLoading,
     isUpdating: isUpdatingDataset,
     updateError,
     setDatasetTitle,
