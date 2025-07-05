@@ -68,7 +68,7 @@ const TranscriptionEditor: React.FC = () => {
       const headers: HeadersInit = {};
       let data: TranscriptionData;
       if (resource.url.includes('ckan.tacc.utexas.edu') && accessToken) {
-        headers['Authorization'] = `${accessToken}`;
+        headers['Authorization'] = `Bearer ${accessToken}`;
         const response = await fetch(resource.url, {
           method: 'GET',
           headers,
