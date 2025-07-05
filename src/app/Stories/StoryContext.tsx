@@ -4,7 +4,6 @@ import React, {
   useState,
   ReactNode,
   useEffect,
-  useRef,
 } from 'react';
 import { useDetailDataset } from '../../hooks/ckan/datasets/useDetailDataset';
 import { useUpdateDataset } from '../../hooks/ckan/datasets/useUpdateDataset';
@@ -117,7 +116,6 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
 
   // Track original notes for dirty detection
   const [originalNotes, setOriginalNotes] = useState('');
-  const hasLoadedInitialNotes = useRef(false);
 
   const handleAddResource = () => {
     setIsModalOpen(true);
@@ -208,17 +206,23 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     }
   }, [dataset]);
 
-  // Update original notes only when notes are initially loaded
+  // Update original notes when notes are successfully loaded
   useEffect(() => {
-    // Only update originalNotes when notes are loaded for the first time
-    if (!isNotesLoading && !notesError && !hasLoadedInitialNotes.current) {
+    if (
+      !isNotesLoading &&
+      !notesError &&
+      notes !== '' &&
+      originalNotes === ''
+    ) {
       setOriginalNotes(notes);
-      hasLoadedInitialNotes.current = true;
     }
-  }, [isNotesLoading, notesError, notes]);
+  }, [isNotesLoading, notesError, notes, originalNotes]);
 
   // Check if dataset has unsaved changes
-  const hasUnsavedChanges = notes !== originalNotes;
+  const hasUnsavedChanges =
+    (notes || '') !== (originalNotes || '') ||
+    datasetTitle !== (dataset?.title || '') ||
+    datasetDescription !== (dataset?.notes || '');
 
   // Handle dataset update errors
   useEffect(() => {
