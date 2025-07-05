@@ -5,12 +5,12 @@ import { Link, useParams } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { 
+  const {
     handleAddResource,
     datasetTitle,
     datasetDescription,
     setDatasetTitle,
-    setDatasetDescription
+    setDatasetDescription,
   } = useStory();
 
   return (
@@ -34,14 +34,7 @@ const Header: React.FC = () => {
           />
         </div>
         <div className="flex justify-between items-center">
-          <div className="flex bg-gray-100 rounded-full p-1">
-            <div className="px-4 py-1.5 text-sm rounded-full bg-white shadow-sm text-blue-600 font-medium cursor-pointer">
-              Edit
-            </div>
-            <div className="px-4 py-1.5 text-sm text-gray-600 cursor-pointer">
-              Preview
-            </div>
-          </div>
+          <div className="flex bg-gray-100 rounded-full p-1"></div>
           <div className="flex gap-3">
             <button
               className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-700"
