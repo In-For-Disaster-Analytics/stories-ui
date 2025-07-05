@@ -4,8 +4,11 @@ import React, {
   useState,
   ReactNode,
   useEffect,
+  useRef,
 } from 'react';
 import { useDetailDataset } from '../../hooks/ckan/datasets/useDetailDataset';
+import { useUpdateDataset } from '../../hooks/ckan/datasets/useUpdateDataset';
+import { useNotesResource } from '../../hooks/ckan/resources/useNotesResource';
 import { Resource } from '../../types/resource';
 import { RawResource } from '../../types/resource';
 import { RawDataset } from '../../types/Dataset';
@@ -41,6 +44,20 @@ interface StoryContextType {
   handleViewPublished: () => void;
   resources: Resource[];
   setResources: (resources: Resource[]) => void;
+  // Dataset update functionality
+  datasetTitle: string;
+  datasetDescription: string;
+  isDirty: boolean;
+  isUpdating: boolean;
+  updateError: ErrorState | null;
+  setDatasetTitle: (title: string) => void;
+  setDatasetDescription: (description: string) => void;
+  // Notes functionality
+  notes: string;
+  setNotes: (notes: string) => void;
+  isNotesLoading: boolean;
+  notesError: string | null;
+  hasNotesResource: boolean;
 }
 
 const StoryContext = createContext<StoryContextType | undefined>(undefined);
@@ -54,8 +71,28 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
   children,
   id,
 }) => {
-  const { dataset } = useDetailDataset(id);
+  const { dataset, refetch } = useDetailDataset(id);
+  const {
+    updateDatasetAsync,
+    isPending: isUpdatingDataset,
+    error: datasetUpdateError,
+  } = useUpdateDataset();
+  
   const [resources, setResources] = useState<Resource[]>([]);
+  
+  // Notes resource management
+  const {
+    notes,
+    setNotes,
+    saveNotes,
+    isLoading: isNotesLoading,
+    error: notesError,
+    hasNotesResource,
+  } = useNotesResource({
+    datasetId: id,
+    resources,
+  });
+  
   const [title, setTitle] = useState(dataset?.title || dataset?.name || '');
   const [subtitle, setSubtitle] = useState(
     'A comprehensive analysis of water quality trends and environmental impacts',
@@ -63,6 +100,15 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<ErrorState | null>(null);
+  
+  // Dataset editing state
+  const [datasetTitle, setDatasetTitle] = useState(dataset?.title || '');
+  const [datasetDescription, setDatasetDescription] = useState(dataset?.notes || '');
+  const [updateError, setUpdateError] = useState<ErrorState | null>(null);
+  
+  // Track original notes for dirty detection
+  const [originalNotes, setOriginalNotes] = useState('');
+  const hasLoadedInitialNotes = useRef(false);
 
   const handleAddResource = () => {
     setIsModalOpen(true);
@@ -87,8 +133,35 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     // Implement preview functionality
   };
 
-  const handleSave = () => {
-    // Implement save functionality
+  const handleSave = async () => {
+    if (!dataset || !isDirty) return;
+
+    try {
+      // Save dataset metadata if changed
+      const hasDatasetChanges = 
+        datasetTitle !== (dataset?.title || '') || 
+        datasetDescription !== (dataset?.notes || '');
+      
+      if (hasDatasetChanges) {
+        await updateDatasetAsync({
+          id: dataset.id,
+          title: datasetTitle,
+          notes: datasetDescription,
+        });
+      }
+      
+      // Save notes if changed
+      const hasNotesChanges = notes !== originalNotes;
+      if (hasNotesChanges) {
+        await saveNotes(notes);
+        setOriginalNotes(notes);
+      }
+      
+      // Refresh dataset to get updated data
+      await refetch();
+    } catch (error) {
+      console.error('Error saving:', error);
+    }
   };
 
   const handleViewPublished = () => {
@@ -119,8 +192,39 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
           } as Resource;
         }),
       );
+      
+      // Update dataset editing state when dataset changes
+      setDatasetTitle(dataset.title || '');
+      setDatasetDescription(dataset.notes || '');
     }
   }, [dataset]);
+
+  // Update original notes only when notes are initially loaded
+  useEffect(() => {
+    // Only update originalNotes when notes are loaded for the first time
+    if (!isNotesLoading && !notesError && !hasLoadedInitialNotes.current) {
+      setOriginalNotes(notes);
+      hasLoadedInitialNotes.current = true;
+    }
+  }, [isNotesLoading, notesError, notes]);
+
+  // Check if dataset has unsaved changes
+  const isDirty = 
+    datasetTitle !== (dataset?.title || '') || 
+    datasetDescription !== (dataset?.notes || '') ||
+    notes !== originalNotes;
+
+  // Handle dataset update errors
+  useEffect(() => {
+    if (datasetUpdateError) {
+      setUpdateError({
+        message: datasetUpdateError.message,
+        code: 'DATASET_UPDATE_ERROR',
+      });
+    } else {
+      setUpdateError(null);
+    }
+  }, [datasetUpdateError]);
 
   const value = {
     title,
@@ -148,6 +252,20 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({
     handleViewPublished,
     resources,
     setResources,
+    // Dataset update functionality
+    datasetTitle,
+    datasetDescription,
+    isDirty,
+    isUpdating: isUpdatingDataset,
+    updateError,
+    setDatasetTitle,
+    setDatasetDescription,
+    // Notes functionality
+    notes,
+    setNotes,
+    isNotesLoading,
+    notesError,
+    hasNotesResource,
   };
 
   return (

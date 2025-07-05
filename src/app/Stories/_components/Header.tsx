@@ -5,13 +5,34 @@ import { Link, useParams } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { title, handleAddResource, handleViewPublished } = useStory();
+  const { 
+    handleAddResource,
+    datasetTitle,
+    datasetDescription,
+    setDatasetTitle,
+    setDatasetDescription
+  } = useStory();
 
   return (
     <header className="bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <h1 className="text-2xl font-bold mb-1">Story Editor</h1>
-        <p className="text-sm text-gray-600 mb-4">{title}</p>
+        <div className="mb-4 space-y-2">
+          <input
+            type="text"
+            value={datasetTitle}
+            onChange={(e) => setDatasetTitle(e.target.value)}
+            placeholder="Dataset title"
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium"
+          />
+          <textarea
+            value={datasetDescription}
+            onChange={(e) => setDatasetDescription(e.target.value)}
+            placeholder="Dataset description"
+            rows={2}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-600 resize-y"
+          />
+        </div>
         <div className="flex justify-between items-center">
           <div className="flex bg-gray-100 rounded-full p-1">
             <div className="px-4 py-1.5 text-sm rounded-full bg-white shadow-sm text-blue-600 font-medium cursor-pointer">
@@ -26,7 +47,7 @@ const Header: React.FC = () => {
               className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-700"
               onClick={handleAddResource}
             >
-              <FiEye className="w-4 h-4" />
+              <FiPlus className="w-4 h-4" />
               Add Resource
             </button>
             {/*Go to resources*/}
