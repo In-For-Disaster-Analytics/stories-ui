@@ -6,6 +6,7 @@ import {
   FiDownload,
   FiMic,
   FiEdit,
+  FiArrowLeft,
 } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import { useStory } from '../../Stories/StoryContext';
@@ -126,12 +127,21 @@ const ResourcesList: React.FC<ResourcesListProps> = ({
           <div className="bg-white shadow-sm border-b">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-                  <p className="mt-2 text-gray-600">
-                    {resources.length} resource
-                    {resources.length !== 1 ? 's' : ''} available
-                  </p>
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => history.goBack()}
+                    className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                  >
+                    <FiArrowLeft className="w-4 h-4 mr-2" />
+                    Back
+                  </button>
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+                    <p className="mt-2 text-gray-600">
+                      {resources.length} resource
+                      {resources.length !== 1 ? 's' : ''} available
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

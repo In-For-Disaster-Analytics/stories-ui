@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import AddResourceModal from '../../components/AddResourceModal/AddResourceModal';
 import Footer from './_components/Footer';
 import Editor from './_components/Editor';
-import Sidebar from './_components/Sidebar';
 import Header from './_components/Header';
 import { StoryProvider } from './StoryContext';
 
@@ -16,7 +15,6 @@ const StoryContent: React.FC = () => {
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Sidebar />
           <Editor />
         </div>
       </main>

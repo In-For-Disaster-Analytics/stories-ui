@@ -24,16 +24,9 @@ const Header: React.FC = () => {
           <div className="flex gap-3">
             <button
               className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-700"
-              onClick={handleViewPublished}
+              onClick={handleAddResource}
             >
               <FiEye className="w-4 h-4" />
-              View Published Story
-            </button>
-            <button
-              onClick={handleAddResource}
-              className="flex items-center gap-2 bg-white text-blue-600 border border-blue-600 px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-50"
-            >
-              <FiPlus className="w-4 h-4" />
               Add Resource
             </button>
             {/*Go to resources*/}

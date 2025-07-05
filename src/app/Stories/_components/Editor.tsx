@@ -34,9 +34,8 @@ const EditorContent: React.FC = () => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <input
-        type="text"
-        className="w-full text-base text-gray-600 mb-5 pb-2.5 border-b border-gray-100 focus:outline-none"
+      <textarea
+        className="w-full text-base text-gray-600 mb-5 pb-2.5 border-b border-gray-100 focus:outline-none h-full"
         placeholder="Enter subtitle..."
         value={subtitle}
         onChange={(e) => setSubtitle(e.target.value)}
