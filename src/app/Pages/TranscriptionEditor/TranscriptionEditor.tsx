@@ -10,6 +10,7 @@ import {
 import { useStory } from '../../Stories/StoryContext';
 import { useUpdateResource } from '../../../hooks/ckan/resources/useUpdateResource';
 import useAccessToken from '../../../hooks/auth/useAccessToken';
+import { splitTextIntelligently } from '../../../utils/textSplitting';
 import { Sidebar, Editor } from './_components';
 
 const TranscriptionEditor: React.FC = () => {
@@ -221,18 +222,20 @@ const TranscriptionEditor: React.FC = () => {
   const splitSegment = (index: number) => {
     const segment = segments[index];
     const midTime = (segment.timestamp[0] + segment.timestamp[1]) / 2;
-    const textMid = Math.floor(segment.text.length / 2);
+    
+    // Use the utility function to split the text intelligently
+    const [firstText, secondText] = splitTextIntelligently(segment.text);
 
     const firstHalf: TranscriptionSegment = {
       ...segment,
       timestamp: [segment.timestamp[0], midTime],
-      text: segment.text.substring(0, textMid),
+      text: firstText,
     };
 
     const secondHalf: TranscriptionSegment = {
       ...segment,
       timestamp: [midTime, segment.timestamp[1]],
-      text: segment.text.substring(textMid),
+      text: secondText,
     };
 
     const newSegments = [...segments];
