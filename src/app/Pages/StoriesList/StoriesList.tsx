@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useListDatasets } from '../../../hooks/ckan/datasets/useListDatasets';
+import { useInfiniteDatasets } from '../../../hooks/ckan/datasets/useInfiniteDatasets';
 import { DatasetSearchOptions } from '../../../types/types';
 import { Link } from 'react-router-dom';
 
@@ -8,31 +8,38 @@ interface StoriesListProps {
 }
 
 const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
-  const [searchOptions, setSearchOptions] = useState<DatasetSearchOptions>(
+  const [searchOptions, setSearchOptions] = useState<Omit<DatasetSearchOptions, 'offset'>>(
     initialOptions || { limit: 20 },
   );
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { datasets, isLoading, isError, error, refetch } =
-    useListDatasets(searchOptions);
+  const { 
+    datasets, 
+    totalCount, 
+    isLoading, 
+    isError, 
+    error, 
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch 
+  } = useInfiniteDatasets(searchOptions);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchOptions((prev) => ({
       ...prev,
       filterQuery: searchQuery,
-      offset: 0, // Reset to first page when searching
     }));
   };
 
   const handleLoadMore = () => {
-    setSearchOptions((prev) => ({
-      ...prev,
-      offset: (prev.offset || 0) + (prev.limit || 20),
-    }));
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
   };
 
-  if (isLoading && !datasets) {
+  if (isLoading && datasets.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -175,10 +182,10 @@ const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
             <div className="mt-8 text-center">
               <button
                 onClick={handleLoadMore}
-                disabled={isLoading}
+                disabled={isFetchingNextPage || !hasNextPage}
                 className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Loading...' : 'Load More Stories'}
+                {isFetchingNextPage ? 'Loading...' : hasNextPage ? 'Load More Stories' : 'No More Stories'}
               </button>
             </div>
           </>
