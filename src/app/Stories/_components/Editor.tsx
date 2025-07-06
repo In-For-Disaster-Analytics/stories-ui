@@ -31,7 +31,7 @@ const EditorContent: React.FC = () => {
 
       <textarea
         className="w-full h-full min-h-[500px] text-base text-gray-700 border border-gray-200 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-        placeholder="Write your story notes here...\n\nThis is a plain text editor for taking notes about your story. You can write detailed observations, ideas, and documentation here."
+        placeholder="Write your story notes here..."
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
       />

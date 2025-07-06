@@ -1,37 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiEye, FiPlus } from 'react-icons/fi';
 import { useStory } from '../StoryContext';
 import { Link, useParams } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const {
-    handleAddResource,
-    datasetTitle,
-    datasetDescription,
-    setDatasetTitle,
-    setDatasetDescription,
-  } = useStory();
+  const { handleAddResource, datasetTitle, datasetDescription } = useStory();
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const shouldShowLoadMore = datasetDescription && datasetDescription.length > 200;
+  const displayDescription = shouldShowLoadMore && !isExpanded 
+    ? datasetDescription.substring(0, 200) + '...'
+    : datasetDescription;
 
   return (
     <header className="bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="text-2xl font-bold mb-1">Story Editor</h1>
+        <h1 className="text-2xl font-bold mb-1">{datasetTitle}</h1>
         <div className="mb-4 space-y-2">
-          <input
-            type="text"
-            value={datasetTitle}
-            onChange={(e) => setDatasetTitle(e.target.value)}
-            placeholder="Dataset title"
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium"
-          />
-          <textarea
-            value={datasetDescription}
-            onChange={(e) => setDatasetDescription(e.target.value)}
-            placeholder="Dataset description"
-            rows={2}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-600 resize-y"
-          />
+          <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+            {displayDescription}
+            {shouldShowLoadMore && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="ml-2 text-blue-600 hover:text-blue-700 font-medium"
+              >
+                {isExpanded ? 'Show less' : 'Load more'}
+              </button>
+            )}
+          </p>
         </div>
         <div className="flex justify-between items-center">
           <div className="flex bg-gray-100 rounded-full p-1"></div>
