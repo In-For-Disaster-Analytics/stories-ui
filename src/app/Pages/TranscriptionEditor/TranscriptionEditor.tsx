@@ -384,20 +384,18 @@ const TranscriptionEditor: React.FC = () => {
           </div>
         )}
 
-        {/* Media Player Section - Pinned to Top */}
-        <div className="sticky top-0 z-10 bg-white shadow-md border-b mb-6">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <Sidebar
-              mediaResources={mediaResources}
-              selectedMediaResource={selectedMediaResource}
-              audioRef={audioRef}
-              videoRef={videoRef}
-              onMediaResourceSelect={handleMediaResourceSelect}
-              onTimeUpdate={handleTimeUpdate}
-              onCanPlay={handleCanPlay}
-              onLoadedMetadata={handleLoadedMetadata}
-            />
-          </div>
+        {/* Media Player Section - Full Screen */}
+        <div className="mb-6">
+          <Sidebar
+            mediaResources={mediaResources}
+            selectedMediaResource={selectedMediaResource}
+            audioRef={audioRef}
+            videoRef={videoRef}
+            onMediaResourceSelect={handleMediaResourceSelect}
+            onTimeUpdate={handleTimeUpdate}
+            onCanPlay={handleCanPlay}
+            onLoadedMetadata={handleLoadedMetadata}
+          />
         </div>
 
         {/* Editor Section - Full Width */}
