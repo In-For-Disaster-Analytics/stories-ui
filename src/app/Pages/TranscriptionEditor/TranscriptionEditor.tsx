@@ -67,7 +67,11 @@ const TranscriptionEditor: React.FC = () => {
       // Check if URL is from CKAN TACC and add auth headers
       const headers: HeadersInit = {};
       let data: TranscriptionData;
-      if (resource.url.includes('ckan.tacc.utexas.edu') && accessToken) {
+      if (!accessToken) {
+        return;
+      }
+      if (resource.url.includes('ckan.tacc.utexas.edu')) {
+        console.log('auth', resource.url);
         headers['Authorization'] = `Bearer ${accessToken}`;
         const response = await fetch(resource.url, {
           method: 'GET',
@@ -75,6 +79,7 @@ const TranscriptionEditor: React.FC = () => {
         });
         data = await response.json();
       } else {
+        console.log('no auth', resource.url);
         const response = await fetch(resource.url);
         data = await response.json();
       }
