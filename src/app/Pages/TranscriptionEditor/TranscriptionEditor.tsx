@@ -348,30 +348,34 @@ const TranscriptionEditor: React.FC = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar Component */}
-          <Sidebar
-            mediaResources={mediaResources}
-            selectedMediaResource={selectedMediaResource}
-            audioRef={audioRef}
-            videoRef={videoRef}
-            onMediaResourceSelect={handleMediaResourceSelect}
-            onTimeUpdate={handleTimeUpdate}
-            onCanPlay={handleCanPlay}
-            onLoadedMetadata={handleLoadedMetadata}
-          />
+        <div className="space-y-6">
+          {/* Media Player Section - Full Width */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <Sidebar
+              mediaResources={mediaResources}
+              selectedMediaResource={selectedMediaResource}
+              audioRef={audioRef}
+              videoRef={videoRef}
+              onMediaResourceSelect={handleMediaResourceSelect}
+              onTimeUpdate={handleTimeUpdate}
+              onCanPlay={handleCanPlay}
+              onLoadedMetadata={handleLoadedMetadata}
+            />
+          </div>
 
-          {/* Editor Component */}
-          <Editor
-            segments={segments}
-            config={config}
-            currentTime={displayTime}
-            onUpdateSegment={updateSegment}
-            onAddSegment={addSegment}
-            onDeleteSegment={deleteSegment}
-            onSplitSegment={splitSegment}
-            onTimestampClick={handleTimestampClick}
-          />
+          {/* Editor Section - Full Width */}
+          <div className="bg-white rounded-lg shadow-sm border">
+            <Editor
+              segments={segments}
+              config={config}
+              currentTime={displayTime}
+              onUpdateSegment={updateSegment}
+              onAddSegment={addSegment}
+              onDeleteSegment={deleteSegment}
+              onSplitSegment={splitSegment}
+              onTimestampClick={handleTimestampClick}
+            />
+          </div>
         </div>
       </div>
     </div>
