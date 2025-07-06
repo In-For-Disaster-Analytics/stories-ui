@@ -22,7 +22,7 @@ export const useInfiniteDatasets = (options?: Omit<DatasetSearchOptions, 'offset
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['datasets-infinite', options],
+    queryKey: ['datasets-infinite', options?.filterQuery, options?.limit, options?.sort],
     queryFn: async ({ pageParam = 0 }): Promise<InfiniteDatasetPage> => {
       try {
         const headers: HeadersInit = {

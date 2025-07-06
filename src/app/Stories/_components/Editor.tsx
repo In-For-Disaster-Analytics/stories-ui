@@ -1,46 +1,5 @@
 import React from 'react';
-import {
-  FiType,
-  FiAlignLeft,
-  FiAlignCenter,
-  FiAlignRight,
-} from 'react-icons/fi';
 import { useStory } from '../StoryContext';
-
-const EditorToolbar: React.FC = () => {
-  return (
-    <div className="bg-white rounded-t-lg shadow-sm p-4 border-b border-gray-100">
-      <div className="flex gap-2.5">
-        <div className="flex items-center gap-1.5 px-2.5 border-r border-gray-100">
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50"
-            title="Text formatting"
-          >
-            <FiType className="w-4 h-4" />
-          </button>
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50"
-            title="Align left"
-          >
-            <FiAlignLeft className="w-4 h-4" />
-          </button>
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50"
-            title="Align center"
-          >
-            <FiAlignCenter className="w-4 h-4" />
-          </button>
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50"
-            title="Align right"
-          >
-            <FiAlignRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const EditorContent: React.FC = () => {
   const { notes, setNotes, isNotesLoading, notesError, hasNotesResource } =

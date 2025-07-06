@@ -8,21 +8,20 @@ interface StoriesListProps {
 }
 
 const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
-  const [searchOptions, setSearchOptions] = useState<Omit<DatasetSearchOptions, 'offset'>>(
-    initialOptions || { limit: 20 },
-  );
+  const [searchOptions, setSearchOptions] = useState<
+    Omit<DatasetSearchOptions, 'offset'>
+  >(initialOptions || { limit: 20 });
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { 
-    datasets, 
-    totalCount, 
-    isLoading, 
-    isError, 
-    error, 
+  const {
+    datasets,
+    isLoading,
+    isError,
+    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch 
+    refetch,
   } = useInfiniteDatasets(searchOptions);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -185,7 +184,11 @@ const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
                 disabled={isFetchingNextPage || !hasNextPage}
                 className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isFetchingNextPage ? 'Loading...' : hasNextPage ? 'Load More Stories' : 'No More Stories'}
+                {isFetchingNextPage
+                  ? 'Loading...'
+                  : hasNextPage
+                    ? 'Load More Stories'
+                    : 'No More Stories'}
               </button>
             </div>
           </>
