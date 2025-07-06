@@ -348,9 +348,9 @@ const TranscriptionEditor: React.FC = () => {
           </div>
         )}
 
-        <div className="space-y-6">
-          {/* Media Player Section - Full Width */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+        {/* Media Player Section - Pinned to Top */}
+        <div className="sticky top-0 z-10 bg-white shadow-md border-b mb-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <Sidebar
               mediaResources={mediaResources}
               selectedMediaResource={selectedMediaResource}
@@ -362,20 +362,20 @@ const TranscriptionEditor: React.FC = () => {
               onLoadedMetadata={handleLoadedMetadata}
             />
           </div>
+        </div>
 
-          {/* Editor Section - Full Width */}
-          <div className="bg-white rounded-lg shadow-sm border">
-            <Editor
-              segments={segments}
-              config={config}
-              currentTime={displayTime}
-              onUpdateSegment={updateSegment}
-              onAddSegment={addSegment}
-              onDeleteSegment={deleteSegment}
-              onSplitSegment={splitSegment}
-              onTimestampClick={handleTimestampClick}
-            />
-          </div>
+        {/* Editor Section - Full Width */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <Editor
+            segments={segments}
+            config={config}
+            currentTime={displayTime}
+            onUpdateSegment={updateSegment}
+            onAddSegment={addSegment}
+            onDeleteSegment={deleteSegment}
+            onSplitSegment={splitSegment}
+            onTimestampClick={handleTimestampClick}
+          />
         </div>
       </div>
     </div>
