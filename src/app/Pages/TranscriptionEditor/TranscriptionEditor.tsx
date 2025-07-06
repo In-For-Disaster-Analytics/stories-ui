@@ -30,6 +30,8 @@ const TranscriptionEditor: React.FC = () => {
 
   // State management
   const [segments, setSegments] = useState<TranscriptionSegment[]>([]);
+  const [isLoadingTranscription, setIsLoadingTranscription] = useState(true);
+  const [transcriptionError, setTranscriptionError] = useState<string | null>(null);
   const [selectedMediaResource, setSelectedMediaResource] =
     useState<Resource | null>(null);
   const [config] = useState<TranscriptionEditorConfig>({
@@ -63,11 +65,15 @@ const TranscriptionEditor: React.FC = () => {
   const fetchTranscriptionData = useCallback(async () => {
     if (!resource) return;
 
+    setIsLoadingTranscription(true);
+    setTranscriptionError(null);
+
     try {
       // Check if URL is from CKAN TACC and add auth headers
       const headers: HeadersInit = {};
       let data: TranscriptionData;
       if (!accessToken) {
+        setTranscriptionError('Authentication token is required');
         return;
       }
       if (resource.url.includes('ckan.tacc.utexas.edu')) {
@@ -77,10 +83,16 @@ const TranscriptionEditor: React.FC = () => {
           method: 'GET',
           headers,
         });
+        if (!response.ok) {
+          throw new Error(`Failed to load transcription: ${response.statusText}`);
+        }
         data = await response.json();
       } else {
         console.log('no auth', resource.url);
         const response = await fetch(resource.url);
+        if (!response.ok) {
+          throw new Error(`Failed to load transcription: ${response.statusText}`);
+        }
         data = await response.json();
       }
 
@@ -93,6 +105,10 @@ const TranscriptionEditor: React.FC = () => {
       setSegments(segments);
     } catch (error) {
       console.error('Error loading transcription data:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load transcription data';
+      setTranscriptionError(errorMessage);
+    } finally {
+      setIsLoadingTranscription(false);
     }
   }, [resource, accessToken]);
 
@@ -353,6 +369,21 @@ const TranscriptionEditor: React.FC = () => {
           </div>
         )}
 
+        {/* Transcription Load Error */}
+        {transcriptionError && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+            <div className="text-sm text-red-600">
+              <strong>Load Error:</strong> {transcriptionError}
+              <button
+                onClick={fetchTranscriptionData}
+                className="ml-2 text-blue-600 hover:text-blue-700 underline"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Media Player Section - Pinned to Top */}
         <div className="sticky top-0 z-10 bg-white shadow-md border-b mb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -371,16 +402,47 @@ const TranscriptionEditor: React.FC = () => {
 
         {/* Editor Section - Full Width */}
         <div className="bg-white rounded-lg shadow-sm border">
-          <Editor
-            segments={segments}
-            config={config}
-            currentTime={displayTime}
-            onUpdateSegment={updateSegment}
-            onAddSegment={addSegment}
-            onDeleteSegment={deleteSegment}
-            onSplitSegment={splitSegment}
-            onTimestampClick={handleTimestampClick}
-          />
+          {isLoadingTranscription ? (
+            <div className="p-8 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading transcription segments...</p>
+            </div>
+          ) : transcriptionError ? (
+            <div className="p-8 text-center">
+              <div className="text-red-500 text-6xl mb-4">⚠️</div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Failed to Load Transcription
+              </h3>
+              <p className="text-gray-600 mb-4">{transcriptionError}</p>
+              <button
+                onClick={fetchTranscriptionData}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : segments.length === 0 ? (
+            <div className="p-8 text-center">
+              <div className="text-gray-400 text-6xl mb-4">📝</div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No Transcription Segments
+              </h3>
+              <p className="text-gray-600">
+                This transcription file appears to be empty or has no segments.
+              </p>
+            </div>
+          ) : (
+            <Editor
+              segments={segments}
+              config={config}
+              currentTime={displayTime}
+              onUpdateSegment={updateSegment}
+              onAddSegment={addSegment}
+              onDeleteSegment={deleteSegment}
+              onSplitSegment={splitSegment}
+              onTimestampClick={handleTimestampClick}
+            />
+          )}
         </div>
       </div>
     </div>
