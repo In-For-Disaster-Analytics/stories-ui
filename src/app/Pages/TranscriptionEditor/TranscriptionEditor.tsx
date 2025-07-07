@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { FiArrowLeft, FiSave } from 'react-icons/fi';
 import { Resource } from '../../../types/resource';
 import {
@@ -14,11 +14,12 @@ import { splitTextIntelligently } from '../../../utils/textSplitting';
 import { Sidebar, Editor, AnnotationModal } from './_components';
 
 const TranscriptionEditor: React.FC = () => {
-  const location = useLocation();
+  const { resourceId } = useParams<{ resourceId: string }>();
   const history = useHistory();
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { resources } = useStory();
+  const resource = resources.find((r) => r.id === resourceId);
   const {
     updateResourceAsync,
     isPending: isSaving,
@@ -26,13 +27,12 @@ const TranscriptionEditor: React.FC = () => {
   } = useUpdateResource();
   const { accessToken } = useAccessToken();
 
-  // Get resource from navigation state
-  const resource = (location.state as { resource?: Resource })?.resource;
-
   // State management
   const [segments, setSegments] = useState<TranscriptionSegment[]>([]);
   const [isLoadingTranscription, setIsLoadingTranscription] = useState(true);
-  const [transcriptionError, setTranscriptionError] = useState<string | null>(null);
+  const [transcriptionError, setTranscriptionError] = useState<string | null>(
+    null,
+  );
   const [selectedMediaResource, setSelectedMediaResource] =
     useState<Resource | null>(null);
   const [config] = useState<TranscriptionEditorConfig>({
@@ -50,8 +50,11 @@ const TranscriptionEditor: React.FC = () => {
 
   // Annotation modal state
   const [isAnnotationModalOpen, setIsAnnotationModalOpen] = useState(false);
-  const [currentAnnotationSegment, setCurrentAnnotationSegment] = useState<TranscriptionSegment | null>(null);
-  const [currentAnnotationIndex, setCurrentAnnotationIndex] = useState<number | null>(null);
+  const [currentAnnotationSegment, setCurrentAnnotationSegment] =
+    useState<TranscriptionSegment | null>(null);
+  const [currentAnnotationIndex, setCurrentAnnotationIndex] = useState<
+    number | null
+  >(null);
 
   // Get available audio/video resources from the dataset
   const mediaResources = resources.filter(
@@ -90,14 +93,18 @@ const TranscriptionEditor: React.FC = () => {
           headers,
         });
         if (!response.ok) {
-          throw new Error(`Failed to load transcription: ${response.statusText}`);
+          throw new Error(
+            `Failed to load transcription: ${response.statusText}`,
+          );
         }
         data = await response.json();
       } else {
         console.log('no auth', resource.url);
         const response = await fetch(resource.url);
         if (!response.ok) {
-          throw new Error(`Failed to load transcription: ${response.statusText}`);
+          throw new Error(
+            `Failed to load transcription: ${response.statusText}`,
+          );
         }
         data = await response.json();
       }
@@ -112,7 +119,10 @@ const TranscriptionEditor: React.FC = () => {
       setSegments(segments);
     } catch (error) {
       console.error('Error loading transcription data:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load transcription data';
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to load transcription data';
       setTranscriptionError(errorMessage);
     } finally {
       setIsLoadingTranscription(false);
@@ -227,15 +237,17 @@ const TranscriptionEditor: React.FC = () => {
 
   const splitSegment = (index: number) => {
     const segment = segments[index];
-    
+
     // Prevent splitting segments with annotations
     if (segment.annotation && segment.annotation.trim().length > 0) {
-      alert('Cannot split segments that have annotations. Please remove the annotation first if you want to split this segment.');
+      alert(
+        'Cannot split segments that have annotations. Please remove the annotation first if you want to split this segment.',
+      );
       return;
     }
-    
+
     const midTime = (segment.timestamp[0] + segment.timestamp[1]) / 2;
-    
+
     // Use the utility function to split the text intelligently
     const [firstText, secondText] = splitTextIntelligently(segment.text);
 
@@ -333,7 +345,11 @@ const TranscriptionEditor: React.FC = () => {
 
   const handleSaveAnnotation = (annotation: string) => {
     if (currentAnnotationIndex !== null) {
-      updateSegment(currentAnnotationIndex, 'annotation', annotation.trim() || '');
+      updateSegment(
+        currentAnnotationIndex,
+        'annotation',
+        annotation.trim() || '',
+      );
     }
   };
 
