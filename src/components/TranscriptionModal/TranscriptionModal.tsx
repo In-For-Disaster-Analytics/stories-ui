@@ -750,13 +750,6 @@ const TranscriptionModal: React.FC<TranscriptionModalProps> = ({
                     <FiExternalLink className="w-4 h-4 mr-2" />
                     View in DYNAMO Dashboard
                   </a>
-                  <button
-                    onClick={() => alert('Opening execution logs...')}
-                    className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-                  >
-                    <FiFileText className="w-4 h-4 mr-2" />
-                    View Execution Logs
-                  </button>
                 </div>
               </div>
             </div>
