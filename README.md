@@ -2,244 +2,549 @@
 
 A React application for capturing and displaying stories with integrated resource management and audio/video transcription capabilities powered by DYNAMO Ensemble Manager.
 
-1. Clone the repository:
+## Table of Contents
+
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Development Setup](#development-setup)
+- [Environment Configuration](#environment-configuration)
+- [Available Scripts](#available-scripts)
+- [Architecture Overview](#architecture-overview)
+- [User Guide](#user-guide)
+  - [Story Management](#story-management)
+  - [Resource Management](#resource-management)
+  - [Audio/Video Transcription](#audiovideo-transcription)
+  - [Transcription Editor](#transcription-editor)
+- [Deployment](#deployment)
+- [API Integration](#api-integration)
+- [Troubleshooting](#troubleshooting)
+- [Maintenance](#maintenance)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- **Story Management**: Create, edit, and organize stories with rich content
+- **Resource Management**: Upload and manage various file types (documents, images, audio, video)
+- **Audio/Video Transcription**: AI-powered transcription using DYNAMO Ensemble Manager
+- **Transcription Editor**: Advanced editor for reviewing and editing transcription results
+- **Authentication**: Secure authentication via Tapis API
+- **Responsive Design**: Modern, responsive UI built with React and TailwindCSS
+- **Real-time Updates**: Live progress tracking and notifications
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/stories-ui.git
+cd stories-ui
+
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.example .env
+# Edit .env with your configuration
+
+# Start development server
+npm run dev
+```
+
+## Development Setup
+
+### Prerequisites
+
+- **Node.js**: Version 18 or higher
+- **npm**: Version 8 or higher
+- **Git**: For version control
+
+### Installation
+
+1. **Clone the repository:**
 
    ```bash
    git clone https://github.com/your-org/stories-ui.git
    cd stories-ui
    ```
 
-2. Install dependencies:
+2. **Install dependencies:**
 
    ```bash
    npm install
    ```
 
-3. Create a `.env` file in the root directory with the following variables:
+3. **Set up environment variables:**
+
+   Create a `.env` file in the root directory:
 
    ```bash
-   VITE_TAPIS_API_BASE_URL=your_tapis_api_url
-   VITE_CKAN_BASE_URL=your_ckan_base_url
+   # Required Environment Variables
+   VITE_TAPIS_API_BASE_URL=https://your-tapis-api.example.com
+   VITE_CKAN_BASE_URL=https://your-ckan.example.com
    VITE_MAX_FILE_SIZE=52428800  # 50MB in bytes
-   VITE_DYNAMO_API_BASE_URL=your_dynamo_api_url  # For transcription features
-   VITE_DYNAMO_DASHBOARD_URL=your_dynamo_dashboard_url  # For viewing transcription results
+
+   # Optional - For transcription features
+   VITE_DYNAMO_API_BASE_URL=https://your-dynamo-api.example.com/v1
+   VITE_DYNAMO_DASHBOARD_URL=https://your-dynamo-dashboard.example.com
    ```
 
-4. Start the development server:
+4. **Start the development server:**
+
    ```bash
    npm run dev
    ```
 
-### Environment Variables
+   The application will be available at `http://localhost:5173`
 
-The following environment variables are required:
+## Environment Configuration
 
-- `VITE_TAPIS_API_BASE_URL`: Base URL for the Tapis API
-- `VITE_CKAN_BASE_URL`: Base URL for the CKAN instance
-- `VITE_MAX_FILE_SIZE`: Maximum file size in bytes for resource uploads (default: 52428800 for 50MB)
-- `VITE_DYNAMO_API_BASE_URL`: Base URL for DYNAMO Ensemble Manager API (optional, for transcription features)
-- `VITE_DYNAMO_DASHBOARD_URL`: Base URL for DYNAMO Dashboard (optional, for viewing transcription results)
+### Required Variables
 
-### Available Scripts
+| Variable                  | Description                           | Example                    |
+| ------------------------- | ------------------------------------- | -------------------------- |
+| `VITE_TAPIS_API_BASE_URL` | Base URL for Tapis API authentication | `https://api.tapis.io`     |
+| `VITE_CKAN_BASE_URL`      | Base URL for CKAN data management     | `https://ckan.example.com` |
+| `VITE_MAX_FILE_SIZE`      | Maximum file upload size in bytes     | `52428800` (50MB)          |
 
-- `npm run dev` - Start the development server
-- `npm run build` - Build the project for production
-- `npm run lint` - Run linter
-- `npm run preview` - Preview production build
+### Optional Variables
+
+| Variable                    | Description                 | Default                             |
+| --------------------------- | --------------------------- | ----------------------------------- |
+| `VITE_DYNAMO_API_BASE_URL`  | DYNAMO Ensemble Manager API | `http://localhost:3000/v1`          |
+| `VITE_DYNAMO_DASHBOARD_URL` | DYNAMO Dashboard URL        | `https://dashboard.dynamo.mint.edu` |
+
+**Note**: The build process validates required environment variables and will fail if they are missing.
+
+## Available Scripts
+
+| Command           | Description                              |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Start development server with hot reload |
+| `npm run build`   | Build for production (TypeScript + Vite) |
+| `npm run lint`    | Run ESLint code linting                  |
+| `npm run preview` | Preview production build locally         |
+| `npm run test`    | Run test suite with Vitest               |
+
+## Architecture Overview
+
+### Technology Stack
+
+- **Frontend**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: TailwindCSS
+- **Routing**: React Router v5
+- **State Management**: React Context + TanStack Query
+- **Testing**: Vitest with jsdom environment
+- **Authentication**: JWT via Tapis API
+- **Data Storage**: CKAN for datasets and resources
+
+### Key Components
+
+```
+src/
+├── app/                    # Main application features
+│   ├── Home/              # Home page components
+│   ├── Login/             # Authentication components
+│   ├── Pages/             # Main page components
+│   │   ├── ResourcesList/ # Resource management
+│   │   ├── StoriesList/   # Story listing
+│   │   └── TranscriptionEditor/ # Transcription editing
+│   └── Stories/           # Story management
+├── components/            # Reusable UI components
+├── contexts/              # React contexts
+├── hooks/                 # Custom hooks (auth, ckan)
+├── services/              # API services
+├── types/                 # TypeScript definitions
+└── utils/                 # Utility functions
+```
+
+### Authentication Flow
+
+1. User logs in via Tapis API
+2. JWT token stored in localStorage
+3. Token included in API requests
+4. Protected routes enforced via `ProtectedRoute` component
+
+## User Guide
+
+### Story Management
+
+**Creating Stories:**
+
+1. Navigate to the Stories page
+2. Click "Create New Story"
+3. Fill in story details (title, description)
+4. Add resources and content
+5. Save your story
+
+**Editing Stories:**
+
+- Click on any story from the list
+- Use the editor to modify content
+- Add or remove resources
+- Changes are saved automatically
+
+### Resource Management
+
+#### Supported File Types
+
+- **Documents**: PDF, DOC, XLS, CSV
+- **Images**: JPG, PNG, GIF
+- **Audio**: MP3, WAV, FLAC, M4A
+- **Video**: MP4, AVI, MOV, WebM
+
+#### Adding Resources
+
+1. **Via Resources Panel:**
+
+   - Click "Add Resource" button
+   - Drag and drop files or browse to select
+   - Add multiple files simultaneously
+   - Preview before upload
+
+2. **Via Story Editor:**
+   - Use the resource panel in the editor
+   - Upload files directly while editing
+   - Embed resources into story content
+
+#### Resource Actions
+
+- **Preview**: View file content in browser
+- **Embed**: Insert resource into story
+- **Download**: Download original file
+- **Transcribe**: Convert audio/video to text (DYNAMO)
+- **Edit**: Modify resource details
+- **Delete**: Remove from story
+
+### Audio/Video Transcription
+
+The application provides AI-powered transcription for audio and video files using DYNAMO Ensemble Manager.
+
+#### Starting Transcription
+
+1. Upload audio or video file as resource
+2. Click "Transcribe" button on the resource
+3. Follow the workflow steps:
+   - **Analysis Type**: Select "Audio/Video Transcription"
+   - **Problem Statement**: Choose existing or create new
+   - **Configuration**: Set task and subtask names
+   - **Submission**: Job submitted to DYNAMO
+   - **Monitoring**: Track progress in DYNAMO Dashboard
+
+#### Transcription Workflow
+
+**Problem Statements**: Organize transcriptions by research topic or project
+
+- Reusable across multiple transcription jobs
+- Include region (Texas/Alaska) and time period
+- Help categorize and manage related work
+
+**Tasks & Subtasks**: Hierarchical organization within problem statements
+
+- Auto-generated names based on resource
+- Customizable during setup
+- Enable detailed tracking and reporting
+
+### Transcription Editor
+
+Advanced editor for reviewing and editing transcription results.
+
+#### Features
+
+- **Time-synchronized playback**: Audio/video synced with text segments
+- **Segment editing**: Modify individual transcription segments
+- **Speaker identification**: Edit and assign speakers
+- **Text splitting**: Intelligent segment splitting capabilities
+- **Annotations**: Add notes and annotations to segments
+- **Media controls**: Integrated playback controls
+- **Auto-save**: Automatic saving of changes
+
+#### Accessing the Editor
+
+1. Navigate to a story with transcription resources
+2. Click "Edit Transcription" on any transcription resource
+3. Editor opens with media player and transcription segments
+4. Make edits and save changes
+
+#### Editor Controls
+
+- **Play/Pause**: Control media playback
+- **Seek**: Jump to specific timestamps
+- **Split Segment**: Divide segments at specific points
+- **Merge Segments**: Combine adjacent segments
+- **Edit Text**: Modify transcription text
+- **Add Annotations**: Include additional notes
+- **Speaker Assignment**: Change speaker labels
 
 ## Deployment
 
-The application can be deployed as a static site or using Docker:
+### Static Site Deployment
+
+Build and deploy as a static site:
 
 ```bash
 # Build for production
 npm run build
 
-# Using Docker
-docker build -t stories-ui .
-docker run -p 8080:80 stories-ui
+# Deploy dist/ directory to your hosting provider
+# Examples: Netlify, Vercel, GitHub Pages, S3, etc.
 ```
 
-## Contributing
+### Docker Deployment
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. **Build Docker image:**
 
-## License
+   ```bash
+   docker build -t stories-ui .
+   ```
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+2. **Run container:**
 
-# Stories Application - Resource Management
+   ```bash
+   docker run -p 8080:80 stories-ui
+   ```
 
-## Adding Resources
+3. **Docker Compose (with environment file):**
 
-The Stories application allows you to add various types of resources to your stories. This guide explains how to add and manage resources effectively.
+   ```yaml
+   version: '3.8'
+   services:
+     stories-ui:
+       build: .
+       ports:
+         - '8080:80'
+       environment:
+         - VITE_TAPIS_API_BASE_URL=${TAPIS_API_URL}
+         - VITE_CKAN_BASE_URL=${CKAN_URL}
+         - VITE_MAX_FILE_SIZE=${MAX_FILE_SIZE}
+   ```
 
-### Supported Resource Types
+### Production Environment Setup
 
-The application supports the following file formats:
-
-- **Documents**: PDF, DOC, XLS, CSV
-- **Images**: JPG, PNG
-- **Media**: Audio files (MP3, WAV, etc.) and Video files (MP4, AVI, etc.) with transcription support
-
-**Note:** Maximum file size is configured in the environment variables (`VITE_MAX_FILE_SIZE`). The default is set to 50MB, but this can be adjusted based on your CKAN instance configuration.
-
-### How to Add Resources
-
-There are two ways to add resources to your story:
-
-1. **Using the Resources Panel**
-
-   - Click the "Add Resource" button in the header
-   - A modal will open where you can:
-     - Drag and drop files
-     - Click "browse" to select files from your computer
-     - Add multiple files at once
-     - Preview files before adding them
-     - Remove files before submission
-
-2. **Using the Create Resource Form**
-   - Navigate to the "Create New Story" page
-   - Fill out the resource details:
-     - Name (required)
-     - Description (optional, max 1000 characters)
-     - Upload file(s)
-
-### Resource Management Features
-
-Once resources are added, you can:
-
-1. **View Resources**
-
-   - Access the Resources Panel at the bottom of the screen
-   - Expand/collapse the panel using the chevron icon
-   - Maximize the panel for a full-screen view
-   - See resource details including:
-     - Name
-     - Type
-     - Size
-     - Preview option
-     - Embed option
-
-2. **Resource Actions**
-   - **Preview**: View the resource content
-   - **Embed**: Insert the resource into your story
-   - **Transcribe**: Convert audio/video files to text using DYNAMO (available for audio and video files)
-   - **Download**: Download the resource file
-   - **Remove**: Delete resources from your story
-
-## Audio/Video Transcription
-
-The Stories application includes integrated transcription capabilities powered by DYNAMO Ensemble Manager, allowing you to convert audio and video files into text.
-
-### Transcription Features
-
-- **Supported Media**: Audio files (MP3, WAV, etc.) and Video files (MP4, AVI, etc.)
-- **DYNAMO Integration**: Uses DYNAMO Ensemble Manager for processing
-- **Workflow Management**: Organize transcriptions into problem statements, tasks, and subtasks
-- **Progress Tracking**: Real-time updates on transcription status
-- **Dashboard Integration**: View results and monitor progress in DYNAMO Dashboard
-
-### How to Transcribe Media Files
-
-1. **Upload Media File**
-   - Add an audio or video file as a resource to your story
-   - The "Transcribe" button will automatically appear for supported media files
-
-2. **Start Transcription**
-   - Click the "Transcribe" button on any audio/video resource
-   - A modal will open with the transcription workflow
-
-3. **Transcription Workflow**
-   
-   **Step 1: Choose Analysis Type**
-   - Select "Audio/Video Transcription" from available analysis options
-   
-   **Step 2: Problem Statement**
-   - Choose an existing problem statement or create a new one
-   - Problem statements help organize related transcription tasks
-   - Specify region (Texas or Alaska) and time period
-   
-   **Step 3: Configuration**
-   - Set task and subtask names for organization
-   - Names are auto-generated but can be customized
-   
-   **Step 4: Processing**
-   - The system automatically:
-     - Creates or reuses existing tasks
-     - Configures the transcription model
-     - Submits the job to DYNAMO
-   
-   **Step 5: Results**
-   - View submission confirmation
-   - Access links to DYNAMO Dashboard for monitoring
-   - Track transcription progress and results
-
-### Transcription Management
-
-- **Problem Statements**: Group related transcription tasks by research topic or project
-- **Tasks & Subtasks**: Organize transcriptions within problem statements
-- **Reusable Workflows**: Existing problem statements can be reused for new transcriptions
-- **Dashboard Monitoring**: Use DYNAMO Dashboard to track progress and view results
-
-### Configuration Requirements
-
-To enable transcription features, configure these environment variables:
+**Environment Variables for Production:**
 
 ```bash
-# Required for transcription functionality
-VITE_DYNAMO_API_BASE_URL=https://your-dynamo-api.example.com/v1
-VITE_DYNAMO_DASHBOARD_URL=https://your-dynamo-dashboard.example.com
+# Production configuration
+NODE_ENV=production
+VITE_TAPIS_API_BASE_URL=https://api.tapis.io
+VITE_CKAN_BASE_URL=https://your-production-ckan.example.com
+VITE_MAX_FILE_SIZE=104857600  # 100MB for production
+VITE_DYNAMO_API_BASE_URL=https://dynamo-api.example.com/v1
+VITE_DYNAMO_DASHBOARD_URL=https://dashboard.dynamo.example.com
 ```
 
-**Note**: Transcription features require a valid DYNAMO Ensemble Manager instance and appropriate authentication through your Tapis account.
+**Production Checklist:**
 
-### Best Practices
+- [ ] Environment variables configured
+- [ ] HTTPS/SSL certificates installed
+- [ ] CORS policies configured on APIs
+- [ ] File upload limits set appropriately
+- [ ] Authentication endpoints accessible
+- [ ] CKAN instance properly configured
+- [ ] DYNAMO services available (if using transcription)
 
-1. **File Organization**
+### Hosting Options
 
-   - Use descriptive names for your resources
-   - Add meaningful descriptions to help others understand the content
-   - Group related resources together
+1. **Netlify**: Connect GitHub repo for automatic deployments
+2. **Vercel**: Zero-config deployment with edge functions
+3. **AWS S3 + CloudFront**: Static hosting with CDN
+4. **GitHub Pages**: Free hosting for public repositories
+5. **Traditional Web Servers**: Apache, Nginx with static files
 
-2. **File Size Considerations**
+## API Integration
 
-   - Optimize large files before uploading
-   - Consider splitting large datasets into smaller chunks
-   - Use appropriate file formats for your content
-   - Check the configured maximum file size limit
+### Tapis API
 
-3. **Resource Management**
-   - Regularly review and update your resources
-   - Remove outdated or unnecessary resources
-   - Keep resource descriptions up to date
+Used for authentication and user management.
 
-### Troubleshooting
+**Configuration:**
 
-If you encounter issues while adding resources:
+```javascript
+// Set VITE_TAPIS_API_BASE_URL in environment
+const tapisClient = new TapisClient({
+  baseUrl: import.meta.env.VITE_TAPIS_API_BASE_URL,
+});
+```
 
-1. **Upload Failures**
+### CKAN API
 
-   - Check file size against the configured limit (`VITE_MAX_FILE_SIZE`)
-   - Verify file format is supported
-   - Ensure you have a stable internet connection
+Handles datasets (stories) and resources (files).
 
-2. **Resource Display Issues**
-   - Try refreshing the page
-   - Check if the resource is still available
-   - Verify file permissions
+**Key Endpoints:**
 
-3. **Transcription Issues**
-   - Verify DYNAMO API configuration (`VITE_DYNAMO_API_BASE_URL`)
-   - Check authentication with Tapis
-   - Ensure media file is in a supported format
-   - Monitor progress in DYNAMO Dashboard
-   - Contact support if transcription jobs fail or hang
+- `GET /api/3/action/package_list` - List datasets
+- `POST /api/3/action/package_create` - Create dataset
+- `POST /api/3/action/resource_create` - Upload resource
+- `GET /api/3/action/package_show` - Get dataset details
+
+### DYNAMO API
+
+Powers transcription services.
+
+**Configuration:**
+
+```javascript
+// Optional - only needed for transcription features
+const dynamoApiUrl = import.meta.env.VITE_DYNAMO_API_BASE_URL;
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### Authentication Problems
+
+**Issue**: Login fails or token expires quickly
+**Solutions:**
+
+- Verify `VITE_TAPIS_API_BASE_URL` is correct
+- Check network connectivity to Tapis API
+- Ensure credentials are valid
+- Clear localStorage and try again
+
+#### File Upload Issues
+
+**Issue**: Files fail to upload
+**Solutions:**
+
+- Check file size against `VITE_MAX_FILE_SIZE` limit
+- Verify file type is supported
+- Ensure CKAN instance is accessible
+- Check CORS configuration on CKAN
+
+#### Transcription Problems
+
+**Issue**: Transcription fails to start or complete
+**Solutions:**
+
+- Verify `VITE_DYNAMO_API_BASE_URL` configuration
+- Check audio/video file format compatibility
+- Ensure DYNAMO services are running
+- Monitor job status in DYNAMO Dashboard
+
+#### Build/Development Issues
+
+**Issue**: Build fails or development server won't start
+**Solutions:**
+
+- Verify all required environment variables are set
+- Clear node_modules and reinstall: `rm -rf node_modules package-lock.json && npm install`
+- Check Node.js version compatibility (18+)
+- Review build logs for specific error messages
+
+### Debug Mode
+
+Enable debug logging:
+
+```bash
+# Development
+npm run dev
+
+# Add to .env for persistent debugging
+VITE_DEBUG=true
+```
+
+### Performance Issues
+
+**Large Files:**
+
+- Optimize files before upload
+- Consider chunked uploads for very large files
+- Monitor network bandwidth
+
+**Slow Loading:**
+
+- Check API response times
+- Optimize images and media files
+- Enable browser caching
+
+## Maintenance
+
+### Regular Maintenance Tasks
+
+#### Weekly
+
+- [ ] Review application logs for errors
+- [ ] Check file storage usage and cleanup old files
+- [ ] Monitor API rate limits and usage
+- [ ] Verify backup systems are working
+
+#### Monthly
+
+- [ ] Update dependencies (`npm audit` and `npm update`)
+- [ ] Review and rotate API keys if needed
+- [ ] Check SSL certificate expiration
+- [ ] Performance monitoring and optimization
+
+#### Quarterly
+
+- [ ] Security audit and vulnerability assessment
+- [ ] Review and update documentation
+- [ ] Disaster recovery testing
+- [ ] User feedback review and feature planning
+
+### Monitoring
+
+**Key Metrics to Monitor:**
+
+- Application uptime and response times
+- File upload success rates
+- Authentication success rates
+- Transcription job completion rates
+- Storage usage and growth trends
+
+### Backup Strategy
+
+**Data to Backup:**
+
+- User stories and metadata (CKAN datasets)
+- Uploaded files and resources
+- Transcription results
+- User account data (if stored locally)
+
+**Backup Frequency:**
+
+- Daily: Incremental backups of new/changed data
+- Weekly: Full system backup
+- Monthly: Archive to long-term storage
 
 ### Security Considerations
 
-- Only upload files you have permission to share
-- Be mindful of sensitive information in your resources
-- Follow your organization's data sharing policies
+**Best Practices:**
 
-For additional help or questions, please contact the support team.
+- Regular security updates for all dependencies
+- Secure storage of environment variables
+- HTTPS enforcement in production
+- Regular access review and cleanup
+- Input validation and sanitization
+- CORS policy configuration
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-feature`
+3. Make changes and add tests
+4. Run tests: `npm run test`
+5. Run linting: `npm run lint`
+6. Commit changes: `git commit -m 'Add new feature'`
+7. Push to branch: `git push origin feature/new-feature`
+8. Submit a Pull Request
+
+### Code Standards
+
+- Follow existing code style and conventions
+- Add tests for new functionality
+- Update documentation for new features
+- Ensure all tests pass before submitting PR
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+For additional help or questions, please contact the support team or open an issue on GitHub.

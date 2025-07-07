@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` - Build for production (TypeScript compile + Vite build)
 - `npm run lint` - Run ESLint
 - `npm run preview` - Preview production build locally
+- `npm run test` - Run tests with Vitest
 
 ## Required Environment Variables
 
@@ -24,9 +25,10 @@ This is a React + TypeScript application for capturing and displaying stories wi
 
 ### Core Technologies
 - **Frontend**: React 18 with TypeScript, Vite build tool
-- **Routing**: React Router v5
+- **Routing**: React Router v5 (react-router-dom)
 - **State Management**: React Context + TanStack Query for server state
 - **Styling**: TailwindCSS
+- **Testing**: Vitest with jsdom environment
 - **APIs**: Integrates with Tapis API and CKAN for resource management
 
 ### Key Application Structure
@@ -41,6 +43,7 @@ This is a React + TypeScript application for capturing and displaying stories wi
 - `/` - Stories list (protected)
 - `/login` - Authentication
 - `/stories/*` - Story management routes (protected)
+- `/transcription-editor` - Transcription editing interface (protected)
 
 **Story Management**:
 - Stories are backed by CKAN datasets
@@ -85,6 +88,30 @@ The application has a comprehensive file upload system:
 
 When working with file uploads, always check the `VITE_MAX_FILE_SIZE` environment variable and validate file types against the supported formats list.
 
+### Transcription Editor System
+
+The application includes a comprehensive transcription editor for editing audio/video transcription results:
+
+**Key Components**:
+- `TranscriptionEditor` - Main editor component with media player integration
+- `Editor` component - Handles transcription segment editing
+- `Sidebar` component - Media player controls and resource selection
+- `AnnotationModal` - For adding annotations to transcription segments
+
+**Editor Features**:
+- Time-synchronized playback with transcription segments
+- Segment splitting and merging capabilities
+- Text editing with intelligent text splitting
+- Speaker identification and editing
+- Annotation system for segments
+- Auto-save functionality
+- Media player controls integrated with editing interface
+
+**Navigation**:
+- Access via "Edit Transcription" button on transcription resources
+- Uses React Router state to pass resource data
+- Breadcrumb navigation back to story context
+
 ### Audio Transcription System
 
 The application includes an integrated audio transcription system powered by DYNAMO Ensemble Manager:
@@ -113,3 +140,34 @@ The application includes an integrated audio transcription system powered by DYN
 - Default model ID: `7c2c8d5f-322b-4c1c-8a85-2c49580eadde`
 - Supports both audio and video file transcription
 - Supports Texas and Alaska regions
+
+## Important Development Notes
+
+**Environment Configuration**:
+- The Vite config validates required environment variables at build time
+- `VITE_TAPIS_API_BASE_URL`, `VITE_CKAN_BASE_URL`, and `VITE_MAX_FILE_SIZE` are mandatory
+- DYNAMO variables are optional but required for transcription features
+
+**Testing Setup**:
+- Uses Vitest with jsdom environment for component testing
+- Global test configuration in `vitest.config.ts`
+- React Testing Library patterns recommended for component tests
+
+**Code Organization**:
+- Feature-based organization in `src/app/` directory
+- Shared components in `src/components/`
+- Domain-specific hooks in `src/hooks/` (auth, ckan)
+- Type definitions centralized in `src/types/`
+- Utility functions in `src/utils/` with accompanying tests
+
+**Authentication Flow**:
+- JWT tokens managed via `AuthContext` and stored in localStorage
+- `useAccessToken` hook provides token access throughout the app
+- CKAN API requests require Bearer token authentication
+- Tapis integration for initial authentication
+
+**State Management Patterns**:
+- React Context for authentication and story-level state
+- TanStack Query for server state management and caching
+- Local state for UI-specific concerns
+- Custom hooks abstract complex state logic
