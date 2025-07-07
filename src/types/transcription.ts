@@ -2,6 +2,7 @@ export interface TranscriptionSegment {
   speaker: string;
   timestamp: [number, number]; // [start, end] in seconds
   text: string;
+  annotation?: string; // Optional annotation for the segment
 }
 
 export interface TranscriptionSpeaker {

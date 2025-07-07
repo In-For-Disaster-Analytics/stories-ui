@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiPlus, FiTrash2, FiScissors } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiScissors, FiMessageSquare } from 'react-icons/fi';
 import {
   TranscriptionSegment,
   TranscriptionEditorConfig,
@@ -18,6 +18,7 @@ interface EditorProps {
   onDeleteSegment: (index: number) => void;
   onSplitSegment: (index: number) => void;
   onTimestampClick: (time: number) => void;
+  onAnnotateSegment: (index: number) => void;
 }
 
 const Editor: React.FC<EditorProps> = ({
@@ -29,6 +30,7 @@ const Editor: React.FC<EditorProps> = ({
   onDeleteSegment,
   onSplitSegment,
   onTimestampClick,
+  onAnnotateSegment,
 }) => {
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -59,7 +61,7 @@ const Editor: React.FC<EditorProps> = ({
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="w-32 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
                 <th className="w-40 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -74,6 +76,9 @@ const Editor: React.FC<EditorProps> = ({
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Text
                 </th>
+                <th className="w-20 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Notes
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -82,6 +87,7 @@ const Editor: React.FC<EditorProps> = ({
                 const cps = calculateCPS(segment.text, duration);
                 const isHighCPS = cps > config.maxCPS;
                 const isPlaying = isSegmentPlaying(segment);
+                const hasAnnotation = segment.annotation && segment.annotation.trim().length > 0;
 
                 return (
                   <tr 
@@ -89,6 +95,8 @@ const Editor: React.FC<EditorProps> = ({
                     className={`hover:bg-gray-50 cursor-pointer ${
                       isPlaying 
                         ? 'bg-blue-50 border-l-4 border-blue-400' 
+                        : hasAnnotation 
+                        ? 'bg-yellow-50 border-l-4 border-yellow-400' 
                         : ''
                     }`}
                     onClick={() => onTimestampClick(segment.timestamp[0])}
@@ -110,10 +118,30 @@ const Editor: React.FC<EditorProps> = ({
                             e.stopPropagation();
                             onSplitSegment(index);
                           }}
-                          className="text-blue-600 hover:text-blue-900"
-                          title="Split segment"
+                          className={hasAnnotation 
+                            ? "text-gray-400 cursor-not-allowed" 
+                            : "text-blue-600 hover:text-blue-900"
+                          }
+                          title={hasAnnotation 
+                            ? "Cannot split segment with annotation" 
+                            : "Split segment"
+                          }
+                          disabled={hasAnnotation ? true : false}
                         >
                           <FiScissors className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAnnotateSegment(index);
+                          }}
+                          className={hasAnnotation 
+                            ? "text-yellow-600 hover:text-yellow-700" 
+                            : "text-gray-600 hover:text-gray-900"
+                          }
+                          title={hasAnnotation ? "Edit annotation" : "Add annotation"}
+                        >
+                          <FiMessageSquare className="w-4 h-4" />
                         </button>
                         <button
                           onClick={(e) => {
@@ -172,6 +200,37 @@ const Editor: React.FC<EditorProps> = ({
                         <div className="text-xs text-red-600 mt-1">
                           High CPS: {cps.toFixed(1)} chars/sec
                         </div>
+                      )}
+                      {hasAnnotation && (
+                        <div className="text-xs text-yellow-600 mt-1 flex items-center">
+                          <FiMessageSquare className="w-3 h-3 mr-1" />
+                          Has annotation
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      {hasAnnotation ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAnnotateSegment(index);
+                          }}
+                          className="text-yellow-600 hover:text-yellow-700"
+                          title="View annotation"
+                        >
+                          <FiMessageSquare className="w-5 h-5" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAnnotateSegment(index);
+                          }}
+                          className="text-gray-400 hover:text-gray-600"
+                          title="Add annotation"
+                        >
+                          <FiMessageSquare className="w-5 h-5" />
+                        </button>
                       )}
                     </td>
                   </tr>

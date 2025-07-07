@@ -11,7 +11,7 @@ import { useStory } from '../../Stories/StoryContext';
 import { useUpdateResource } from '../../../hooks/ckan/resources/useUpdateResource';
 import useAccessToken from '../../../hooks/auth/useAccessToken';
 import { splitTextIntelligently } from '../../../utils/textSplitting';
-import { Sidebar, Editor } from './_components';
+import { Sidebar, Editor, AnnotationModal } from './_components';
 
 const TranscriptionEditor: React.FC = () => {
   const location = useLocation();
@@ -47,6 +47,11 @@ const TranscriptionEditor: React.FC = () => {
   // State for UI updates (throttled)
   const [displayTime, setDisplayTime] = useState(0);
   const [canPlay, setCanPlay] = useState(false);
+
+  // Annotation modal state
+  const [isAnnotationModalOpen, setIsAnnotationModalOpen] = useState(false);
+  const [currentAnnotationSegment, setCurrentAnnotationSegment] = useState<TranscriptionSegment | null>(null);
+  const [currentAnnotationIndex, setCurrentAnnotationIndex] = useState<number | null>(null);
 
   // Get available audio/video resources from the dataset
   const mediaResources = resources.filter(
@@ -102,6 +107,7 @@ const TranscriptionEditor: React.FC = () => {
         speaker: speaker.speaker,
         timestamp: speaker.timestamp,
         text: speaker.text,
+        annotation: (speaker as TranscriptionSegment).annotation, // Preserve annotation if it exists
       }));
       setSegments(segments);
     } catch (error) {
@@ -221,6 +227,13 @@ const TranscriptionEditor: React.FC = () => {
 
   const splitSegment = (index: number) => {
     const segment = segments[index];
+    
+    // Prevent splitting segments with annotations
+    if (segment.annotation && segment.annotation.trim().length > 0) {
+      alert('Cannot split segments that have annotations. Please remove the annotation first if you want to split this segment.');
+      return;
+    }
+    
     const midTime = (segment.timestamp[0] + segment.timestamp[1]) / 2;
     
     // Use the utility function to split the text intelligently
@@ -230,12 +243,14 @@ const TranscriptionEditor: React.FC = () => {
       ...segment,
       timestamp: [segment.timestamp[0], midTime],
       text: firstText,
+      annotation: undefined, // Clear annotation for safety
     };
 
     const secondHalf: TranscriptionSegment = {
       ...segment,
       timestamp: [midTime, segment.timestamp[1]],
       text: secondText,
+      annotation: undefined, // Clear annotation for safety
     };
 
     const newSegments = [...segments];
@@ -256,6 +271,7 @@ const TranscriptionEditor: React.FC = () => {
           speaker: segment.speaker,
           timestamp: segment.timestamp,
           text: segment.text,
+          ...(segment.annotation && { annotation: segment.annotation }), // Include annotation if it exists
         })),
         chunks: segments.map((segment) => ({
           timestamp: segment.timestamp,
@@ -301,6 +317,24 @@ const TranscriptionEditor: React.FC = () => {
     currentPlayTimeRef.current = 0;
     setDisplayTime(0);
     isSeekingRef.current = false;
+  };
+
+  const handleAnnotateSegment = (index: number) => {
+    setCurrentAnnotationSegment(segments[index]);
+    setCurrentAnnotationIndex(index);
+    setIsAnnotationModalOpen(true);
+  };
+
+  const handleCloseAnnotationModal = () => {
+    setIsAnnotationModalOpen(false);
+    setCurrentAnnotationSegment(null);
+    setCurrentAnnotationIndex(null);
+  };
+
+  const handleSaveAnnotation = (annotation: string) => {
+    if (currentAnnotationIndex !== null) {
+      updateSegment(currentAnnotationIndex, 'annotation', annotation.trim() || '');
+    }
   };
 
   if (!resource) {
@@ -442,10 +476,19 @@ const TranscriptionEditor: React.FC = () => {
               onDeleteSegment={deleteSegment}
               onSplitSegment={splitSegment}
               onTimestampClick={handleTimestampClick}
+              onAnnotateSegment={handleAnnotateSegment}
             />
           )}
         </div>
       </div>
+
+      {/* Annotation Modal */}
+      <AnnotationModal
+        isOpen={isAnnotationModalOpen}
+        onClose={handleCloseAnnotationModal}
+        segment={currentAnnotationSegment}
+        onSave={handleSaveAnnotation}
+      />
     </div>
   );
 };
