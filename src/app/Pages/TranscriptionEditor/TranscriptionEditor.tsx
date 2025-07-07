@@ -12,6 +12,7 @@ import { useUpdateResource } from '../../../hooks/ckan/resources/useUpdateResour
 import useAccessToken from '../../../hooks/auth/useAccessToken';
 import { splitTextIntelligently } from '../../../utils/textSplitting';
 import { Sidebar, Editor, AnnotationModal } from './_components';
+import { Loading } from '../../common/Loading';
 
 const TranscriptionEditor: React.FC = () => {
   const { resourceId } = useParams<{ resourceId: string }>();
@@ -19,7 +20,15 @@ const TranscriptionEditor: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { resources } = useStory();
-  const resource = resources.find((r) => r.id === resourceId);
+  const [resource, setResource] = useState<Resource | null | undefined>(
+    undefined,
+  );
+  useEffect(() => {
+    const resource = resources.find((r) => r.id === resourceId);
+    if (resource) {
+      setResource(resource);
+    }
+  }, [resourceId, resources]);
   const {
     updateResourceAsync,
     isPending: isSaving,
@@ -86,7 +95,6 @@ const TranscriptionEditor: React.FC = () => {
         return;
       }
       if (resource.url.includes('ckan.tacc.utexas.edu')) {
-        console.log('auth', resource.url);
         headers['Authorization'] = `Bearer ${accessToken}`;
         const response = await fetch(resource.url, {
           method: 'GET',
@@ -99,7 +107,6 @@ const TranscriptionEditor: React.FC = () => {
         }
         data = await response.json();
       } else {
-        console.log('no auth', resource.url);
         const response = await fetch(resource.url);
         if (!response.ok) {
           throw new Error(
@@ -118,7 +125,6 @@ const TranscriptionEditor: React.FC = () => {
       }));
       setSegments(segments);
     } catch (error) {
-      console.error('Error loading transcription data:', error);
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -353,7 +359,7 @@ const TranscriptionEditor: React.FC = () => {
     }
   };
 
-  if (!resource) {
+  if (resource === null) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -372,7 +378,16 @@ const TranscriptionEditor: React.FC = () => {
     );
   }
 
-  console.log('TranscriptionEditor', 're-render');
+  if (resource === undefined) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loading loadingMessage="Loading transcription data..." />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
