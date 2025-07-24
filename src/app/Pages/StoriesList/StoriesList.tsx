@@ -124,9 +124,9 @@ const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
               {datasets.map((story) => (
                 <div
                   key={story.id}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 overflow-hidden"
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 overflow-hidden h-80 flex flex-col"
                 >
-                  <div className="p-6">
+                  <div className="p-6 flex-1 flex flex-col">
                     <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                       {story.title}
                     </h3>
@@ -153,7 +153,7 @@ const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between text-sm text-gray-500">
+                    <div className="flex items-center justify-between text-sm text-gray-500 mt-auto">
                       <span>{story.resources.length} resources</span>
                       {story.metadata?.created && (
                         <span>
