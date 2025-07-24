@@ -37,11 +37,16 @@ export const useInfiniteDatasets = (options?: Omit<DatasetSearchOptions, 'offset
         const queryParams = new URLSearchParams();
         if (options?.filterQuery) {
           if (Array.isArray(options.filterQuery)) {
-            options.filterQuery.forEach((query: string) =>
-              queryParams.append('q', query),
-            );
+            const multiFieldQuery = options.filterQuery.map(query => 
+              `title:*${query}* OR notes:*${query}* OR tags:*${query}*`
+            ).join(' OR ');
+            queryParams.append('q', multiFieldQuery);
           } else {
-            queryParams.append('q', options.filterQuery);
+            const searchTerm = options.filterQuery.trim();
+            if (searchTerm) {
+              const multiFieldQuery = `title:*${searchTerm}* OR notes:*${searchTerm}* OR tags:*${searchTerm}*`;
+              queryParams.append('q', multiFieldQuery);
+            }
           }
         }
         if (options?.limit) {
