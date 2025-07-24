@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Dataset } from '../../../../types/types';
+import { Dataset } from '../../../../types/Dataset';
 
 interface StoriesGridProps {
   datasets: Dataset[];
@@ -57,9 +57,7 @@ const StoriesGrid: React.FC<StoriesGridProps> = ({
                   <span>{story.resources.length} resources</span>
                   {story.metadata?.created && (
                     <span>
-                      {new Date(
-                        story.metadata.created,
-                      ).toLocaleDateString()}
+                      {new Date(story.metadata.created).toLocaleDateString()}
                     </span>
                   )}
                 </div>
