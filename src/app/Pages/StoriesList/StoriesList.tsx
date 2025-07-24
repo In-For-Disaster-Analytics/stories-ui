@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useInfiniteDatasets } from '../../../hooks/ckan/datasets/useInfiniteDatasets';
 import { DatasetSearchOptions } from '../../../types/types';
 import { Link } from 'react-router-dom';
@@ -24,13 +24,16 @@ const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
     refetch,
   } = useInfiniteDatasets(searchOptions);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchOptions((prev) => ({
-      ...prev,
-      filterQuery: searchQuery,
-    }));
-  };
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setSearchOptions((prev) => ({
+        ...prev,
+        filterQuery: searchQuery,
+      }));
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -97,23 +100,15 @@ const StoriesList: React.FC<StoriesListProps> = ({ initialOptions }) => {
 
       {/* Search Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <form onSubmit={handleSearch} className="max-w-2xl">
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search stories..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Search
-            </button>
-          </div>
-        </form>
+        <div className="max-w-2xl">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search stories..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
       </div>
 
       {/* Stories Grid */}
