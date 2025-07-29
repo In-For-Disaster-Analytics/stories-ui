@@ -243,6 +243,7 @@ class DynamoApiService {
     problemStatementId: string,
     taskId: string,
     subtask: Omit<Subtask, 'id'>,
+    regionid: string,
     token: string,
   ): Promise<Subtask> {
     console.log('creating subtask', JSON.stringify(subtask));
@@ -253,6 +254,7 @@ class DynamoApiService {
       response_variables: subtask.response_variables,
       dates: subtask.dates,
       dataset_id: subtask.dataset_id,
+      regionid: regionid,
     };
 
     console.log('subtask body', JSON.stringify(body));

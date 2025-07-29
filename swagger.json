@@ -735,6 +735,91 @@
         "title": "Parameter",
         "type": "object"
       },
+      "ModelParameter": {
+        "description": "A model parameter with comprehensive metadata",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the parameter"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the parameter"
+          },
+          "type": {
+            "type": "string",
+            "description": "Data type of the parameter"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Description of what this parameter controls"
+          },
+          "min": {
+            "type": "string",
+            "nullable": true,
+            "description": "Minimum acceptable value"
+          },
+          "max": {
+            "type": "string",
+            "nullable": true,
+            "description": "Maximum acceptable value"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true,
+            "description": "Unit of measurement for the parameter"
+          },
+          "default": {
+            "type": "string",
+            "nullable": true,
+            "description": "Default value for the parameter"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true,
+            "description": "Current or assigned value"
+          },
+          "adjustment_variable": {
+            "type": "array",
+            "nullable": true,
+            "description": "Variable that this parameter adjusts"
+          },
+          "accepted_values": {
+            "type": "string",
+            "nullable": true,
+            "description": "Accepted values for the parameter (comma-separated string)"
+          },
+          "position": {
+            "type": "number",
+            "nullable": true,
+            "description": "Position of the parameter in the model configuration"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ]
+      },
+      "BasicModelParameter": {
+        "description": "Basic model parameter information with just id and value",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the parameter"
+          },
+          "value": {
+            "type": "string",
+            "description": "Current or assigned value"
+          }
+        },
+        "required": [
+          "id",
+          "value"
+        ]
+      },
       "Task": {
         "type": "object",
         "description": "A Task definition",
@@ -1005,7 +1090,10 @@
         "description": "A Subtask creation request definition",
         "required": [
           "name",
-          "dates"
+          "dates",
+          "driving_variables",
+          "response_variables",
+          "regionid"
         ],
         "properties": {
           "name": {
@@ -2262,6 +2350,68 @@
           }
         }
       },
+      "SubmissionResult": {
+        "type": "object",
+        "description": "Result of submitting executions to an execution service",
+        "properties": {
+          "submittedExecutions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "execution": {
+                  "$ref": "#/components/schemas/Execution",
+                  "description": "The execution that was successfully submitted"
+                },
+                "jobId": {
+                  "type": "string",
+                  "description": "The job ID assigned by the execution service"
+                }
+              },
+              "required": [
+                "execution",
+                "jobId"
+              ]
+            },
+            "description": "List of executions that were successfully submitted"
+          },
+          "failedExecutions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "execution": {
+                  "$ref": "#/components/schemas/Execution",
+                  "description": "The execution that failed to submit"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message describing why submission failed"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "Error code (if available)"
+                    }
+                  },
+                  "description": "Error details for the failed submission"
+                }
+              },
+              "required": [
+                "execution",
+                "error"
+              ]
+            },
+            "description": "List of executions that failed to submit"
+          }
+        },
+        "required": [
+          "submittedExecutions",
+          "failedExecutions"
+        ]
+      },
       "SubmitSubtaskResponse": {
         "type": "object",
         "description": "Response from submitting a subtask for execution",
@@ -2276,6 +2426,10 @@
               "$ref": "#/components/schemas/Execution"
             },
             "description": "List of executions created for this subtask submission"
+          },
+          "submissionResult": {
+            "$ref": "#/components/schemas/SubmissionResult",
+            "description": "Detailed results of the submission process including successful and failed executions"
           }
         },
         "required": [
@@ -3145,24 +3299,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "result": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Execution submitted successfully"
-                    },
-                    "job_ids": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "example": "1234567890"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/SubmissionResult"
                 }
               }
             }
@@ -3765,14 +3902,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "subtasks": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Subtask"
-                      }
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subtask"
                   }
                 }
               }
@@ -3939,8 +4071,8 @@
     },
     "/problemStatements/{problemStatementId}/tasks/{taskId}/subtasks/{subtaskId}/models": {
       "post": {
-        "summary": "Add models to a subtask",
-        "description": "Adds models to a subtask",
+        "summary": "Select model configurations for a subtask",
+        "description": "Select and add ModelConfiguration or ModelConfigurationSetup instances to use in this subtask for execution",
         "security": [
           {
             "BearerAuth": [],
@@ -3991,7 +4123,7 @@
         },
         "responses": {
           "200": {
-            "description": "Models added successfully",
+            "description": "Model configurations selected and added to subtask successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -4020,8 +4152,8 @@
     },
     "/problemStatements/{problemStatementId}/tasks/{taskId}/subtasks/{subtaskId}/data": {
       "post": {
-        "summary": "Add data to a subtask",
-        "description": "Adds data to a subtask",
+        "summary": "Select data for a subtask",
+        "description": "Select the data to use in the subtask per ModelConfiguration/ModelConfigurationSetup. You can obtain a blueprint from the blueprint endpoint to see available data inputs",
         "security": [
           {
             "BearerAuth": [],
@@ -4072,7 +4204,7 @@
         },
         "responses": {
           "200": {
-            "description": "Data added successfully",
+            "description": "Data selected and configured for subtask successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -4403,6 +4535,273 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/DatasetSpecification"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/problemStatements/{problemStatementId}/tasks/{taskId}/subtasks/{subtaskId}/blueprint": {
+      "get": {
+        "summary": "Get blueprint (parameters and inputs) for a subtask",
+        "description": "Returns the complete model configuration blueprint for all models in a subtask",
+        "security": [
+          {
+            "BearerAuth": [],
+            "oauth2": []
+          }
+        ],
+        "tags": [
+          "Subtasks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "problemStatementId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The problem statement ID"
+          },
+          {
+            "in": "path",
+            "name": "taskId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The task ID"
+          },
+          {
+            "in": "path",
+            "name": "subtaskId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The subtask ID"
+          },
+          {
+            "in": "query",
+            "name": "detailed",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "If true, returns full ModelParameter details. If false, returns basic info (id, value) only."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Complete blueprint for the subtask",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "model_id": {
+                        "type": "string",
+                        "description": "The model identifier",
+                        "example": "https://w3id.org/okn/i/mint/c07a6f98-6339-4033-84b0-6cd7daca6284"
+                      },
+                      "parameters": {
+                        "type": "array",
+                        "description": "Returns BasicModelParameter (id, value) by default, or full ModelParameter when detailed=true",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/components/schemas/BasicModelParameter"
+                            },
+                            {
+                              "$ref": "#/components/schemas/ModelParameter"
+                            }
+                          ]
+                        }
+                      },
+                      "inputs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "Input identifier",
+                              "example": "https://w3id.org/okn/i/mint/ce32097e-641d-42af-b3f1-477a24cf015a"
+                            },
+                            "dataset": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "description": "Dataset identifier",
+                                  "example": "18400624-423c-42b5-ad56-6c73322584bd"
+                                },
+                                "resources": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "Resource identifier",
+                                        "example": "9c7b25c4-8cea-4965-a07a-d9b3867f18a9"
+                                      },
+                                      "url": {
+                                        "type": "string",
+                                        "description": "Resource URL",
+                                        "example": "https://ckan.tacc.utexas.edu/dataset/18400624-423c-42b5-ad56-6c73322584bd/resource/9c7b25c4-8cea-4965-a07a-d9b3867f18a9/download/barton_springs_2001_2010average.wel"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/problemStatements/{problemStatementId}/tasks/{taskId}/subtasks/{subtaskId}/outputs": {
+      "post": {
+        "summary": "Publish all executions for a subtask",
+        "description": "Publishes all executions for a subtask by looping through all thread models and their executions",
+        "operationId": "publishAllExecutions",
+        "tags": [
+          "Subtasks"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "oauth2": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "problemStatementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subtaskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All executions published successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No executions found to publish",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subtask not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
                   }
                 }
               }

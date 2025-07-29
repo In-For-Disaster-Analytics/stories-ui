@@ -136,6 +136,7 @@ export const useTranscription = () => {
           config.problemStatementId,
           taskId,
           subtaskData,
+          problemStatement.regionid,
           accessToken,
         );
         subtaskId = subtask.id!;
@@ -163,6 +164,7 @@ export const useTranscription = () => {
           config.problemStatementId,
           taskId,
           subtaskData,
+          problemStatement.regionid,
           accessToken,
         );
         subtaskId = subtask.id!;
