@@ -1,0 +1,11 @@
+# Run with: docker compose --env-file {path to your env file} up
+version: '3.8'
+services:
+  stories-ui:
+    build: .
+    ports:
+      - '8080:80'
+    environment:
+      - VITE_TAPIS_API_BASE_URL=${TAPIS_API_URL}
+      - VITE_CKAN_BASE_URL=${CKAN_URL}
+      - VITE_MAX_FILE_SIZE=${MAX_FILE_SIZE}
