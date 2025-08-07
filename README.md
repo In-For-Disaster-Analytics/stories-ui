@@ -321,6 +321,11 @@ npm run build
 
 ### Production Environment Setup
 
+4. **Run Compose:**
+
+   ```bash
+   docker compose --env-file (/path/to/your/.env-file) up
+   ```
 **Environment Variables for Production:**
 
 ```bash
