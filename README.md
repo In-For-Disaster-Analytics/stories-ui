@@ -24,13 +24,12 @@ A React application for capturing and displaying stories with integrated resourc
 
 ## Features
 
-- **Story Management**: Create, edit, and organize stories with rich content
+- **Story Management**: Create, edit, and organize stories with basic text content
 - **Resource Management**: Upload and manage various file types (documents, images, audio, video)
 - **Audio/Video Transcription**: AI-powered transcription using DYNAMO Ensemble Manager
 - **Transcription Editor**: Advanced editor for reviewing and editing transcription results
 - **Authentication**: Secure authentication via Tapis API
 - **Responsive Design**: Modern, responsive UI built with React and TailwindCSS
-- **Real-time Updates**: Live progress tracking and notifications
 
 ## Quick Start
 
