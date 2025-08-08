@@ -300,7 +300,11 @@ npm run build
 2. **Run container:**
 
    ```bash
-   docker run -p 8080:80 stories-ui
+   docker run -p 8080:80 \
+     -e VITE_TAPIS_API_BASE_URL=https://your-tapis-api.example.com \
+     -e VITE_CKAN_BASE_URL=https://your-ckan.example.com \
+     -e VITE_MAX_FILE_SIZE=52428800 \
+     stories-ui
    ```
 
 3. **Docker Compose (with environment file):**
@@ -313,9 +317,9 @@ npm run build
        ports:
          - '8080:80'
        environment:
-         - VITE_TAPIS_API_BASE_URL=${TAPIS_API_URL}
-         - VITE_CKAN_BASE_URL=${CKAN_URL}
-         - VITE_MAX_FILE_SIZE=${MAX_FILE_SIZE}
+         - VITE_TAPIS_API_BASE_URL=${VITE_TAPIS_API_BASE_URL}
+         - VITE_CKAN_BASE_URL=${VITE_CKAN_BASE_URL}
+         - VITE_MAX_FILE_SIZE=${VITE_MAX_FILE_SIZE}
    ```
 
 ### Production Environment Setup
