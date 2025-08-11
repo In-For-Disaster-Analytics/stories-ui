@@ -24,13 +24,12 @@ A React application for capturing and displaying stories with integrated resourc
 
 ## Features
 
-- **Story Management**: Create, edit, and organize stories with rich content
+- **Story Management**: Create, edit, and organize stories with basic text content
 - **Resource Management**: Upload and manage various file types (documents, images, audio, video)
 - **Audio/Video Transcription**: AI-powered transcription using DYNAMO Ensemble Manager
 - **Transcription Editor**: Advanced editor for reviewing and editing transcription results
 - **Authentication**: Secure authentication via Tapis API
 - **Responsive Design**: Modern, responsive UI built with React and TailwindCSS
-- **Real-time Updates**: Live progress tracking and notifications
 
 ## Quick Start
 
@@ -301,7 +300,11 @@ npm run build
 2. **Run container:**
 
    ```bash
-   docker run -p 8080:80 stories-ui
+   docker run -p 8080:80 \
+     -e VITE_TAPIS_API_BASE_URL=https://your-tapis-api.example.com \
+     -e VITE_CKAN_BASE_URL=https://your-ckan.example.com \
+     -e VITE_MAX_FILE_SIZE=52428800 \
+     stories-ui
    ```
 
 3. **Docker Compose (with environment file):**
@@ -314,9 +317,9 @@ npm run build
        ports:
          - '8080:80'
        environment:
-         - VITE_TAPIS_API_BASE_URL=${TAPIS_API_URL}
-         - VITE_CKAN_BASE_URL=${CKAN_URL}
-         - VITE_MAX_FILE_SIZE=${MAX_FILE_SIZE}
+         - VITE_TAPIS_API_BASE_URL=${VITE_TAPIS_API_BASE_URL}
+         - VITE_CKAN_BASE_URL=${VITE_CKAN_BASE_URL}
+         - VITE_MAX_FILE_SIZE=${VITE_MAX_FILE_SIZE}
    ```
 
 ### Production Environment Setup
