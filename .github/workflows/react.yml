@@ -9,18 +9,16 @@ on:
 permissions:
   contents: write
   packages: write
-  id-token: write
 
 env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
