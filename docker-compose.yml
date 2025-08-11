@@ -1,5 +1,4 @@
 # Run with: docker compose --env-file {path to your env file} up
-version: '3.8'
 services:
   stories-ui:
     build: .
