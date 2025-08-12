@@ -134,7 +134,7 @@ sequenceDiagram
     Note over User,API: Phase 2: Story Selection
     User->>SI: Request story list
     SI->>API: Fetch story list
-    rect  rgb(230,245,255)
+    rect  rgba(125, 240, 241, 1)
     Note over API,CKAN: Authorization process
     API->>CKAN: Verify authentication token
     CKAN-->>API: Token valid
@@ -168,8 +168,6 @@ sequenceDiagram
 
   end
 ```
-
-## Workflow Description
 
 ## Audio Transcription Workflow
 
