@@ -284,15 +284,14 @@ sequenceDiagram
    rect rgb(230, 245, 255)
    participant User
    participant TU as Stories UI
-   participant API as DynamoApiService
-   participant DYNAMO as DYNAMO System
    participant Poll as ExecutionPolling
+   participant API as DYNAMO API
+   participant TAPIS as TAPIS Service
 
    TU->>TU: Update step 3 status (active)
-   TU->>API: Submit subtask for execution
-   API->>DYNAMO: POST /submit-subtask
-   DYNAMO->>DYNAMO: Queue transcription job
-   DYNAMO-->>API: Submission confirmed
+   TU->>API: Submit subtask for execution  POST /submit-subtask
+   API->>TAPIS: Queue transcription job
+   TAPIS-->>API: Job ID
    API-->>TU: Execution started
    TU->>TU: Update step 3 (completed)
 
@@ -302,8 +301,8 @@ sequenceDiagram
 
    loop Execution Monitoring
        Poll->>API: Check execution status
-       API->>DYNAMO: GET /execution-status
-       DYNAMO-->>API: Current execution state
+       API->>TAPIS: Get job status
+       TAPIS-->>API: Current execution state
        API-->>Poll: Execution progress
        alt Execution Complete
            Poll->>TU: Notify completion
