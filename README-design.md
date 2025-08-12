@@ -10,7 +10,7 @@ The Stories Explorer platform bridges the gap between technical data management 
 
 - **CKAN**: The open-source data management system that serves as the backend for storing, managing, and distributing datasets and resources. CKAN provides APIs for data access, search, and organization.
 - **Stories Interface**: The user-facing application that allows for the creation, editing, and viewing of narrative content that incorporates data resources. Stories are stored as specialized datasets in CKAN.
-- **Stories**: A specialized dataset type in CKAN used to store story content, including text, embedded media, and references to other resources.
+- **Stories**: A specialized dataset type in CKAN used to store story content, including text, embedded media, and references to other resources. **Note**: [Schema definition is currently undefined and needs to be implemented](https://github.com/In-For-Disaster-Analytics/stories-ui/issues/15).
 
 ```mermaid
 erDiagram
@@ -319,11 +319,3 @@ sequenceDiagram
    end
    end
 ```
-
-### Process Summary
-
-**Phase 2: Problem Statement & Task Setup**
-
-**Phase 3: Task Creation & Model Setup**
-
-**Phase 4: Analysis Submission & Monitoring**
