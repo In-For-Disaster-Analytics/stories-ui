@@ -94,3 +94,146 @@ This sequence diagram illustrates the complete user journey through the Stories 
 ## Security and Authentication
 
 The system implements comprehensive authentication validation at each API interaction, ensuring secure access to stories and resources. JWT tokens are validated consistently across all CKAN operations, maintaining data integrity and user access controls.
+
+## Audio Transcription Workflow
+
+The transcription system integrates with DYNAMO Ensemble Manager to provide automated audio/video transcription capabilities. Below is the detailed workflow sequence:
+
+```mermaid
+%%{ init : { "theme" : "neutral", "themeVariables" : { "primaryColor" : "#fff", "primaryTextColor" : "#000", "primaryBorderColor" : "#000", "lineColor" : "#000", "secondaryColor" : "#f8f8f8", "tertiaryColor" : "#f0f0f0" }}}%%
+sequenceDiagram
+   participant User
+   participant TC as TranscriptionModal
+   participant Hook as useTranscription
+   participant API as DynamoApiService
+   participant DYNAMO as DYNAMO System
+   participant Poll as ExecutionPolling
+
+   %% Phase 1: Initialization
+   rect rgb(255, 245, 230)
+   Note over User,Hook: Phase 1: Setup & Configuration
+   User->>TC: Click "Transcribe" on audio resource
+   TC->>Hook: Initialize transcription hook
+   Hook->>API: Fetch problem statements
+   API->>DYNAMO: GET /problem-statements
+   DYNAMO-->>API: Return available problem statements
+   API-->>Hook: Problem statements list
+   Hook-->>TC: Display analysis types & problem statements
+   TC-->>User: Show configuration modal
+   end
+
+   %% Phase 2: Configuration
+   rect rgb(230, 255, 245)
+   Note over User,API: Phase 2: Problem Statement & Task Setup
+   User->>TC: Select/create problem statement
+   alt Create New Problem Statement
+       TC->>Hook: Create problem statement
+       Hook->>API: Create problem statement
+       API->>DYNAMO: POST /problem-statements
+       DYNAMO-->>API: New problem statement created
+       API-->>Hook: Problem statement ID
+   else Use Existing
+       User->>TC: Select existing problem statement
+   end
+   
+   User->>TC: Configure task/subtask names
+   User->>TC: Submit transcription request
+   TC->>Hook: Start transcription with config
+   end
+
+   %% Phase 3: Transcription Execution
+   rect rgb(245, 230, 255)
+   Note over Hook,DYNAMO: Phase 3: Task Creation & Model Setup
+   
+   Hook->>Hook: Initialize progress steps
+   Hook->>Hook: Update step 1 status (active)
+   
+   Hook->>API: Check for existing task
+   API->>DYNAMO: GET /tasks (filter by dataset)
+   DYNAMO-->>API: Existing task or null
+   API-->>Hook: Task existence result
+   
+   alt Existing Task Found
+       Hook->>API: Create subtask only
+       API->>DYNAMO: POST /subtasks
+   else No Existing Task
+       Hook->>API: Create new task
+       API->>DYNAMO: POST /tasks
+       DYNAMO-->>API: New task created
+       API-->>Hook: Task ID
+       Hook->>API: Create subtask
+       API->>DYNAMO: POST /subtasks
+   end
+   
+   DYNAMO-->>API: Subtask created
+   API-->>Hook: Task & Subtask IDs
+   Hook->>Hook: Update step 1 (completed)
+   
+   Hook->>Hook: Update step 2 status (active)
+   Hook->>API: Setup model configuration
+   API->>DYNAMO: POST /model-configuration
+   Note over API,DYNAMO: Configure audio transcription model with resource data
+   DYNAMO-->>API: Configuration confirmed
+   API-->>Hook: Model setup complete
+   Hook->>Hook: Update step 2 (completed)
+   end
+
+   %% Phase 4: Submission & Monitoring
+   rect rgb(230, 245, 255)
+   Note over Hook,Poll: Phase 4: Analysis Submission & Monitoring
+   
+   Hook->>Hook: Update step 3 status (active)
+   Hook->>API: Submit subtask for execution
+   API->>DYNAMO: POST /submit-subtask
+   DYNAMO->>DYNAMO: Queue transcription job
+   DYNAMO-->>API: Submission confirmed
+   API-->>Hook: Execution started
+   Hook->>Hook: Update step 3 (completed)
+   
+   Hook->>Poll: Initialize execution polling
+   Hook->>Hook: Set current result with dashboard URL
+   Hook-->>TC: Return transcription result
+   TC-->>User: Show success with dashboard link
+   
+   loop Execution Monitoring
+       Poll->>API: Check execution status
+       API->>DYNAMO: GET /execution-status
+       DYNAMO-->>API: Current execution state
+       API-->>Poll: Execution progress
+       alt Execution Complete
+           Poll->>Hook: Notify completion
+           Hook-->>TC: Update status (complete)
+       else Execution Failed
+           Poll->>Hook: Notify failure
+           Hook-->>TC: Update status (error)
+       else Still Running
+           Poll->>Poll: Continue polling
+       end
+   end
+   end
+```
+
+### Transcription Process Breakdown
+
+**Phase 1: Setup & Configuration**
+- User initiates transcription from audio/video resource
+- System fetches available problem statements and analysis types
+- Configuration modal displays options for user selection
+
+**Phase 2: Problem Statement & Task Setup**
+- User selects or creates problem statements with regional and temporal scope
+- Task and subtask names are configured for organizational purposes
+- Transcription request is submitted with complete configuration
+
+**Phase 3: Task Creation & Model Setup**
+- System checks for existing tasks to avoid duplication
+- Creates new tasks/subtasks as needed in DYNAMO system
+- Configures audio transcription model with specific resource data and metadata
+
+**Phase 4: Analysis Submission & Monitoring**
+- Subtask is submitted to DYNAMO for execution
+- Background polling monitors transcription progress
+- Users receive dashboard links for real-time status monitoring
+- System handles completion, failure, and ongoing execution states
+
+The transcription system provides comprehensive error handling, progress tracking, and integration with the DYNAMO dashboard for advanced monitoring capabilities.
