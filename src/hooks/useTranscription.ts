@@ -111,6 +111,14 @@ export const useTranscription = () => {
       // Use dataset ID from story context if available, otherwise fall back to resource dataset ID
       const datasetId = dataset?.id || resource.dataset?.id || '';
 
+      if (!datasetId) {
+        throw new Error('No dataset ID available for transcription. Please ensure the resource is associated with a dataset.');
+      }
+
+      if (!resource.url) {
+        throw new Error('Resource URL is required for transcription.');
+      }
+
       // Check for existing task
       const existingTask = await dynamoApiService.findExistingTaskForDataset(
         config.problemStatementId,
@@ -183,17 +191,19 @@ export const useTranscription = () => {
       const dataItem = setupRequest.data.find(
         (item) => item.id === analysisConfig.inputDataId,
       );
-      if (dataItem) {
-        dataItem.dataset = {
-          id: datasetId,
-          resources: [
-            {
-              id: resource.id,
-              url: resource.url,
-            },
-          ],
-        };
+      if (!dataItem) {
+        throw new Error(`Data item with ID ${analysisConfig.inputDataId} not found in setup request.`);
       }
+      
+      dataItem.dataset = {
+        id: datasetId,
+        resources: [
+          {
+            id: resource.id,
+            url: resource.url,
+          },
+        ],
+      };
 
       await dynamoApiService.setupModelConfiguration(
         config.problemStatementId,
