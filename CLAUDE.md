@@ -171,3 +171,4 @@ The application includes an integrated audio transcription system powered by DYN
 - TanStack Query for server state management and caching
 - Local state for UI-specific concerns
 - Custom hooks abstract complex state logic
+- Remember that Stories is a CKAN Dataset

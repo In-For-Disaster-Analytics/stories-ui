@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hurricane Harvey Analysis | Stories Analytics</title>
+    <link rel="stylesheet" href="single-story-dashboard.css" />
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <div class="container">
+        <div class="top-bar-content">
+          <div class="logo">Stories<span>Analytics</span></div>
+          <ul class="nav-links">
+            <li><a href="#" class="active">Stories</a></li>
+            <li><a href="#">Analysis Tools</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Data Catalog</a></li>
+          </ul>
+          <div class="user-menu">
+            <span class="user-name">Sarah Martinez</span>
+            <div class="user-avatar">SM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Header -->
+    <div class="story-header">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+          <a href="#" class="breadcrumb-link">Stories</a>
+          <svg class="breadcrumb-separator" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+          <span class="breadcrumb-current">Hurricane Harvey Analysis</span>
+        </nav>
+
+        <!-- Story Title and Metadata -->
+        <div class="story-title-section">
+          <div class="story-main-info">
+            <h1 class="story-title">Hurricane Harvey Analysis</h1>
+            <p class="story-description">Comprehensive analysis of community response and recovery efforts during Hurricane Harvey in Houston area</p>
+            
+            <div class="story-metadata">
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                  </svg>
+                </div>
+                <span class="metadata-value">Texas</span>
+              </div>
+              
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+                  </svg>
+                </div>
+                <span class="metadata-value">Aug 25 - Sep 10, 2017</span>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045z"/>
+                    <path d="M9 12.5a3.5 3.5 0 1 1-7 0V8.1c0-.272.208-.7.756-.963.545-.261 1.311-.421 2.244-.421s1.7.16 2.244.421c.548.263.756.69.756.963v4.4z"/>
+                  </svg>
+                </div>
+                <span class="metadata-value">Hurricane</span>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                  </svg>
+                </div>
+                <span class="metadata-value">Sarah Martinez</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-actions">
+            <button class="btn btn-secondary">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+              </svg>
+              Settings
+            </button>
+            
+            <button class="btn btn-primary">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8.235 1.02a.5.5 0 0 1 .53 0l7 4a.5.5 0 0 1 0 .96l-7 4a.5.5 0 0 1-.53 0l-7-4a.5.5 0 0 1 0-.96l7-4z"/>
+                <path d="M7.47 7.78a.5.5 0 0 0 1.06 0l3-6a.5.5 0 0 0-.9-.44L8 5.685 5.34 1.34a.5.5 0 0 0-.9.44l3 6z"/>
+              </svg>
+              Export Story
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-navigation">
+      <div class="container">
+        <div class="tab-nav-bar">
+          <button class="tab-nav-item active" data-tab="resources">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM6.5 7a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zM4.776 4.553a.5.5 0 0 1 .671-.223L9 5.999l3.553-1.67a.5.5 0 1 1 .448.895L9 7.999 5 5.224a.5.5 0 0 1-.224-.671z"/>
+              <path d="M1.5 1A1.5 1.5 0 0 0 0 2.5V14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V2.5A1.5 1.5 0 0 0 14.5 1H1.5z"/>
+            </svg>
+            Resources
+            <span class="tab-badge">14</span>
+          </button>
+          
+          <button class="tab-nav-item" data-tab="analysis">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+              <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
+            </svg>
+            Analysis
+            <span class="tab-badge warning">2 ready</span>
+          </button>
+          
+          <button class="tab-nav-item" data-tab="reports">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5V6z"/>
+              <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+            </svg>
+            Reports & Outputs
+            <span class="tab-badge success">2</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+      <div class="container">
+        <div class="tab-content">
+          
+          <!-- Resources Tab Content -->
+          <div class="tab-pane active" id="resources-tab">
+            <!-- Upload Area -->
+            <div class="upload-area">
+              <div class="upload-icon">
+                <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M8.5 1.5A1.5 1.5 0 0 0 7 0H4.5A1.5 1.5 0 0 0 3 1.5v13a1.5 1.5 0 0 0 1.5 1.5H12a1.5 1.5 0 0 0 1.5-1.5V4.5a1.5 1.5 0 0 0-1.5-1.5L8.5 1.5z"/>
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+              </div>
+              <div class="upload-content">
+                <h3 class="upload-title">Drop files here or click to upload</h3>
+                <p class="upload-subtitle">Support for audio, video, documents, and images</p>
+                <button class="btn btn-primary upload-button">Choose Files</button>
+              </div>
+            </div>
+
+            <!-- Resource Categories -->
+            <div class="resource-categories">
+              <div class="category-tabs">
+                <button class="category-tab active" data-filter="all">All (14)</button>
+                <button class="category-tab" data-filter="audio">Audio (3)</button>
+                <button class="category-tab" data-filter="document">Documents (5)</button>
+                <button class="category-tab" data-filter="transcription">Transcripts (2)</button>
+                <button class="category-tab" data-filter="image">Images (4)</button>
+              </div>
+            </div>
+
+            <!-- Resource List -->
+            <div class="resource-grid">
+              <!-- Audio Resource -->
+              <div class="resource-card" data-type="audio">
+                <div class="resource-card-header">
+                  <div class="resource-icon audio">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Emergency_Call_Recording_082517.mp3</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">15.2 MB</span>
+                    <span class="upload-date">Aug 25, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Transcribe</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Document Resource -->
+              <div class="resource-card" data-type="document">
+                <div class="resource-card-header">
+                  <div class="resource-icon document">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Incident_Report_Houston_PD.pdf</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">2.8 MB</span>
+                    <span class="upload-date">Aug 26, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Analyze</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Video Resource -->
+              <div class="resource-card" data-type="video">
+                <div class="resource-card-header">
+                  <div class="resource-icon video">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M0 1a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V1zm7 2a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V3z"/>
+                      <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Mayor_Press_Conference.mp4</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">125.5 MB</span>
+                    <span class="upload-date">Aug 28, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Transcribe</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Transcription Result Resource -->
+              <div class="resource-card" data-type="transcription">
+                <div class="resource-card-header">
+                  <div class="resource-icon transcription">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                      <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Emergency_Call_Recording_Transcript.json</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">245 KB</span>
+                    <span class="upload-date">Sep 2, 2017</span>
+                  </div>
+                  <div class="transcription-preview">
+                    <p class="transcript-snippet">"SPEAKER_01: Houston Fire Department emergency... SPEAKER_02: We have a situation on..."</p>
+                    <div class="transcript-stats">
+                      <span class="stat-item">3 speakers</span>
+                      <span class="stat-item">12:34 duration</span>
+                      <span class="stat-item">5 annotations</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block edit-transcription-btn">Edit Transcription</button>
+                  <button class="btn btn-outline btn-sm">Quick View</button>
+                </div>
+              </div>
+
+              <!-- Second Transcription Result Resource -->
+              <div class="resource-card" data-type="transcription">
+                <div class="resource-card-header">
+                  <div class="resource-icon transcription">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                      <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Mayor_Press_Conference_Transcript.json</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">892 KB</span>
+                    <span class="upload-date">Sep 5, 2017</span>
+                  </div>
+                  <div class="transcription-preview">
+                    <p class="transcript-snippet">"SPEAKER_MAYOR: Citizens of Houston, we are facing unprecedented challenges... SPEAKER_REPORTER: Mr. Mayor, can you..."</p>
+                    <div class="transcript-stats">
+                      <span class="stat-item">8 speakers</span>
+                      <span class="stat-item">35:47 duration</span>
+                      <span class="stat-item">12 annotations</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block edit-transcription-btn">Edit Transcription</button>
+                  <button class="btn btn-outline btn-sm">Quick View</button>
+                </div>
+              </div>
+
+              <!-- Show More Card -->
+              <div class="resource-card resource-card-more">
+                <div class="resource-card-body centered">
+                  <div class="more-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                  </div>
+                  <h4 class="more-text">+ 7 more files</h4>
+                  <button class="btn btn-link">View All Resources</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analysis Tab Content -->
+          <div class="tab-pane" id="analysis-tab">
+            <!-- Analysis Overview -->
+            <div class="analysis-overview-section">
+              <div class="overview-cards">
+                <div class="overview-card completed">
+                  <div class="overview-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                    </svg>
+                  </div>
+                  <div class="overview-content">
+                    <div class="overview-value">3</div>
+                    <div class="overview-label">Completed</div>
+                  </div>
+                </div>
+
+                <div class="overview-card in-progress">
+                  <div class="overview-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                    </svg>
+                  </div>
+                  <div class="overview-content">
+                    <div class="overview-value">2</div>
+                    <div class="overview-label">In Progress</div>
+                  </div>
+                </div>
+
+                <div class="overview-card pending">
+                  <div class="overview-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                    </svg>
+                  </div>
+                  <div class="overview-content">
+                    <div class="overview-value">7</div>
+                    <div class="overview-label">Pending</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transcription Review Section -->
+            <div class="transcription-review-section">
+              <div class="section-header">
+                <h3 class="section-title">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16" class="section-icon">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                    <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                  </svg>
+                  Transcription Review
+                </h3>
+                <div class="section-badge">2 ready for review</div>
+              </div>
+              
+              <div class="transcription-review-grid">
+                <!-- Transcription Review Card 1 -->
+                <div class="transcription-review-card">
+                  <div class="review-header">
+                    <div class="review-status ready-for-review">Ready for Review</div>
+                    <button class="review-menu-btn">⋯</button>
+                  </div>
+                  <div class="review-content">
+                    <h4 class="review-title">Emergency Call Recording</h4>
+                    <p class="review-subtitle">Emergency_Call_Recording_082517.mp3</p>
+                    <div class="review-stats">
+                      <div class="review-stat">
+                        <span class="stat-label">Duration</span>
+                        <span class="stat-value">12:34</span>
+                      </div>
+                      <div class="review-stat">
+                        <span class="stat-label">Speakers</span>
+                        <span class="stat-value">3</span>
+                      </div>
+                      <div class="review-stat">
+                        <span class="stat-label">Segments</span>
+                        <span class="stat-value">47</span>
+                      </div>
+                    </div>
+                    <div class="review-preview">
+                      <p class="transcript-preview-text">"SPEAKER_01: Houston Fire Department emergency dispatch, what's your emergency? SPEAKER_02: We have a situation on Main Street near the..."</p>
+                    </div>
+                  </div>
+                  <div class="review-actions">
+                    <button class="btn btn-primary btn-block edit-transcription-btn">Edit & Annotate</button>
+                    <button class="btn btn-outline btn-sm">Quick Preview</button>
+                  </div>
+                </div>
+
+                <!-- Transcription Review Card 2 -->
+                <div class="transcription-review-card">
+                  <div class="review-header">
+                    <div class="review-status needs-attention">Needs Attention</div>
+                    <button class="review-menu-btn">⋯</button>
+                  </div>
+                  <div class="review-content">
+                    <h4 class="review-title">Mayor Press Conference</h4>
+                    <p class="review-subtitle">Mayor_Press_Conference.mp4</p>
+                    <div class="review-stats">
+                      <div class="review-stat">
+                        <span class="stat-label">Duration</span>
+                        <span class="stat-value">35:47</span>
+                      </div>
+                      <div class="review-stat">
+                        <span class="stat-label">Speakers</span>
+                        <span class="stat-value">8</span>
+                      </div>
+                      <div class="review-stat">
+                        <span class="stat-label">Segments</span>
+                        <span class="stat-value">156</span>
+                      </div>
+                    </div>
+                    <div class="review-preview">
+                      <p class="transcript-preview-text">"SPEAKER_MAYOR: Citizens of Houston, we are facing unprecedented challenges in the wake of Hurricane Harvey. SPEAKER_REPORTER: Mr. Mayor, can you tell us..."</p>
+                    </div>
+                    <div class="review-issues">
+                      <div class="issue-tag">Speaker identification needed</div>
+                      <div class="issue-tag">Timeline alignment</div>
+                    </div>
+                  </div>
+                  <div class="review-actions">
+                    <button class="btn btn-primary btn-block edit-transcription-btn">Fix Issues</button>
+                    <button class="btn btn-outline btn-sm">Quick Preview</button>
+                  </div>
+                </div>
+
+                <!-- Review Summary -->
+                <div class="transcription-review-card review-summary-card">
+                  <div class="summary-content">
+                    <div class="summary-icon">
+                      <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
+                      </svg>
+                    </div>
+                    <h4 class="summary-title">Ready for Analysis</h4>
+                    <p class="summary-description">Once transcriptions are reviewed and annotated, proceed to narrative analysis to extract themes and insights.</p>
+                    <div class="summary-progress">
+                      <div class="progress-label">Review Progress</div>
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 40%"></div>
+                      </div>
+                      <div class="progress-text">40% reviewed</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analysis Tools -->
+            <div class="analysis-tools-section">
+              <!-- Transcription Tool -->
+              <div class="analysis-tool-card">
+                <div class="tool-header">
+                  <div class="tool-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"/>
+                    </svg>
+                  </div>
+                  <div class="tool-info">
+                    <h3 class="tool-name">Audio/Video Transcription</h3>
+                    <div class="tool-status status-in-progress">2 of 3 files complete</div>
+                  </div>
+                </div>
+                <div class="tool-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 67%"></div>
+                  </div>
+                  <div class="progress-text">67% Complete</div>
+                </div>
+                <div class="tool-actions">
+                  <button class="btn btn-outline view-transcription-results">View & Edit Results</button>
+                  <button class="btn btn-primary">Run on New Files</button>
+                </div>
+              </div>
+
+              <!-- Narrative Analysis Tool -->
+              <div class="analysis-tool-card">
+                <div class="tool-header">
+                  <div class="tool-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12z"/>
+                      <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6z"/>
+                    </svg>
+                  </div>
+                  <div class="tool-info">
+                    <h3 class="tool-name">Narrative Analysis</h3>
+                    <div class="tool-status status-pending">Ready to run</div>
+                  </div>
+                </div>
+                <div class="tool-description">
+                  Extract themes, sentiment, and key insights from transcripts and documents
+                </div>
+                <div class="tool-actions">
+                  <button class="btn btn-primary btn-block">Run Analysis</button>
+                </div>
+              </div>
+
+              <!-- Topic Classification Tool -->
+              <div class="analysis-tool-card">
+                <div class="tool-header">
+                  <div class="tool-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3z"/>
+                      <path d="M9 2.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3z"/>
+                    </svg>
+                  </div>
+                  <div class="tool-info">
+                    <h3 class="tool-name">Topic Classification</h3>
+                    <div class="tool-status status-completed">Completed</div>
+                  </div>
+                </div>
+                <div class="tool-results">
+                  <div class="topics-grid">
+                    <span class="topic-tag">Emergency Response</span>
+                    <span class="topic-tag">Infrastructure</span>
+                    <span class="topic-tag">Community</span>
+                    <span class="topic-tag">Recovery</span>
+                    <span class="topic-tag">Resources</span>
+                    <span class="topic-tag more">+2 more</span>
+                  </div>
+                </div>
+                <div class="tool-actions">
+                  <button class="btn btn-outline btn-block">View Full Results</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports Tab Content -->
+          <div class="tab-pane" id="reports-tab">
+            <!-- Reports Header -->
+            <div class="reports-header">
+              <div class="reports-title-section">
+                <h2>Generated Reports</h2>
+                <p>Export and share analysis results with stakeholders</p>
+              </div>
+              <button class="btn btn-primary">Create New Report</button>
+            </div>
+
+            <!-- Reports Grid -->
+            <div class="reports-grid">
+              <!-- Executive Summary Report -->
+              <div class="report-card">
+                <div class="report-card-header">
+                  <div class="report-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2z"/>
+                      <path d="M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                    </svg>
+                  </div>
+                  <div class="report-status">Published</div>
+                </div>
+                <div class="report-card-body">
+                  <h3 class="report-name">Executive Summary - Hurricane Harvey</h3>
+                  <div class="report-meta">
+                    <span class="report-type">PDF Report</span>
+                    <span class="report-date">Sep 15, 2017</span>
+                  </div>
+                  <div class="report-stats">
+                    <div class="stat">
+                      <span class="stat-value">1,245</span>
+                      <span class="stat-label">Views</span>
+                    </div>
+                    <div class="stat">
+                      <span class="stat-value">87</span>
+                      <span class="stat-label">Downloads</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="report-card-actions">
+                  <button class="btn btn-outline">View</button>
+                  <button class="btn btn-primary">Export</button>
+                </div>
+              </div>
+
+              <!-- Dashboard Report -->
+              <div class="report-card">
+                <div class="report-card-header">
+                  <div class="report-icon dashboard">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                    </svg>
+                  </div>
+                  <div class="report-status live">Live</div>
+                </div>
+                <div class="report-card-body">
+                  <h3 class="report-name">Interactive Analysis Dashboard</h3>
+                  <div class="report-meta">
+                    <span class="report-type">Live Dashboard</span>
+                    <span class="report-date">Updated daily</span>
+                  </div>
+                  <div class="report-preview">Real-time analysis metrics and visualizations</div>
+                </div>
+                <div class="report-card-actions">
+                  <button class="btn btn-outline">Open</button>
+                  <button class="btn btn-primary">Share</button>
+                </div>
+              </div>
+
+              <!-- Create Report CTA -->
+              <div class="report-card report-card-cta">
+                <div class="cta-content">
+                  <div class="cta-icon">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                  </div>
+                  <h3 class="cta-title">Ready to create a report?</h3>
+                  <p class="cta-description">Use your analysis results to generate stakeholder reports</p>
+                  <button class="btn btn-primary">Create New Report</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- External Resources -->
+            <div class="external-resources">
+              <h3 class="external-title">External Resources</h3>
+              <div class="external-links">
+                <a href="#" class="external-link">
+                  <div class="external-icon">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146z"/>
+                    </svg>
+                  </div>
+                  <div class="external-content">
+                    <div class="external-name">DYNAMO Dashboard</div>
+                    <div class="external-desc">Monitor transcription jobs and analysis progress</div>
+                  </div>
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="external-arrow">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                  </svg>
+                </a>
+                
+                <a href="#" class="external-link">
+                  <div class="external-icon">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146z"/>
+                    </svg>
+                  </div>
+                  <div class="external-content">
+                    <div class="external-name">TAPIS Jobs Monitor</div>
+                    <div class="external-desc">Track computational analysis jobs and system status</div>
+                  </div>
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="external-arrow">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Transcription Preview Modal -->
+    <div id="transcription-preview-modal" class="modal" style="display: none;">
+      <div class="modal-overlay" onclick="closeTranscriptionPreview()"></div>
+      <div class="modal-content transcription-modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Transcription Preview</h2>
+          <button class="modal-close" onclick="closeTranscriptionPreview()">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="transcription-info">
+            <div class="transcription-meta">
+              <h3 id="preview-title">Emergency Call Recording</h3>
+              <div class="transcription-stats-header">
+                <div class="stat-group">
+                  <span class="stat-label">Duration:</span>
+                  <span class="stat-value" id="preview-duration">12:34</span>
+                </div>
+                <div class="stat-group">
+                  <span class="stat-label">Speakers:</span>
+                  <span class="stat-value" id="preview-speakers">3</span>
+                </div>
+                <div class="stat-group">
+                  <span class="stat-label">Segments:</span>
+                  <span class="stat-value" id="preview-segments">47</span>
+                </div>
+                <div class="stat-group">
+                  <span class="stat-label">Annotations:</span>
+                  <span class="stat-value" id="preview-annotations">5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="transcription-content">
+            <div class="transcription-segments">
+              <div class="segment">
+                <div class="segment-header">
+                  <span class="segment-time">[00:00:15 - 00:00:28]</span>
+                  <span class="segment-speaker">SPEAKER_01</span>
+                </div>
+                <div class="segment-text">Houston Fire Department emergency dispatch, what's your emergency?</div>
+              </div>
+              
+              <div class="segment">
+                <div class="segment-header">
+                  <span class="segment-time">[00:00:29 - 00:00:45]</span>
+                  <span class="segment-speaker">SPEAKER_02</span>
+                </div>
+                <div class="segment-text">We have a situation on Main Street near the convention center. There's flooding and people are trapped in their cars.</div>
+                <div class="segment-annotation">
+                  <div class="annotation-label">Annotation:</div>
+                  <div class="annotation-text">Critical incident - multiple vehicles trapped, immediate rescue required</div>
+                </div>
+              </div>
+
+              <div class="segment">
+                <div class="segment-header">
+                  <span class="segment-time">[00:00:46 - 00:01:02]</span>
+                  <span class="segment-speaker">SPEAKER_01</span>
+                </div>
+                <div class="segment-text">Copy that. Can you provide an exact address and approximate number of vehicles involved?</div>
+              </div>
+
+              <div class="segment">
+                <div class="segment-header">
+                  <span class="segment-time">[00:01:03 - 00:01:18]</span>
+                  <span class="segment-speaker">SPEAKER_02</span>
+                </div>
+                <div class="segment-text">It's at the intersection of Main and Fannin. I can see at least six vehicles, maybe more. Water level is rising quickly.</div>
+              </div>
+
+              <div class="segment">
+                <div class="segment-header">
+                  <span class="segment-time">[00:01:19 - 00:01:35]</span>
+                  <span class="segment-speaker">SPEAKER_01</span>
+                </div>
+                <div class="segment-text">We're dispatching rescue units immediately. Are you in a safe location? Can you assist in directing people to higher ground?</div>
+                <div class="segment-annotation">
+                  <div class="annotation-label">Annotation:</div>
+                  <div class="annotation-text">Dispatcher coordinating rescue response, prioritizing victim safety</div>
+                </div>
+              </div>
+
+              <div class="segment more-segments">
+                <div class="more-indicator">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                  </svg>
+                  <span>42 more segments...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeTranscriptionPreview()">Close</button>
+          <button class="btn btn-primary edit-transcription-btn">Edit Full Transcription</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize dashboard interactions
+      document.addEventListener('DOMContentLoaded', function() {
+        // Main tab navigation
+        const tabNavItems = document.querySelectorAll('.tab-nav-item');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        
+        tabNavItems.forEach(tab => {
+          tab.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Remove active class from all tabs and panes
+            tabNavItems.forEach(t => t.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Show corresponding tab pane
+            const targetPane = document.getElementById(targetTab + '-tab');
+            if (targetPane) {
+              targetPane.classList.add('active');
+            }
+          });
+        });
+
+        // Resource category tabs
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        categoryTabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            
+            // Remove active class from all category tabs
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter resource cards
+            const resourceCards = document.querySelectorAll('.resource-card');
+            resourceCards.forEach(card => {
+              if (filter === 'all' || card.getAttribute('data-type') === filter) {
+                card.style.display = 'block';
+              } else {
+                card.style.display = 'none';
+              }
+            });
+          });
+        });
+
+        // Upload area interactions
+        const uploadArea = document.querySelector('.upload-area');
+        const uploadButton = document.querySelector('.upload-button');
+        
+        if (uploadButton) {
+          uploadButton.addEventListener('click', function() {
+            // In real app: open file picker
+            console.log('File picker opened');
+          });
+        }
+
+        if (uploadArea) {
+          // Drag and drop functionality
+          uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+          });
+
+          uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+          });
+
+          uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            // In real app: handle file upload
+            console.log('Files dropped:', e.dataTransfer.files);
+          });
+        }
+
+        // Analysis tool buttons
+        const analysisButtons = document.querySelectorAll('.analysis-tool-card .btn-primary, .resource-card .btn-primary');
+        analysisButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // Skip if button is disabled
+            if (this.disabled) return;
+            
+            const originalText = this.textContent;
+            
+            // Show loading state
+            this.innerHTML = `
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="spinner">
+                <path d="M11.534 7h3.932a.25.25 0 0 1 0 .5h-3.932a7.5 7.5 0 0 0-3.032-3.038v-3.93a.25.25 0 0 1 .5 0v3.938c1.25.32 2.375 1.044 3.032 2.03z"/>
+              </svg>
+              Running...
+            `;
+            this.disabled = true;
+            
+            // Simulate analysis completion
+            setTimeout(() => {
+              if (originalText.includes('Transcribe') || originalText.includes('Analyze')) {
+                this.innerHTML = 'View Results';
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-outline');
+              } else {
+                this.innerHTML = originalText;
+              }
+              this.disabled = false;
+            }, 2000 + Math.random() * 2000); // Random delay between 2-4 seconds
+          });
+        });
+
+        // Transcription preview modal functionality
+        const quickViewButtons = document.querySelectorAll('button:contains("Quick View")');
+        quickViewButtons.forEach(button => {
+          // Since :contains is not standard, use a different approach
+          if (button.textContent.trim() === 'Quick View') {
+            button.addEventListener('click', function() {
+              openTranscriptionPreview();
+            });
+          }
+        });
+
+        // Edit transcription button functionality
+        const editTranscriptionButtons = document.querySelectorAll('.edit-transcription-btn');
+        editTranscriptionButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // In real app: navigate to transcription editor
+            console.log('Opening transcription editor...');
+            // window.location.href = '/stories/hurricane-harvey/transcription/emergency-call/edit';
+            alert('Navigating to Transcription Editor...\n\nIn the real application, this would open the TranscriptionEditor component with:\n• Audio/video synchronization\n• Segment editing capabilities\n• Speaker identification tools\n• Annotation system\n• Auto-save functionality');
+          });
+        });
+
+        // View transcription results functionality
+        const viewResultsButtons = document.querySelectorAll('.view-transcription-results');
+        viewResultsButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            console.log('Opening transcription results dashboard...');
+            // In real app: navigate to transcription results view
+            alert('Opening Transcription Results Dashboard...\n\nThis would show:\n• All completed transcriptions\n• Review status for each\n• Quick access to edit individual transcriptions\n• Bulk operations for multiple transcriptions');
+          });
+        });
+      });
+
+      // Modal functions (global scope for onclick handlers)
+      function openTranscriptionPreview() {
+        const modal = document.getElementById('transcription-preview-modal');
+        if (modal) {
+          modal.style.display = 'block';
+          document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+      }
+
+      function closeTranscriptionPreview() {
+        const modal = document.getElementById('transcription-preview-modal');
+        if (modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function(event) {
+        const modal = document.getElementById('transcription-preview-modal');
+        if (event.target === modal) {
+          closeTranscriptionPreview();
+        }
+      }
+    </script>
+
+    <style>
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .drag-over {
+        border-color: #2563eb !important;
+        background-color: #f0f9ff !important;
+      }
+
+      /* Transcription specific styles */
+      .resource-icon.transcription {
+        background-color: #dbeafe;
+        color: #3b82f6;
+      }
+
+      .transcription-preview {
+        margin-top: 12px;
+        padding: 12px;
+        background-color: #f8fafc;
+        border-radius: 6px;
+        border-left: 3px solid #3b82f6;
+      }
+
+      .transcript-snippet {
+        font-size: 13px;
+        color: #475569;
+        font-style: italic;
+        margin: 0 0 8px 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .transcript-stats {
+        display: flex;
+        gap: 16px;
+        margin-top: 8px;
+      }
+
+      .stat-item {
+        font-size: 12px;
+        color: #64748b;
+        padding: 2px 8px;
+        background-color: #e2e8f0;
+        border-radius: 12px;
+      }
+
+      /* Transcription Review Section */
+      .transcription-review-section {
+        margin-bottom: 32px;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+      }
+
+      .section-badge {
+        background-color: #fef3c7;
+        color: #92400e;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .transcription-review-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .transcription-review-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+      }
+
+      .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .review-status {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 8px;
+        border-radius: 12px;
+      }
+
+      .review-status.ready-for-review {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+
+      .review-status.needs-attention {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+
+      .review-content {
+        padding: 16px;
+      }
+
+      .review-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 4px 0;
+        color: #1e293b;
+      }
+
+      .review-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0 0 12px 0;
+      }
+
+      .review-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .review-stat {
+        text-align: center;
+        padding: 8px;
+        background-color: #f8fafc;
+        border-radius: 6px;
+      }
+
+      .review-stat .stat-label {
+        display: block;
+        font-size: 11px;
+        color: #64748b;
+        margin-bottom: 2px;
+      }
+
+      .review-stat .stat-value {
+        display: block;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .review-preview {
+        background-color: #f8fafc;
+        border-radius: 6px;
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+
+      .transcript-preview-text {
+        font-size: 13px;
+        color: #475569;
+        margin: 0;
+        font-style: italic;
+        line-height: 1.4;
+      }
+
+      .review-issues {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+
+      .issue-tag {
+        font-size: 11px;
+        background-color: #fef3c7;
+        color: #92400e;
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+
+      .review-actions {
+        padding: 12px 16px;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        gap: 8px;
+      }
+
+      .review-summary-card {
+        border: 2px dashed #cbd5e1;
+        background: #f8fafc;
+      }
+
+      .summary-content {
+        padding: 24px;
+        text-align: center;
+      }
+
+      .summary-icon {
+        margin: 0 auto 16px;
+        color: #3b82f6;
+      }
+
+      .summary-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        color: #1e293b;
+      }
+
+      .summary-description {
+        font-size: 14px;
+        color: #64748b;
+        margin: 0 0 16px 0;
+        line-height: 1.4;
+      }
+
+      .summary-progress {
+        max-width: 200px;
+        margin: 0 auto;
+      }
+
+      .progress-label {
+        font-size: 12px;
+        color: #64748b;
+        margin-bottom: 4px;
+      }
+
+      /* Modal styles */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+      }
+
+      .modal-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .transcription-modal-content {
+        width: 800px;
+        max-width: 90vw;
+      }
+
+      .modal-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        color: #1e293b;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+      }
+
+      .modal-close:hover {
+        background-color: #f1f5f9;
+      }
+
+      .modal-body {
+        padding: 24px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .transcription-meta {
+        margin-bottom: 24px;
+      }
+
+      .transcription-meta h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        color: #1e293b;
+      }
+
+      .transcription-stats-header {
+        display: flex;
+        gap: 24px;
+      }
+
+      .stat-group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stat-group .stat-label {
+        font-size: 13px;
+        color: #64748b;
+      }
+
+      .stat-group .stat-value {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .transcription-segments {
+        space-y: 16px;
+      }
+
+      .segment {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .segment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .segment-time {
+        font-size: 12px;
+        color: #3b82f6;
+        font-weight: 500;
+      }
+
+      .segment-speaker {
+        font-size: 12px;
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 2px 8px;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .segment-text {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #374151;
+        margin-bottom: 8px;
+      }
+
+      .segment-annotation {
+        background-color: #fef9e7;
+        border: 1px solid #fde68a;
+        border-radius: 6px;
+        padding: 8px;
+        margin-top: 8px;
+      }
+
+      .annotation-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #92400e;
+        margin-bottom: 4px;
+      }
+
+      .annotation-text {
+        font-size: 12px;
+        color: #78350f;
+        line-height: 1.4;
+      }
+
+      .more-segments {
+        border: 2px dashed #cbd5e1;
+        background: #f8fafc;
+        text-align: center;
+        padding: 24px;
+      }
+
+      .more-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #64748b;
+        font-size: 14px;
+      }
+
+      .modal-footer {
+        padding: 20px 24px;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+      }
+    </style>
+  </body>
+</html>

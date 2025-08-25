@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Story | Stories Analytics</title>
+    <link rel="stylesheet" href="story-creation.css" />
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <div class="container">
+        <div class="top-bar-content">
+          <div class="logo">Stories<span>Analytics</span></div>
+          <ul class="nav-links">
+            <li><a href="#" class="active">Stories</a></li>
+            <li><a href="#">Analysis Tools</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Data Catalog</a></li>
+          </ul>
+          <div class="user-menu">
+            <span class="user-name">Sarah Martinez</span>
+            <div class="user-avatar">SM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-bar">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="#" class="breadcrumb-link">Stories</a>
+          <svg class="breadcrumb-separator" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+          <span class="breadcrumb-current">Create New Story</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <div class="creation-layout">
+          <!-- Story Creation Form -->
+          <div class="creation-form">
+            <div class="form-header">
+              <h1 class="form-title">Create New Story</h1>
+              <p class="form-subtitle">Set up a new story for analyzing disaster-related data and generating reports</p>
+            </div>
+
+            <form class="story-form">
+              <!-- Basic Information Section -->
+              <div class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+                
+                <div class="form-group">
+                  <label for="story-title" class="form-label">Story Title *</label>
+                  <input 
+                    type="text" 
+                    id="story-title" 
+                    class="form-input" 
+                    placeholder="Enter a descriptive title for your story"
+                    required
+                  />
+                  <span class="field-hint">This will be the main identifier for your story in reports and analysis</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="story-description" class="form-label">Description</label>
+                  <textarea 
+                    id="story-description" 
+                    class="form-textarea" 
+                    rows="3"
+                    placeholder="Provide a brief description of what this story covers"
+                  ></textarea>
+                  <span class="field-hint">Optional: Help team members understand the story's focus and scope</span>
+                </div>
+              </div>
+
+              <!-- Location & Time Section -->
+              <div class="form-section">
+                <h2 class="section-title">Location & Time Period</h2>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="region" class="form-label">Region *</label>
+                    <select id="region" class="form-select" required>
+                      <option value="">Select region</option>
+                      <option value="texas">Texas</option>
+                      <option value="alaska">Alaska</option>
+                      <option value="florida">Florida</option>
+                      <option value="california">California</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="disaster-type" class="form-label">Disaster Type</label>
+                    <select id="disaster-type" class="form-select">
+                      <option value="">Select type (optional)</option>
+                      <option value="hurricane">Hurricane</option>
+                      <option value="wildfire">Wildfire</option>
+                      <option value="flood">Flood</option>
+                      <option value="tornado">Tornado</option>
+                      <option value="earthquake">Earthquake</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="start-date" class="form-label">Start Date</label>
+                    <input 
+                      type="date" 
+                      id="start-date" 
+                      class="form-input"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="end-date" class="form-label">End Date</label>
+                    <input 
+                      type="date" 
+                      id="end-date" 
+                      class="form-input"
+                    />
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Access & Sharing Section -->
+              <div class="form-section">
+                <h2 class="section-title">Access & Sharing</h2>
+                
+                <div class="form-group">
+                  <label class="form-label">Visibility</label>
+                  <div class="radio-group">
+                    <label class="radio-item">
+                      <input type="radio" name="visibility" value="private" class="radio-input" checked>
+                      <span class="radio-label">Private</span>
+                      <span class="radio-desc">Only you can access this story</span>
+                    </label>
+
+                    <label class="radio-item">
+                      <input type="radio" name="visibility" value="team" class="radio-input">
+                      <span class="radio-label">Team</span>
+                      <span class="radio-desc">Share with your analysis team</span>
+                    </label>
+
+                    <label class="radio-item">
+                      <input type="radio" name="visibility" value="public" class="radio-input">
+                      <span class="radio-label">Public</span>
+                      <span class="radio-desc">Anyone in the organization can view</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="tags" class="form-label">Tags</label>
+                  <input 
+                    type="text" 
+                    id="tags" 
+                    class="form-input" 
+                    placeholder="Add tags separated by commas"
+                  />
+                  <span class="field-hint">e.g., hurricane, houston, 2023, emergency-response</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                  </svg>
+                  Cancel
+                </button>
+                
+                <button type="button" class="btn btn-outline">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2 1a1 1 0 0 0-1 1v9.5a1 1 0 0 0 1 1h2.5a1 1 0 0 1 0 2H2a3 3 0 0 1-3-3V2a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v6.5a.5.5 0 0 1-1 0V2a1 1 0 0 0-1-1H2z"/>
+                    <path d="M13.5 9a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5z"/>
+                  </svg>
+                  Save as Draft
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                  </svg>
+                  Create Story
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Help Sidebar -->
+          <div class="help-sidebar">
+            <div class="help-card">
+              <div class="help-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
+              </div>
+              <h3 class="help-title">Getting Started</h3>
+              <p class="help-text">Once you create a story, you'll be able to:</p>
+              <ul class="help-list">
+                <li>Upload audio, video, and document files</li>
+                <li>Run automated analysis on your content</li>
+                <li>Generate reports for stakeholders</li>
+                <li>Track analysis progress in real-time</li>
+              </ul>
+            </div>
+
+            <div class="help-card">
+              <div class="help-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L5.146 2.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 7.5H4.5z"/>
+                </svg>
+              </div>
+              <h3 class="help-title">Available Analysis Tools</h3>
+              <div class="analysis-tools-list">
+                <div class="analysis-tool-item">
+                  <div class="tool-icon-small">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"/>
+                    </svg>
+                  </div>
+                  <div class="tool-details">
+                    <div class="tool-name-small">Audio/Video Transcription</div>
+                    <div class="tool-desc-small">Convert media files to searchable text</div>
+                  </div>
+                </div>
+
+                <div class="analysis-tool-item">
+                  <div class="tool-icon-small">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                      <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                  </div>
+                  <div class="tool-details">
+                    <div class="tool-name-small">Narrative Analysis</div>
+                    <div class="tool-desc-small">Extract themes and sentiment from text</div>
+                  </div>
+                </div>
+
+                <div class="analysis-tool-item">
+                  <div class="tool-icon-small">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                    </svg>
+                  </div>
+                  <div class="tool-details">
+                    <div class="tool-name-small">Topic Classification</div>
+                    <div class="tool-desc-small">Categorize content by themes</div>
+                  </div>
+                </div>
+
+                <div class="analysis-tool-item">
+                  <div class="tool-icon-small">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                    </svg>
+                  </div>
+                  <div class="tool-details">
+                    <div class="tool-name-small">Entity Extraction</div>
+                    <div class="tool-desc-small">Identify people, places, organizations</div>
+                  </div>
+                </div>
+              </div>
+              <div class="workflow-note">
+                <strong>Workflow:</strong> Upload resources → Run analysis manually → Generate reports
+              </div>
+            </div>
+
+            <div class="help-card">
+              <div class="help-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                  <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
+              </div>
+              <h3 class="help-title">Need Help?</h3>
+              <p class="help-text">Contact the analysis team if you have questions about:</p>
+              <ul class="help-list">
+                <li>Setting up analysis workflows</li>
+                <li>Understanding analysis results</li>
+                <li>Creating effective reports</li>
+              </ul>
+              <button class="help-button">
+                Contact Support
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <span>Stories Analytics Platform</span>
+            <span>•</span>
+            <span>Disaster Response Analysis</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Form validation and interactions
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.story-form');
+        const requiredFields = form.querySelectorAll('[required]');
+        const createButton = form.querySelector('button[type="submit"]');
+        
+        // Enable/disable create button based on required fields
+        function validateForm() {
+          let isValid = true;
+          requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+              isValid = false;
+            }
+          });
+          createButton.disabled = !isValid;
+        }
+        
+        // Initial validation
+        validateForm();
+        
+        // Listen for changes on required fields
+        requiredFields.forEach(field => {
+          field.addEventListener('input', validateForm);
+        });
+        
+        // Date validation (end date after start date)
+        const startDate = document.getElementById('start-date');
+        const endDate = document.getElementById('end-date');
+        
+        startDate.addEventListener('change', function() {
+          if (endDate.value && this.value > endDate.value) {
+            endDate.value = this.value;
+          }
+          endDate.min = this.value;
+        });
+        
+        // Form submission
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          // Show loading state
+          createButton.innerHTML = `
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="spinner">
+              <path d="M11.534 7h3.932a.25.25 0 0 1 0 .5h-3.932a7.5 7.5 0 0 0-3.032-3.038v-3.93a.25.25 0 0 1 .5 0v3.938c1.25.32 2.375 1.044 3.032 2.03z"/>
+            </svg>
+            Creating Story...
+          `;
+          createButton.disabled = true;
+          
+          // Simulate API call
+          setTimeout(() => {
+            alert('Story created successfully! Redirecting to story dashboard...');
+            // In real app: window.location.href = '/stories/new-story-id';
+          }, 2000);
+        });
+      });
+    </script>
+
+    <style>
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </body>
+</html>
