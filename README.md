@@ -1,6 +1,6 @@
 # Stories UI
 
-A React application for capturing and displaying stories with integrated resource management and audio/video transcription capabilities powered by DYNAMO Ensemble Manager.
+A React application for capturing and displaying stories with integrated resource management and analysis workflows (transcription, narrative analysis, topic classification) powered by DYNAMO Ensemble Manager and TapisApps.
 
 ## Table of Contents
 
@@ -26,7 +26,7 @@ A React application for capturing and displaying stories with integrated resourc
 
 - **Story Management**: Create, edit, and organize stories with basic text content
 - **Resource Management**: Upload and manage various file types (documents, images, audio, video)
-- **Audio/Video Transcription**: AI-powered transcription using DYNAMO Ensemble Manager
+- **Analysis Workflows**: AI-powered analysis including transcription, narrative analysis, and topic classification using TapisApps through DYNAMO Ensemble Manager
 - **Transcription Editor**: Advanced editor for reviewing and editing transcription results
 - **Authentication**: Secure authentication via Tapis API
 - **Responsive Design**: Modern, responsive UI built with React and TailwindCSS
