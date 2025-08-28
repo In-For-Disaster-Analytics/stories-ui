@@ -474,6 +474,16 @@ body {
   color: #6b21a8;
 }
 
+.resource-icon.transcription {
+  background: linear-gradient(135deg, #ecfdf5, #bbf7d0);
+  color: #059669;
+}
+
+.resource-icon.image {
+  background: linear-gradient(135deg, #fef2f2, #fecaca);
+  color: #dc2626;
+}
+
 .resource-name {
   font-weight: 500;
   color: #374151;
@@ -520,6 +530,256 @@ body {
 }
 
 /* Analysis Tab Styles */
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.analysis-header-content {
+  flex: 1;
+}
+
+.analysis-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.analysis-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Task Groups Section */
+.task-groups-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.task-group-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.task-group-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.task-group-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.task-group-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.task-group-icon.emergency {
+  background: linear-gradient(135deg, #fef2f2, #fecaca);
+}
+
+.task-group-icon.government {
+  background: linear-gradient(135deg, #f0f9ff, #bae6fd);
+}
+
+.task-group-icon.community {
+  background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+}
+
+.task-group-details {
+  flex: 1;
+}
+
+.task-group-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 4px 0;
+}
+
+.task-group-description {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+.task-group-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.task-count {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.task-progress-indicator {
+  display: flex;
+  gap: 4px;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e2e8f0;
+}
+
+.progress-dot.completed {
+  background: #059669;
+}
+
+.progress-dot.in-progress {
+  background: #d97706;
+}
+
+.progress-dot.pending {
+  background: #9ca3af;
+}
+
+.task-group-content {
+  padding: 0 24px 24px;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.task-status {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.task-status.completed {
+  background: #059669;
+}
+
+.task-status.in-progress {
+  background: #d97706;
+}
+
+.task-status.pending {
+  background: #9ca3af;
+}
+
+.task-info {
+  flex: 1;
+}
+
+.task-name {
+  font-weight: 500;
+  color: #374151;
+  margin: 0 0 4px 0;
+  font-size: 14px;
+}
+
+.task-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.task-type {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.task-date {
+  color: #6b7280;
+}
+
+.task-resources {
+  font-size: 12px;
+  color: #64748b;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-progress-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+}
+
+.progress-bar-mini {
+  width: 50px;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill-mini {
+  height: 100%;
+  background: linear-gradient(90deg, #d97706, #f59e0b);
+  transition: width 0.3s ease;
+}
+
+.progress-text-mini {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.task-group-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
 .analysis-overview-section {
   margin-bottom: 40px;
 }
@@ -949,6 +1209,42 @@ body {
   color: #9ca3af;
 }
 
+/* Transcription Preview Styles */
+.transcription-preview {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.transcript-snippet {
+  font-size: 12px;
+  color: #4b5563;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.transcript-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  font-size: 11px;
+  color: #6b7280;
+  background: #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .resource-grid {
@@ -1024,6 +1320,210 @@ body {
     align-items: stretch;
     gap: 16px;
   }
+
+  .task-group-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}
+
+/* Task Details Section */
+.task-details-section {
+  margin-top: 32px;
+}
+
+.section-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.section-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.section-info {
+  flex: 1;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 4px;
+}
+
+.section-description {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.section-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.task-detail-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+  transition: all 0.2s;
+}
+
+.task-detail-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.task-detail-card.completed {
+  border-left: 4px solid #059669;
+}
+
+.task-detail-card.in-progress {
+  border-left: 4px solid #d97706;
+}
+
+.task-detail-card.pending {
+  border-left: 4px solid #9ca3af;
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 20px;
+}
+
+.task-details h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 16px 0 8px 0;
+}
+
+.task-description {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.task-resources {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resource-details {
+  flex: 1;
+}
+
+.resource-name {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.resource-meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.task-results {
+  background: #f0fdf4;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 3px solid #059669;
+}
+
+.findings-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+}
+
+.findings-list li {
+  padding: 4px 0;
+  font-size: 14px;
+  color: #374151;
+  position: relative;
+  padding-left: 20px;
+}
+
+.findings-list li::before {
+  content: "•";
+  color: #059669;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.task-progress-section {
+  background: #fffbeb;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 3px solid #d97706;
+}
+
+.progress-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.progress-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.progress-step {
+  color: #374151;
+}
+
+.progress-step.completed {
+  color: #059669;
+  font-weight: 500;
+}
+
+.progress-step.in-progress {
+  color: #d97706;
+  font-weight: 500;
+}
+
+.progress-step.pending {
+  color: #9ca3af;
+}
+
+.progress-status {
+  font-size: 12px;
+  color: #6b7280;
 }
 
 /* Interactive States */

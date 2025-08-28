@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Task Modal - Stories Analytics</title>
+    <link rel="stylesheet" href="single-story-dashboard.css" />
+    <style>
+      /* Modal Overlay */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      /* Modal Container */
+      .modal {
+        background: white;
+        border-radius: 12px;
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        max-width: 700px;
+        width: 90%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Modal Header */
+      .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+      }
+
+      .modal-close:hover {
+        background: #f3f4f6;
+      }
+
+      /* Modal Body */
+      .modal-body {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+      }
+
+      /* Form Section */
+      .form-section {
+        margin-bottom: 32px;
+      }
+
+      .form-section:last-child {
+        margin-bottom: 0;
+      }
+
+      .form-section h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 6px;
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1a202c;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        font-family: inherit;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      /* Search Section */
+      .search-section {
+        margin-bottom: 20px;
+      }
+
+      .search-box {
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 12px 14px 12px 44px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1a202c;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+      }
+
+      /* Resource List */
+      .resource-list {
+        max-height: 280px;
+        overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fafbfc;
+      }
+
+      .resource-item {
+        padding: 16px;
+        border-bottom: 1px solid #f1f3f4;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        background: white;
+      }
+
+      .resource-item:last-child {
+        border-bottom: none;
+      }
+
+      .resource-item:hover {
+        background: #f8f9fa;
+      }
+
+      .resource-item.selected {
+        background: #eff6ff;
+        border-left: 3px solid #2563eb;
+      }
+
+      .resource-checkbox {
+        margin-right: 14px;
+        width: 18px;
+        height: 18px;
+        accent-color: #2563eb;
+        cursor: pointer;
+      }
+
+      .resource-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 14px;
+        font-size: 16px;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      .resource-icon.audio {
+        background: #8b5cf6;
+      }
+
+      .resource-icon.document {
+        background: #ef4444;
+      }
+
+      .resource-icon.video {
+        background: #10b981;
+      }
+
+      .resource-icon.image {
+        background: #f59e0b;
+      }
+
+      .resource-icon.transcription {
+        background: #6366f1;
+      }
+
+      .resource-details {
+        flex: 1;
+      }
+
+      .resource-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a202c;
+        margin-bottom: 4px;
+      }
+
+      .resource-meta {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      /* Selection Summary */
+      .selection-summary {
+        background: #f8f9fa;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 16px;
+      }
+
+      .selection-summary h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 8px;
+      }
+
+      .selection-count {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .selected-resources {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .selected-resource-tag {
+        background: #e0e7ff;
+        color: #3730a3;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .selected-resource-tag .remove-tag {
+        cursor: pointer;
+        font-weight: bold;
+        opacity: 0.7;
+      }
+
+      .selected-resource-tag .remove-tag:hover {
+        opacity: 1;
+      }
+
+      /* Modal Footer */
+      .modal-footer {
+        padding: 24px;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        background: #fafbfc;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        font-family: inherit;
+      }
+
+      .btn-outline {
+        background: white;
+        border: 1px solid #d1d5db;
+        color: #374151;
+      }
+
+      .btn-outline:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+      }
+
+      .btn-primary {
+        background: #2563eb;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #1d4ed8;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6b7280;
+      }
+
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+      }
+
+      .empty-state-text {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Modal Overlay -->
+    <div class="modal-overlay">
+      <div class="modal">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h2 class="modal-title">Create New Task</h2>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <!-- Basic Information Section -->
+          <div class="form-section">
+            <h3>Task Information</h3>
+            <div class="form-group">
+              <label class="form-label" for="task-name">Task Name *</label>
+              <input
+                type="text"
+                id="task-name"
+                class="form-input"
+                placeholder="Enter a descriptive name for this task"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="task-description"
+                >Description</label
+              >
+              <textarea
+                id="task-description"
+                class="form-textarea"
+                placeholder="Describe the purpose, goals, and context of this analysis task..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Resources Section -->
+          <div class="form-section">
+            <h3>Select Resources</h3>
+            <p style="font-size: 14px; color: #6b7280; margin-bottom: 16px">
+              Choose the files and data that will be used for this analysis
+              task.
+            </p>
+
+            <div class="search-section">
+              <div class="search-box">
+                <svg
+                  class="search-icon"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                  />
+                </svg>
+                <input
+                  type="text"
+                  class="search-input"
+                  placeholder="Search by filename, type, or content..."
+                  id="resource-search"
+                  oninput="filterResources()"
+                />
+              </div>
+            </div>
+
+            <!-- <div class="resource-list" id="resource-list">
+              <div class="resource-item" data-type="audio" data-name="emergency call recording 911 houston dispatch">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon audio">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Emergency_Call_Recording_082517.mp3</div>
+                  <div class="resource-meta">12.3 MB • Audio • 12:34 duration • 911 Emergency Calls</div>
+                </div>
+              </div>
+
+              <div class="resource-item" data-type="audio" data-name="radio communications emergency response units">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon audio">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Radio_Communications_082917.mp3</div>
+                  <div class="resource-meta">8.7 MB • Audio • 18:42 duration • Emergency Response Units</div>
+                </div>
+              </div>
+
+              <div class="resource-item" data-type="document" data-name="incident report houston police department official">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon document">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Incident_Report_Houston_PD.pdf</div>
+                  <div class="resource-meta">2.1 MB • PDF • 24 pages • Houston Police Department</div>
+                </div>
+              </div>
+
+              <div class="resource-item" data-type="video" data-name="emergency response briefing hurricane harvey">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon video">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M0 1a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V1zm7 2a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V3z"/>
+                    <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Emergency_Response_Briefing.mp4</div>
+                  <div class="resource-meta">89.2 MB • Video • 45:12 duration • Official Briefing</div>
+                </div>
+              </div>
+
+              <div class="resource-item" data-type="document" data-name="emergency response protocol procedures manual">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon document">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Emergency_Response_Protocol.pdf</div>
+                  <div class="resource-meta">1.4 MB • PDF • 18 pages • Procedures Manual</div>
+                </div>
+              </div>
+
+              <div class="resource-item" data-type="image" data-name="houston flood map geographic data">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon image">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Houston_Flood_Map_082517.jpg</div>
+                  <div class="resource-meta">3.2 MB • Image • 1920x1080 • Geographic Data</div>
+                </div>
+              </div>
+
+              <div class="resource-item" data-type="transcription" data-name="emergency call transcript processed text">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon transcription">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                    <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Emergency_Call_Recording_Transcript.json</div>
+                  <div class="resource-meta">245 KB • Transcript • 3 speakers • Processed Text</div>
+                </div>
+              </div>
+
+              <div class="resource-item" data-type="document" data-name="weather data hurricane harvey meteorological">
+                <input type="checkbox" class="resource-checkbox" />
+                <div class="resource-icon document">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                  </svg>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-name">Weather_Data_Hurricane_Harvey.csv</div>
+                  <div class="resource-meta">892 KB • CSV • 1,247 records • Meteorological Data</div>
+                </div>
+              </div>
+            </div> -->
+
+            <!-- Selection Summary -->
+            <div
+              class="selection-summary"
+              id="selectionSummary"
+              style="display: none"
+            >
+              <h4>Selected Resources</h4>
+              <div class="selection-count" id="selectionCount">
+                0 resources selected
+              </div>
+              <div class="selected-resources" id="selectedResourcesList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button
+            class="btn btn-primary"
+            onclick="createTask()"
+            id="createTaskBtn"
+          >
+            Create Task
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function closeModal() {
+        // In a real application, this would close the modal
+        window.close();
+      }
+
+      function filterResources() {
+        const searchTerm = document
+          .getElementById('resource-search')
+          .value.toLowerCase();
+        const resourceItems = document.querySelectorAll('.resource-item');
+        let visibleCount = 0;
+
+        resourceItems.forEach((item) => {
+          const searchableText =
+            item.getAttribute('data-name').toLowerCase() +
+            ' ' +
+            item.querySelector('.resource-name').textContent.toLowerCase() +
+            ' ' +
+            item.querySelector('.resource-meta').textContent.toLowerCase();
+
+          const matches = searchableText.includes(searchTerm);
+          item.style.display = matches ? 'flex' : 'none';
+          if (matches) visibleCount++;
+        });
+
+        // Show empty state if no results
+        const resourceList = document.getElementById('resource-list');
+        const existingEmptyState = resourceList.querySelector('.empty-state');
+
+        if (visibleCount === 0 && searchTerm.length > 0) {
+          if (!existingEmptyState) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.innerHTML = `
+              <div class="empty-state-icon">🔍</div>
+              <div class="empty-state-text">No resources found matching "${searchTerm}"</div>
+            `;
+            resourceList.appendChild(emptyState);
+          }
+        } else if (existingEmptyState) {
+          existingEmptyState.remove();
+        }
+      }
+
+      function updateSelectionSummary() {
+        const selectedCheckboxes = document.querySelectorAll(
+          '.resource-checkbox:checked',
+        );
+        const summaryDiv = document.getElementById('selectionSummary');
+        const countDiv = document.getElementById('selectionCount');
+        const listDiv = document.getElementById('selectedResourcesList');
+
+        if (selectedCheckboxes.length === 0) {
+          summaryDiv.style.display = 'none';
+          return;
+        }
+
+        summaryDiv.style.display = 'block';
+        countDiv.textContent = `${selectedCheckboxes.length} resource${selectedCheckboxes.length === 1 ? '' : 's'} selected`;
+
+        // Update selected resources list
+        listDiv.innerHTML = '';
+        selectedCheckboxes.forEach((checkbox) => {
+          const resourceItem = checkbox.closest('.resource-item');
+          const resourceName =
+            resourceItem.querySelector('.resource-name').textContent;
+
+          const tag = document.createElement('div');
+          tag.className = 'selected-resource-tag';
+          tag.innerHTML = `
+            <span>${resourceName}</span>
+            <span class="remove-tag" onclick="removeResource('${resourceName}')">&times;</span>
+          `;
+          listDiv.appendChild(tag);
+        });
+
+        // Update create button
+        const createBtn = document.getElementById('createTaskBtn');
+        createBtn.disabled = selectedCheckboxes.length === 0;
+      }
+
+      function removeResource(resourceName) {
+        const resourceItems = document.querySelectorAll('.resource-item');
+        resourceItems.forEach((item) => {
+          if (
+            item.querySelector('.resource-name').textContent === resourceName
+          ) {
+            const checkbox = item.querySelector('.resource-checkbox');
+            checkbox.checked = false;
+            item.classList.remove('selected');
+          }
+        });
+        updateSelectionSummary();
+      }
+
+      function createTask() {
+        const name = document.getElementById('task-name').value.trim();
+        const description = document
+          .getElementById('task-description')
+          .value.trim();
+        const selectedResources = document.querySelectorAll(
+          '.resource-checkbox:checked',
+        );
+
+        if (!name) {
+          alert('Please enter a task name');
+          document.getElementById('task-name').focus();
+          return;
+        }
+
+        if (selectedResources.length === 0) {
+          alert('Please select at least one resource');
+          return;
+        }
+
+        // Show success message
+        alert(
+          `Task "${name}" created successfully with ${selectedResources.length} resources!\n\nYou can now add subtasks to begin your analysis.`,
+        );
+        closeModal();
+      }
+
+      // Add event listeners when page loads
+      document.addEventListener('DOMContentLoaded', function () {
+        // Handle resource selection
+        document.querySelectorAll('.resource-item').forEach((item) => {
+          item.addEventListener('click', function (e) {
+            // Don't toggle if clicking directly on checkbox
+            if (e.target.type !== 'checkbox') {
+              const checkbox = this.querySelector('.resource-checkbox');
+              checkbox.checked = !checkbox.checked;
+            }
+
+            // Update visual state
+            this.classList.toggle(
+              'selected',
+              this.querySelector('.resource-checkbox').checked,
+            );
+            updateSelectionSummary();
+          });
+        });
+
+        // Handle checkbox changes directly
+        document.querySelectorAll('.resource-checkbox').forEach((checkbox) => {
+          checkbox.addEventListener('change', function () {
+            const item = this.closest('.resource-item');
+            item.classList.toggle('selected', this.checked);
+            updateSelectionSummary();
+          });
+        });
+
+        // Initial state
+        updateSelectionSummary();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analysis - Hurricane Harvey Analysis | Stories Analytics</title>
+    <link rel="stylesheet" href="single-story-dashboard.css" />
+    <style>
+      /* Modal Overlay */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      /* Modal Container */
+      .modal {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        max-width: 800px;
+        width: 90%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: modalSlideIn 0.3s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Modal Header */
+      .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+      }
+
+      .modal-close:hover {
+        background: #f3f4f6;
+      }
+
+      /* Modal Body */
+      .modal-body {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+      }
+
+      /* Form Section */
+      .form-section {
+        margin-bottom: 32px;
+      }
+
+      .form-section h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 6px;
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1a202c;
+        transition: border-color 0.2s;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      /* Search Section */
+      .search-section {
+        margin-bottom: 24px;
+      }
+
+      .search-box {
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 10px 12px 10px 40px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1a202c;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+      }
+
+      /* Resource List */
+      .resource-list {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        margin-bottom: 24px;
+      }
+
+      .resource-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .resource-item:last-child {
+        border-bottom: none;
+      }
+
+      .resource-item:hover {
+        background: #f9fafb;
+      }
+
+      .resource-item.selected {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+      }
+
+      .resource-checkbox {
+        margin-right: 12px;
+        width: 16px;
+        height: 16px;
+        accent-color: #2563eb;
+      }
+
+      .resource-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 14px;
+        color: white;
+      }
+
+      .resource-icon.audio {
+        background: #8b5cf6;
+      }
+
+      .resource-icon.document {
+        background: #ef4444;
+      }
+
+      .resource-icon.video {
+        background: #10b981;
+      }
+
+      .resource-icon.image {
+        background: #f59e0b;
+      }
+
+      .resource-details {
+        flex: 1;
+      }
+
+      .resource-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a202c;
+        margin-bottom: 2px;
+      }
+
+      .resource-meta {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      /* Analysis Type Cards */
+      .analysis-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .analysis-card {
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: white;
+      }
+
+      .analysis-card:hover {
+        border-color: #2563eb;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .analysis-card.selected {
+        border-color: #2563eb;
+        background: #eff6ff;
+      }
+
+      .analysis-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 12px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+
+      .analysis-icon.transcription {
+        background: #ddd6fe;
+        color: #7c3aed;
+      }
+
+      .analysis-icon.narratives {
+        background: #d1fae5;
+        color: #059669;
+      }
+
+      .analysis-icon.analysis {
+        background: #fef3c7;
+        color: #d97706;
+      }
+
+      .analysis-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 8px;
+      }
+
+      .analysis-description {
+        font-size: 14px;
+        color: #6b7280;
+        line-height: 1.4;
+      }
+
+      /* Modal Footer */
+      .modal-footer {
+        padding: 24px;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
+
+      .btn-outline {
+        background: white;
+        border: 1px solid #d1d5db;
+        color: #374151;
+      }
+
+      .btn-outline:hover {
+        background: #f9fafb;
+      }
+
+      .btn-primary {
+        background: #2563eb;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #1d4ed8;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Success State */
+      .success-message {
+        text-align: center;
+        padding: 40px 20px;
+      }
+
+      .success-icon {
+        width: 64px;
+        height: 64px;
+        background: #10b981;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 32px;
+      }
+
+      .success-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 8px;
+      }
+
+      .success-description {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 20px;
+      }
+
+      .task-preview {
+        background: #f9fafb;
+        border-radius: 8px;
+        padding: 16px;
+        text-align: left;
+        border: 1px solid #e5e7eb;
+      }
+
+      .task-preview h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 4px;
+      }
+
+      .task-preview p {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 12px;
+      }
+
+      .task-preview-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <div class="container">
+        <div class="top-bar-content">
+          <div class="logo">Stories<span>Analytics</span></div>
+          <ul class="nav-links">
+            <li><a href="#" class="active">Stories</a></li>
+            <li><a href="#">Analysis Tools</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Data Catalog</a></li>
+          </ul>
+          <div class="user-menu">
+            <span class="user-name">Sarah Martinez</span>
+            <div class="user-avatar">SM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Header -->
+    <div class="story-header">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+          <a href="analysis.html" class="breadcrumb-link">Stories</a>
+          <svg
+            class="breadcrumb-separator"
+            width="12"
+            height="12"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+          <a href="analysis.html" class="breadcrumb-link"
+            >Hurricane Harvey Analysis</a
+          >
+          <svg
+            class="breadcrumb-separator"
+            width="12"
+            height="12"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+          <span class="breadcrumb-current">Analysis</span>
+        </nav>
+
+        <!-- Story Title and Metadata -->
+        <div class="story-title-section">
+          <div class="story-main-info">
+            <h1 class="story-title">Hurricane Harvey Analysis</h1>
+            <p class="story-description">
+              Run and manage analysis tasks for Hurricane Harvey data
+            </p>
+
+            <div class="story-metadata">
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                    />
+                  </svg>
+                </div>
+                <span class="metadata-value">Texas</span>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708z"
+                    />
+                  </svg>
+                </div>
+                <span class="metadata-value">Aug 25 - Sep 10, 2017</span>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045z"
+                    />
+                    <path
+                      d="M9 12.5a3.5 3.5 0 1 1-7 0V8.1c0-.272.208-.7.756-.963.545-.261 1.311-.421 2.244-.421s1.7.16 2.244.421c.548.263.756.69.756.963v4.4z"
+                    />
+                  </svg>
+                </div>
+                <span class="metadata-value">Hurricane</span>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                    />
+                  </svg>
+                </div>
+                <span class="metadata-value">Sarah Martinez</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-actions">
+            <a href="resources.html" class="btn btn-secondary"
+              >Manage Resources</a
+            >
+            <a href="report.html" class="btn btn-secondary">View Reports</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-navigation">
+      <div class="container">
+        <div class="tab-nav-bar">
+          <a href="analysis.html" class="tab-nav-item active">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+              />
+              <path
+                d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"
+              />
+            </svg>
+            Analysis
+            <span class="tab-badge warning">3 tasks</span>
+          </a>
+
+          <a href="report.html" class="tab-nav-item">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5V6z"
+              />
+              <path
+                d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"
+              />
+            </svg>
+            Reports & Outputs
+            <span class="tab-badge success">2</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+      <div class="container">
+        <div class="tab-content">
+          <!-- Analysis Tab Content -->
+          <div class="tab-pane active" id="analysis-tab">
+            <!-- Analysis Header -->
+            <div class="analysis-header">
+              <div class="analysis-header-content">
+                <h2 class="analysis-title">Analysis Overview</h2>
+                <div class="analysis-actions">
+                  <button class="btn btn-outline" onclick="openCreateTaskModal()">
+                    <svg
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                      />
+                    </svg>
+                    Create New Task
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task Groups Section -->
+            <div class="task-groups-section">
+              <!-- Emergency Response Task -->
+              <a
+                href="emergency-response-analysis.html"
+                class="task-group-card"
+              >
+                <div class="task-group-info">
+                  <div class="task-group-icon emergency">🚨</div>
+                  <div class="task-group-details">
+                    <h3 class="task-group-name">Emergency Response Analysis</h3>
+                    <p class="task-group-description">
+                      Immediate emergency response and communication analysis
+                    </p>
+                  </div>
+                </div>
+              </a>
+
+              <!-- Government Communications Task -->
+              <div class="task-group-card">
+                <div class="task-group-info">
+                  <div class="task-group-icon government">🏛️</div>
+                  <div class="task-group-details">
+                    <h3 class="task-group-name">Government Communications</h3>
+                    <p class="task-group-description">
+                      Official government response and public communications
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Community Impact Task -->
+              <div class="task-group-card">
+                <div class="task-group-info">
+                  <div class="task-group-icon community">👥</div>
+                  <div class="task-group-details">
+                    <h3 class="task-group-name">Community Impact Analysis</h3>
+                    <p class="task-group-description">
+                      Community response and impact assessment
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Create Task Modal -->
+    <div class="modal-overlay" id="createTaskModal">
+      <div class="modal">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Create New Analysis Task</h2>
+          <button class="modal-close" onclick="closeCreateTaskModal()">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body" id="modalBody">
+          <!-- Step 1: Basic Information -->
+          <div class="modal-step" id="step1">
+            <div class="form-section">
+              <h3>Basic Information</h3>
+              <div class="form-group">
+                <label class="form-label" for="task-name">Task Name</label>
+                <input
+                  type="text"
+                  id="task-name"
+                  class="form-input"
+                  placeholder="Enter task name"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="task-description">Description</label>
+                <textarea
+                  id="task-description"
+                  class="form-textarea"
+                  placeholder="Describe the purpose and goals of this analysis task"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div class="form-section">
+              <h3>Select Resources</h3>
+              <div class="search-section">
+                <div class="search-box">
+                  <svg class="search-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                  </svg>
+                  <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search resources by name or type..."
+                    id="resource-search"
+                    oninput="filterResources()"
+                  />
+                </div>
+              </div>
+
+              <div class="resource-list" id="resource-list">
+                <div class="resource-item" data-type="audio" data-name="emergency call recording">
+                  <input type="checkbox" class="resource-checkbox" />
+                  <div class="resource-icon audio">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-details">
+                    <div class="resource-name">Emergency_Call_Recording_082517.mp3</div>
+                    <div class="resource-meta">12.3 MB • Audio • 12:34 duration</div>
+                  </div>
+                </div>
+
+                <div class="resource-item" data-type="audio" data-name="radio communications">
+                  <input type="checkbox" class="resource-checkbox" />
+                  <div class="resource-icon audio">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-details">
+                    <div class="resource-name">Radio_Communications_082917.mp3</div>
+                    <div class="resource-meta">8.7 MB • Audio • 18:42 duration</div>
+                  </div>
+                </div>
+
+                <div class="resource-item" data-type="document" data-name="incident report houston pd">
+                  <input type="checkbox" class="resource-checkbox" />
+                  <div class="resource-icon document">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-details">
+                    <div class="resource-name">Incident_Report_Houston_PD.pdf</div>
+                    <div class="resource-meta">2.1 MB • PDF • 24 pages</div>
+                  </div>
+                </div>
+
+                <div class="resource-item" data-type="video" data-name="emergency response briefing">
+                  <input type="checkbox" class="resource-checkbox" />
+                  <div class="resource-icon video">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M0 1a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V1zm7 2a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V3z"/>
+                      <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-details">
+                    <div class="resource-name">Emergency_Response_Briefing.mp4</div>
+                    <div class="resource-meta">89.2 MB • Video • 45:12 duration</div>
+                  </div>
+                </div>
+
+                <div class="resource-item" data-type="document" data-name="emergency response protocol">
+                  <input type="checkbox" class="resource-checkbox" />
+                  <div class="resource-icon document">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-details">
+                    <div class="resource-name">Emergency_Response_Protocol.pdf</div>
+                    <div class="resource-meta">1.4 MB • PDF • 18 pages</div>
+                  </div>
+                </div>
+
+                <div class="resource-item" data-type="image" data-name="houston flood map">
+                  <input type="checkbox" class="resource-checkbox" />
+                  <div class="resource-icon image">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                      <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                    </svg>
+                  </div>
+                  <div class="resource-details">
+                    <div class="resource-name">Houston_Flood_Map_082517.jpg</div>
+                    <div class="resource-meta">3.2 MB • Image • 1920x1080</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analysis Type Section -->
+            <div class="form-section">
+              <h3>Select Analysis Type</h3>
+              <div class="analysis-types">
+                <div class="analysis-card" onclick="selectAnalysisType('transcription')">
+                  <div class="analysis-icon transcription">🎵</div>
+                  <div class="analysis-title">Transcription</div>
+                  <div class="analysis-description">Convert audio and video files to text with speaker identification</div>
+                </div>
+
+                <div class="analysis-card" onclick="selectAnalysisType('narratives')">
+                  <div class="analysis-icon narratives">📖</div>
+                  <div class="analysis-title">Narratives</div>
+                  <div class="analysis-description">Extract key events, timeline, and story elements from content</div>
+                </div>
+
+                <div class="analysis-card" onclick="selectAnalysisType('analysis')">
+                  <div class="analysis-icon analysis">📊</div>
+                  <div class="analysis-title">Analysis</div>
+                  <div class="analysis-description">Perform statistical analysis and pattern recognition on data</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Success State -->
+          <div class="modal-step" id="step2" style="display: none;">
+            <div class="success-message">
+              <div class="success-icon">✓</div>
+              <div class="success-title">Task Created Successfully!</div>
+              <div class="success-description">Your analysis task has been created and is ready to start.</div>
+              
+              <div class="task-preview" id="taskPreview">
+                <h4 id="previewTaskName">Emergency Response Analysis</h4>
+                <p id="previewTaskDescription">Analysis of emergency response communications during Hurricane Harvey</p>
+                <div class="task-preview-meta">
+                  <span id="previewResourceCount">3 resources selected</span>
+                  <span id="previewAnalysisType">Transcription analysis</span>
+                  <span>Ready to start</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer" id="modalFooter">
+          <button class="btn btn-outline" onclick="closeCreateTaskModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="createTask()" id="createTaskBtn">Create Task</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let selectedAnalysisType = null;
+
+      function openCreateTaskModal() {
+        document.getElementById('createTaskModal').classList.add('active');
+        resetModal();
+      }
+
+      function closeCreateTaskModal() {
+        document.getElementById('createTaskModal').classList.remove('active');
+        resetModal();
+      }
+
+      function resetModal() {
+        // Reset form
+        document.getElementById('task-name').value = '';
+        document.getElementById('task-description').value = '';
+        document.getElementById('resource-search').value = '';
+        
+        // Reset resource selection
+        document.querySelectorAll('.resource-checkbox').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        document.querySelectorAll('.resource-item').forEach(item => {
+          item.classList.remove('selected');
+        });
+        
+        // Reset analysis type selection
+        selectedAnalysisType = null;
+        document.querySelectorAll('.analysis-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+        
+        // Reset modal state
+        document.getElementById('step1').style.display = 'block';
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('modalTitle').textContent = 'Create New Analysis Task';
+        document.getElementById('modalFooter').style.display = 'flex';
+        document.getElementById('createTaskBtn').textContent = 'Create Task';
+        
+        // Show all resources
+        filterResources();
+      }
+
+      function filterResources() {
+        const searchTerm = document.getElementById('resource-search').value.toLowerCase();
+        const resourceItems = document.querySelectorAll('.resource-item');
+
+        resourceItems.forEach(item => {
+          const name = item.getAttribute('data-name').toLowerCase();
+          const type = item.getAttribute('data-type').toLowerCase();
+          const resourceName = item.querySelector('.resource-name').textContent.toLowerCase();
+
+          const matches = name.includes(searchTerm) || 
+                         type.includes(searchTerm) || 
+                         resourceName.includes(searchTerm);
+
+          item.style.display = matches ? 'flex' : 'none';
+        });
+      }
+
+      function selectAnalysisType(type) {
+        // Remove previous selection
+        document.querySelectorAll('.analysis-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+
+        // Add selection to clicked card
+        event.currentTarget.classList.add('selected');
+        selectedAnalysisType = type;
+      }
+
+      function createTask() {
+        const name = document.getElementById('task-name').value;
+        const description = document.getElementById('task-description').value;
+        const selectedResources = Array.from(document.querySelectorAll('.resource-checkbox:checked'));
+        
+        if (!name.trim()) {
+          alert('Please enter a task name');
+          return;
+        }
+
+        if (!selectedAnalysisType) {
+          alert('Please select an analysis type');
+          return;
+        }
+
+        if (selectedResources.length === 0) {
+          alert('Please select at least one resource');
+          return;
+        }
+
+        // Show success state
+        showSuccessState(name, description, selectedResources.length, selectedAnalysisType);
+      }
+
+      function showSuccessState(taskName, taskDescription, resourceCount, analysisType) {
+        // Update preview
+        document.getElementById('previewTaskName').textContent = taskName;
+        document.getElementById('previewTaskDescription').textContent = taskDescription || 'No description provided';
+        document.getElementById('previewResourceCount').textContent = `${resourceCount} resources selected`;
+        document.getElementById('previewAnalysisType').textContent = `${analysisType.charAt(0).toUpperCase() + analysisType.slice(1)} analysis`;
+        
+        // Switch to success step
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+        document.getElementById('modalTitle').textContent = 'Task Created!';
+        document.getElementById('createTaskBtn').textContent = 'View Task';
+        
+        // Update footer for success state
+        document.getElementById('modalFooter').innerHTML = `
+          <button class="btn btn-outline" onclick="closeCreateTaskModal()">Close</button>
+          <button class="btn btn-primary" onclick="viewTask()">View Task</button>
+        `;
+      }
+
+      function viewTask() {
+        // Simulate navigation to task detail page
+        alert('Redirecting to task details page...');
+        closeCreateTaskModal();
+      }
+
+      // Add click handlers for resource selection
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.resource-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            if (e.target.type !== 'checkbox') {
+              const checkbox = this.querySelector('.resource-checkbox');
+              checkbox.checked = !checkbox.checked;
+            }
+            
+            this.classList.toggle('selected', this.querySelector('.resource-checkbox').checked);
+          });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('createTaskModal').addEventListener('click', function(e) {
+          if (e.target === this) {
+            closeCreateTaskModal();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

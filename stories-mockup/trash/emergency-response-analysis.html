@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Emergency Response Analysis - Hurricane Harvey Analysis | Stories
+      Analytics
+    </title>
+    <link rel="stylesheet" href="single-story-dashboard.css" />
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <div class="container">
+        <div class="top-bar-content">
+          <div class="logo">Stories<span>Analytics</span></div>
+          <ul class="nav-links">
+            <li><a href="#" class="active">Stories</a></li>
+            <li><a href="#">Analysis Tools</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Data Catalog</a></li>
+          </ul>
+          <div class="user-menu">
+            <span class="user-name">Sarah Martinez</span>
+            <div class="user-avatar">SM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Header -->
+    <div class="story-header">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+          <a href="analysis.html" class="breadcrumb-link">Stories</a>
+          <svg
+            class="breadcrumb-separator"
+            width="12"
+            height="12"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+          <a href="analysis.html" class="breadcrumb-link"
+            >Hurricane Harvey Analysis</a
+          >
+          <svg
+            class="breadcrumb-separator"
+            width="12"
+            height="12"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+          <a href="analysis.html" class="breadcrumb-link">Analysis</a>
+          <svg
+            class="breadcrumb-separator"
+            width="12"
+            height="12"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+          <span class="breadcrumb-current">Emergency Response</span>
+        </nav>
+
+        <!-- Task Title and Metadata -->
+        <div class="story-title-section">
+          <div class="story-main-info">
+            <div
+              class="task-group-icon emergency"
+              style="
+                width: 64px;
+                height: 64px;
+                font-size: 32px;
+                margin-bottom: 16px;
+              "
+            >
+              🚨
+            </div>
+            <h1 class="story-title">Emergency Response Analysis</h1>
+            <p class="story-description">
+              Immediate emergency response and communication analysis during
+              Hurricane Harvey
+            </p>
+
+            <div class="story-metadata">
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                    />
+                    <path
+                      d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"
+                    />
+                  </svg>
+                </div>
+                <span class="metadata-value">3 Subtasks</span>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708z"
+                    />
+                  </svg>
+                </div>
+                <span class="metadata-value">Created Aug 25, 2017</span>
+              </div>
+
+              <div class="metadata-item">
+                <div class="metadata-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                    />
+                  </svg>
+                </div>
+                <span class="metadata-value">Sarah Martinez</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-actions">
+            <button class="btn btn-outline">Export Report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-navigation">
+      <div class="container">
+        <div class="tab-nav-bar">
+          <a href="javascript:void(0)" class="tab-nav-item active" data-tab="subtasks">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+              <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
+            </svg>
+            Subtasks
+            <span class="tab-badge">3</span>
+          </a>
+
+          <a href="javascript:void(0)" class="tab-nav-item" data-tab="resources">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM6.5 7a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zM4.776 4.553a.5.5 0 0 1 .671-.223L9 5.999l3.553-1.67a.5.5 0 1 1 .448.895L9 7.999 5 5.224a.5.5 0 0 1-.224-.671z"/>
+              <path d="M1.5 1A1.5 1.5 0 0 0 0 2.5V14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V2.5A1.5 1.5 0 0 0 14.5 1H1.5z"/>
+            </svg>
+            Resources
+            <span class="tab-badge">5</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+      <div class="container">
+        <div class="tab-content">
+          <!-- Subtasks Tab Content -->
+          <div class="tab-pane active" id="subtasks-tab">
+            <!-- Subtasks List -->
+            <div class="task-details-section">
+          <div class="section-header">
+            <div class="section-header-content">
+              <div class="section-info">
+                <h2 class="section-title">Emergency Response Subtasks</h2>
+                <p class="section-description">
+                  Analysis tasks for emergency response communications and
+                  documentation
+                </p>
+              </div>
+              <div class="section-actions">
+                <button class="btn btn-primary">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                    />
+                  </svg>
+                  Add New Subtask
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-list">
+            <!-- Emergency Call Analysis Subtask -->
+            <div class="task-detail-card completed">
+              <div class="task-status completed"></div>
+              <div class="task-content">
+                <div class="task-header">
+                  <div class="task-info">
+                    <h3 class="task-name">Emergency Call Transcription</h3>
+                    <div class="task-meta">
+                      <span class="task-type">Audio Transcription</span>
+                      <span class="task-date">Completed 2h ago</span>
+                      <span class="task-duration">Duration: 12 min</span>
+                    </div>
+                  </div>
+                  <div class="task-actions">
+                    <button class="btn btn-sm btn-outline">
+                      View Transcript
+                    </button>
+                    <button class="btn btn-sm btn-outline">
+                      Download Audio
+                    </button>
+                  </div>
+                </div>
+
+                <div class="task-details">
+                  <div class="task-description">
+                    Transcription and analysis of emergency dispatch calls
+                    during the initial hours of Hurricane Harvey landfall in
+                    Houston.
+                  </div>
+
+                  <div class="task-resources">
+                    <h4>Resources</h4>
+                    <div class="resource-item">
+                      <div class="resource-icon audio">
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M9 4a1 1 0 0 0-2 0v4a1 1 0 0 0 2 0V4zM6 6a1 1 0 0 1 2 0v2a1 1 0 1 1-2 0V6zm8-2a1 1 0 0 1 2 0v4a1 1 0 1 1-2 0V4z"
+                          />
+                          <path
+                            d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"
+                          />
+                        </svg>
+                      </div>
+                      <div class="resource-details">
+                        <div class="resource-name">
+                          Emergency_Call_Recording_082517.mp3
+                        </div>
+                        <div class="resource-meta">
+                          12.3 MB • Audio • 12:34 duration
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="task-results">
+                    <h4>Key Findings</h4>
+                    <ul class="findings-list">
+                      <li>47 emergency calls processed during first 3 hours</li>
+                      <li>Average response time: 4.2 minutes</li>
+                      <li>
+                        Primary concerns: flooding, power outages, medical
+                        emergencies
+                      </li>
+                      <li>Peak call volume: 8:30-9:15 AM CDT</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Emergency Documents Analysis -->
+            <div class="task-detail-card completed">
+              <div class="task-status completed"></div>
+              <div class="task-content">
+                <div class="task-header">
+                  <div class="task-info">
+                    <h3 class="task-name">
+                      Emergency Report Document Analysis
+                    </h3>
+                    <div class="task-meta">
+                      <span class="task-type">Document Classification</span>
+                      <span class="task-date">Completed 3h ago</span>
+                      <span class="task-duration">Processing time: 45 min</span>
+                    </div>
+                  </div>
+                  <div class="task-actions">
+                    <button class="btn btn-sm btn-outline">
+                      View Analysis
+                    </button>
+                    <button class="btn btn-sm btn-outline">
+                      Download Report
+                    </button>
+                  </div>
+                </div>
+
+                <div class="task-details">
+                  <div class="task-description">
+                    Classification and analysis of official incident reports
+                    filed by Houston Police Department during Hurricane Harvey.
+                  </div>
+
+                  <div class="task-resources">
+                    <h4>Resources</h4>
+                    <div class="resource-item">
+                      <div class="resource-icon document">
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"
+                          />
+                        </svg>
+                      </div>
+                      <div class="resource-details">
+                        <div class="resource-name">
+                          Incident_Report_Houston_PD.pdf
+                        </div>
+                        <div class="resource-meta">2.1 MB • PDF • 24 pages</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="task-results">
+                    <h4>Key Findings</h4>
+                    <ul class="findings-list">
+                      <li>156 incident reports filed in first 24 hours</li>
+                      <li>
+                        Top incident types: water rescue (34%), property damage
+                        (28%), medical (19%)
+                      </li>
+                      <li>
+                        Most affected areas: Downtown, Bellaire, Meyerland
+                      </li>
+                      <li>
+                        Resource allocation: 89% of units deployed to flood
+                        response
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Radio Communications Analysis -->
+            <div class="task-detail-card in-progress">
+              <div class="task-status in-progress"></div>
+              <div class="task-content">
+                <div class="task-header">
+                  <div class="task-info">
+                    <h3 class="task-name">
+                      Radio Communications Transcription
+                    </h3>
+                    <div class="task-meta">
+                      <span class="task-type">Audio Transcription</span>
+                      <span class="task-date">Started 1h ago</span>
+                      <span class="task-duration">Est. completion: 30 min</span>
+                    </div>
+                  </div>
+                  <div class="task-actions">
+                    <div class="task-progress-mini">
+                      <div class="progress-bar-mini">
+                        <div
+                          class="progress-fill-mini"
+                          style="width: 65%"
+                        ></div>
+                      </div>
+                      <span class="progress-text-mini">65%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-details">
+                  <div class="task-description">
+                    Transcription and analysis of radio communications between
+                    emergency response units during Hurricane Harvey operations.
+                  </div>
+
+                  <div class="task-resources">
+                    <h4>Resources</h4>
+                    <div class="resource-item">
+                      <div class="resource-icon audio">
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M9 4a1 1 0 0 0-2 0v4a1 1 0 0 0 2 0V4zM6 6a1 1 0 0 1 2 0v2a1 1 0 1 1-2 0V6zm8-2a1 1 0 0 1 2 0v4a1 1 0 1 1-2 0V4z"
+                          />
+                          <path
+                            d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"
+                          />
+                        </svg>
+                      </div>
+                      <div class="resource-details">
+                        <div class="resource-name">
+                          Radio_Communications_082917.mp3
+                        </div>
+                        <div class="resource-meta">
+                          8.7 MB • Audio • 18:42 duration
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="task-progress-section">
+                    <h4>Processing Status</h4>
+                    <div class="progress-details">
+                      <div class="progress-item">
+                        <span class="progress-step completed"
+                          >Audio preprocessing</span
+                        >
+                        <span class="progress-status">✓ Complete</span>
+                      </div>
+                      <div class="progress-item">
+                        <span class="progress-step in-progress"
+                          >Speech recognition</span
+                        >
+                        <span class="progress-status">65% complete</span>
+                      </div>
+                      <div class="progress-item">
+                        <span class="progress-step pending"
+                          >Text processing</span
+                        >
+                        <span class="progress-status">Pending</span>
+                      </div>
+                      <div class="progress-item">
+                        <span class="progress-step pending"
+                          >Analysis & insights</span
+                        >
+                        <span class="progress-status">Pending</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Resources Tab Content -->
+          <div class="tab-pane" id="resources-tab">
+            <!-- Upload Area -->
+            <div class="upload-area">
+              <div class="upload-icon">
+                <svg
+                  width="48"
+                  height="48"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8.5 1.5A1.5 1.5 0 0 0 7 0H4.5A1.5 1.5 0 0 0 3 1.5v13a1.5 1.5 0 0 0 1.5 1.5H12a1.5 1.5 0 0 0 1.5-1.5V4.5a1.5 1.5 0 0 0-1.5-1.5L8.5 1.5z"
+                  />
+                  <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-3A.5.5 0 0 1 8 4z"
+                  />
+                </svg>
+              </div>
+              <div class="upload-content">
+                <h3 class="upload-title">Drop files here or click to upload</h3>
+                <p class="upload-subtitle">
+                  Support for audio, video, documents, and images
+                </p>
+                <button class="btn btn-primary upload-button">
+                  Choose Files
+                </button>
+              </div>
+            </div>
+
+            <!-- Resource Categories -->
+            <div class="resource-categories">
+              <div class="category-tabs">
+                <button class="category-tab active" data-filter="all">
+                  All (8)
+                </button>
+                <button class="category-tab" data-filter="audio">
+                  Audio (2)
+                </button>
+                <button class="category-tab" data-filter="document">
+                  Documents (2)
+                </button>
+                <button class="category-tab" data-filter="video">
+                  Video (1)
+                </button>
+                <button class="category-tab" data-filter="transcription">
+                  Transcripts (2)
+                </button>
+                <button class="category-tab" data-filter="image">
+                  Images (1)
+                </button>
+              </div>
+            </div>
+
+            <!-- Resource List -->
+            <div class="resource-grid">
+              <!-- Emergency Call Audio Resource -->
+              <div class="resource-card" data-type="audio">
+                <div class="resource-card-header">
+                  <div class="resource-icon audio">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                      />
+                      <path
+                        d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">
+                    Emergency_Call_Recording_082517.mp3
+                  </h4>
+                  <div class="resource-meta">
+                    <span class="file-size">12.3 MB</span>
+                    <span class="upload-date">Aug 25, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Transcribe</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Radio Communications Audio Resource -->
+              <div class="resource-card" data-type="audio">
+                <div class="resource-card-header">
+                  <div class="resource-icon audio">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                      />
+                      <path
+                        d="M6.271 5.055a.5.5 0 0 1 .52.47L7 6.5h1.5a.5.5 0 1 1 0 1H7.01l.254 2.027a.5.5 0 0 1-.99.124L5.999 7.5H4.5a.5.5 0 1 1 0-1h1.501l-.254-2.027a.5.5 0 0 1 .47-.52z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">
+                    Radio_Communications_082917.mp3
+                  </h4>
+                  <div class="resource-meta">
+                    <span class="file-size">8.7 MB</span>
+                    <span class="upload-date">Aug 29, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Transcribe</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Document Resource -->
+              <div class="resource-card" data-type="document">
+                <div class="resource-card-header">
+                  <div class="resource-icon document">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Incident_Report_Houston_PD.pdf</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">2.1 MB</span>
+                    <span class="upload-date">Aug 26, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Analyze</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Emergency Call Transcription Result Resource -->
+              <div class="resource-card" data-type="transcription">
+                <div class="resource-card-header">
+                  <div class="resource-icon transcription">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+                      />
+                      <path
+                        d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">
+                    Emergency_Call_Recording_Transcript.json
+                  </h4>
+                  <div class="resource-meta">
+                    <span class="file-size">245 KB</span>
+                    <span class="upload-date">Sep 2, 2017</span>
+                  </div>
+                  <div class="transcription-preview">
+                    <p class="transcript-snippet">
+                      "SPEAKER_01: Houston Fire Department emergency...
+                      SPEAKER_02: We have a situation on..."
+                    </p>
+                    <div class="transcript-stats">
+                      <span class="stat-item">3 speakers</span>
+                      <span class="stat-item">12:34 duration</span>
+                      <span class="stat-item">5 annotations</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button
+                    class="btn btn-primary btn-block edit-transcription-btn"
+                  >
+                    Edit Transcription
+                  </button>
+                  <button class="btn btn-outline btn-sm">Quick View</button>
+                </div>
+              </div>
+
+              <!-- Video Resource -->
+              <div class="resource-card" data-type="video">
+                <div class="resource-card-header">
+                  <div class="resource-icon video">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M0 1a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V1zm7 2a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1V3z"
+                      />
+                      <path
+                        d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Emergency_Response_Briefing.mp4</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">89.2 MB</span>
+                    <span class="upload-date">Aug 27, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Transcribe</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Additional Document Resource -->
+              <div class="resource-card" data-type="document">
+                <div class="resource-card-header">
+                  <div class="resource-icon document">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Emergency_Response_Protocol.pdf</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">1.4 MB</span>
+                    <span class="upload-date">Aug 25, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Analyze</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Image Resource -->
+              <div class="resource-card" data-type="image">
+                <div class="resource-card-header">
+                  <div class="resource-icon image">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                      />
+                      <path
+                        d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">Houston_Flood_Map_082517.jpg</h4>
+                  <div class="resource-meta">
+                    <span class="file-size">3.2 MB</span>
+                    <span class="upload-date">Aug 25, 2017</span>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-primary btn-block">Analyze</button>
+                  <button class="btn btn-outline btn-sm">Preview</button>
+                </div>
+              </div>
+
+              <!-- Radio Communications Transcription Result Resource -->
+              <div class="resource-card" data-type="transcription">
+                <div class="resource-card-header">
+                  <div class="resource-icon transcription">
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+                      />
+                      <path
+                        d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="resource-menu">
+                    <button class="menu-button">⋯</button>
+                  </div>
+                </div>
+                <div class="resource-card-body">
+                  <h4 class="resource-name">
+                    Radio_Communications_Transcript.json
+                  </h4>
+                  <div class="resource-meta">
+                    <span class="file-size">180 KB</span>
+                    <span class="upload-date">Processing...</span>
+                  </div>
+                  <div class="transcription-preview">
+                    <p class="transcript-snippet">
+                      "UNIT_7: Command, we have water rescue in progress...
+                      COMMAND: Copy Unit 7, dispatch additional..."
+                    </p>
+                    <div class="transcript-stats">
+                      <span class="stat-item">5 speakers</span>
+                      <span class="stat-item">18:42 duration</span>
+                      <span class="stat-item">65% complete</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="resource-card-actions">
+                  <button class="btn btn-outline btn-block" disabled>
+                    Processing...
+                  </button>
+                  <button class="btn btn-outline btn-sm" disabled>Preview</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      // Tab switching functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const tabNavItems = document.querySelectorAll('.tab-nav-item');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        tabNavItems.forEach(tabNavItem => {
+          tabNavItem.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Remove active class from all tab nav items
+            tabNavItems.forEach(item => item.classList.remove('active'));
+
+            // Remove active class from all tab panes
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+
+            // Add active class to clicked tab nav item
+            this.classList.add('active');
+
+            // Get the target tab from data-tab attribute
+            const targetTab = this.getAttribute('data-tab');
+
+            // Add active class to corresponding tab pane
+            const targetPane = document.getElementById(targetTab + '-tab');
+            if (targetPane) {
+              targetPane.classList.add('active');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

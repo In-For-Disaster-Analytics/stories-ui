@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stories Analytics - Analyst Workflow Mockups</title>
+    <style>
+      /* Reset and Base Styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #1a202c;
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 60px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header p {
+        font-size: 20px;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      /* Grid */
+      .mockups-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 32px;
+        margin-bottom: 60px;
+      }
+
+      /* Cards */
+      .mockup-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .mockup-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      }
+
+      .card-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(45deg, #f8fafc, #e2e8f0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+        border-bottom: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.1) 50%,
+          transparent 70%
+        );
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .card-content {
+        padding: 24px;
+      }
+
+      .card-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 8px;
+      }
+
+      .card-description {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+
+      .card-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #9ca3af;
+      }
+
+      .card-type {
+        background: #eff6ff;
+        color: #1e40af;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: 500;
+      }
+
+      .card-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+      }
+
+      /* Special Card Types */
+      .card-image.analysis {
+        background: linear-gradient(45deg, #eff6ff, #dbeafe);
+        color: #2563eb;
+      }
+
+      .card-image.modal {
+        background: linear-gradient(45deg, #f0fdf4, #dcfce7);
+        color: #16a34a;
+      }
+
+      .card-image.dashboard {
+        background: linear-gradient(45deg, #fef3c7, #fde68a);
+        color: #d97706;
+      }
+
+      .card-image.workflow {
+        background: linear-gradient(45deg, #fce7f3, #fbcfe8);
+        color: #db2777;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        color: white;
+        opacity: 0.8;
+      }
+
+      .footer p {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        font-size: 14px;
+      }
+
+      .footer-links a {
+        color: white;
+        text-decoration: none;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+
+      .footer-links a:hover {
+        opacity: 1;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 36px;
+        }
+
+        .header p {
+          font-size: 18px;
+        }
+
+        .mockups-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+
+        .footer-links {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Stories Analytics</h1>
+        <p>Analyst Workflow Mockups & Prototypes</p>
+      </div>
+
+      <!-- Mockups Grid -->
+      <div class="mockups-grid">
+        <!-- Analysis Overview -->
+        <a href="analysis.html" class="mockup-card">
+          <div class="card-image analysis">📊</div>
+          <div class="card-content">
+            <h3 class="card-title">Analysis Overview</h3>
+            <p class="card-description">
+              Main analysis dashboard showing task groups, navigation, and
+              overview of Hurricane Harvey analysis workflow.
+            </p>
+            <div class="card-meta">
+              <span class="card-type">Dashboard</span>
+              <div class="card-status">
+                <div class="status-dot"></div>
+                <span>Complete</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="create-task-modal.html" class="mockup-card">
+          <div class="card-image modal">📝</div>
+          <div class="card-content">
+            <h3 class="card-title">Create New Task Modal</h3>
+            <p class="card-description">
+              Standalone modal for creating new analysis tasks with resource
+              selection, search functionality, and form validation.
+            </p>
+            <div class="card-meta">
+              <span class="card-type">Modal</span>
+              <div class="card-status">
+                <div class="status-dot"></div>
+                <span>Complete</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Emergency Response Analysis -->
+        <a href="emergency-response-analysis.html" class="mockup-card">
+          <div class="card-image dashboard">🚨</div>
+          <div class="card-content">
+            <h3 class="card-title">Single Task Dashboard</h3>
+            <p class="card-description">
+              Detailed task view with subtasks and resources tabs. Shows
+              completed, in-progress, and pending analysis subtasks.
+            </p>
+            <div class="card-meta">
+              <span class="card-type">Task Detail</span>
+              <div class="card-status">
+                <div class="status-dot"></div>
+                <span>Complete</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Create Task Modal Standalone -->
+
+        <!-- Add New Subtask Modal -->
+        <a href="add-subtask-modal.html" class="mockup-card">
+          <div class="card-image modal">🎯</div>
+          <div class="card-content">
+            <h3 class="card-title">Add New Subtask Modal</h3>
+            <p class="card-description">
+              Modal for creating subtasks with resource selection, search
+              filtering, and analysis type selection (transcription, narratives,
+              analysis).
+            </p>
+            <div class="card-meta">
+              <span class="card-type">Modal</span>
+              <div class="card-status">
+                <div class="status-dot"></div>
+                <span>Complete</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Coming Soon Card -->
+        <div class="mockup-card" style="opacity: 0.6; cursor: not-allowed">
+          <div class="card-image analysis">🔮</div>
+          <div class="card-content">
+            <h3 class="card-title">Transcription Editor</h3>
+            <p class="card-description">
+              Advanced transcription editing interface with timeline
+              synchronization, speaker identification, and annotation tools.
+            </p>
+            <div class="card-meta">
+              <span class="card-type">Editor</span>
+              <div class="card-status">
+                <div class="status-dot" style="background: #f59e0b"></div>
+                <span>Coming Soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Hurricane Harvey Analysis • Stories Analytics Platform</p>
+        <div class="footer-links">
+          <a href="#methodology">Methodology</a>
+          <a href="#resources">Resources</a>
+          <a href="#documentation">Documentation</a>
+          <a href="#feedback">Feedback</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Add click prevention for disabled cards
+      document.addEventListener('DOMContentLoaded', function () {
+        const disabledCards = document.querySelectorAll(
+          '.mockup-card[style*="cursor: not-allowed"]',
+        );
+        disabledCards.forEach((card) => {
+          card.addEventListener('click', function (e) {
+            e.preventDefault();
+            alert('This mockup is coming soon!');
+          });
+        });
+
+        // Add hover effects with JavaScript for better performance
+        const cards = document.querySelectorAll(
+          '.mockup-card:not([style*="cursor: not-allowed"])',
+        );
+        cards.forEach((card) => {
+          card.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateY(-8px)';
+          });
+
+          card.addEventListener('mouseleave', function () {
+            this.style.transform = 'translateY(0)';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
